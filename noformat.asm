@@ -10,8 +10,22 @@
 .org        progStart-2
 .db         $BB,$6D
 
-begin:
-	ld hl, FP_A
+flt2str:
+	push hl
+	push de
+	push af
+	push bc
+
+	ld hl, flt2str_bfr3	; clear out the string buffer
+	ld b, $15
+	xor a
+	ld (FP_num_zer), a	; clear out this variable while we're at it
+flt2str0p1:
+	ld (hl), a
+	inc hl
+	djnz flt2str0p1
+	
+	ld hl, flt2str_bfr
 	inc hl
 	ld a, (hl) 		; _GetExp
 	
@@ -21,14 +35,14 @@ begin:
 	ld (FP_num_zer), a
 	or $80
 
-	ld hl, FP_B
+	ld hl, flt2str_bfr2
 	inc hl
 	ld (hl), a
 	
-	ld hl, FP_B		; OP2
+	ld hl, flt2str_bfr2		; OP2
 	bCall( _Mov9toOP2 )
 	
-	ld hl, FP_A
+	ld hl, flt2str_bfr
 	bCall( _Mov9toOP1 )
 
 	bCall( _FPMult )
@@ -36,10 +50,10 @@ begin:
 	ld a, $0A
 	bCall( _FormReal )
 
-	ld hl, FP_A 		; Check for FP_A<0 and store a - if it is
+	ld hl, flt2str_bfr 		; Check for flt2str_bfr<0 and store a - if it is
 	ld a, (hl)
 	cp $80
-	ld hl, Txt_bfr
+	ld hl, flt2str_bfr3
 	jr nz, positive
 	ld (hl), '-'
 	inc hl
@@ -71,19 +85,29 @@ positive1:
 
 	ld (hl), $00
 		
-	ld hl, Txt_bfr
-	bCall( _PutS )
+	;ld hl, flt2str_bfr3
+	;bCall( _PutS )
+
+	ld hl, flt2str_bfr
+	xor a
+	ld b, $0C
+positive2:
+	ld (hl), a
+	inc hl
+	djnz positive2
+	
+	pop bc
+	pop af
+	pop de
+	pop hl
 	ret
 
 FP_num_zer:
 .db $00
 	
-FP_A:
-.db $00,$7C,$25,$12,$70,$00,$00,$00,$00,$00,$00,$00 ; -0.0000025
-
-FP_B:
-.db $00,$00,$01,$00,$00,$00,$00,$00,$00,$00,$00,$00 ; 1000000
-
-Txt_bfr:
+flt2str_bfr:
+.db $00,$7C,$25,$12,$70,$00,$00,$00,$00,$00,$00,$00
+flt2str_bfr2:
+.db $00,$00,$01,$00,$00,$00,$00,$00,$00,$00,$00,$00
+flt2str_bfr3:
 .db $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-;     1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21 

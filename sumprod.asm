@@ -3,8 +3,6 @@
 .org        progStart-2
 .db         $BB,$6D
 
-
-;; storeVariable
 begin:
 	bCall( _RunIndicOff )
 	;;; Get the Coordinates from the User

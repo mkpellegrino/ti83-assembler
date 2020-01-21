@@ -1,4 +1,3 @@
-;; distance formula / slope formula
 #include    "ti83plus.inc"
 #define     progStart   $9D95
 .org        progStart-2
@@ -7,6 +6,7 @@
 
 ;; storeVariable
 begin:
+	bCall( _RunIndicOff )
 	;;; Get the Coordinates from the User
 	ld hl, prompt_text_sum
 	bCall( _PutS )
@@ -42,6 +42,8 @@ begin:
 	ld hl, output_none	; "No Real Numbers"
 	bCall( _PutS )
 	bCall( _NewLine )	; crlf
+	bCall( _RunIndicOn )
+
 	ret
 
 skip01:
@@ -91,7 +93,8 @@ skip01:
 	ld hl, FP_x2
 	call storeVariable
 
-	;; TODO Display x1 and x2
+	bCall( _RunIndicOn )
+
 	ret
 	
 
@@ -379,9 +382,9 @@ prompt_text:
 
 
 prompt_text_sum:
-.db "Sum:",0
+.db "Sum",0
 prompt_text_prod:
-.db "Prod:",0
+.db "Prod",0
 output_none:
 .db "No Real Numbers",0
 
@@ -389,7 +392,6 @@ FP_sum:
 .db $00, $00, $00, $00, $00, $00, $00, $00, $00
 FP_prod:
 .db $00, $00, $00, $00, $00, $00, $00, $00, $00
-
 FP_x1:
 .db $00, $00, $00, $00, $00, $00, $00, $00, $00
 FP_x2:

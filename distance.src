@@ -1,0 +1,44 @@
+str 000 Distance Formulaby mr pellegrino----------------x1
+str 004 y1
+str 005 x2
+str 006 y2
+var x1
+var y1
+var x2
+var y2
+; Display the Title Screen
+prn 000
+; Get the Coordinates (X1,Y1) & (X2,Y2)
+input x1
+crlf
+prn 004
+input y1
+crlf
+prn 005
+input x2
+crlf
+prn 006
+input y2
+crlf
+; Now do the math
+OP1<mem x1
+OP1>OP2
+OP1<mem x2
+OP1-OP2
+OP1^2
+OP1>mem x1
+OP1<mem y1
+OP1>OP2
+OP1<mem y2
+OP1-OP2
+OP1^2
+OP1>OP2
+OP1<mem x1
+OP1+OP2
+OP1^0.5
+; Display the value
+prn OP1
+; Store the value in the user variable "X"
+OP1>varX
+OP1>varAns
+ret

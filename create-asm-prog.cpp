@@ -177,15 +177,11 @@ void sysCall( string s )
 
 }
 
-void assem( string s )
+void a( string s )
 {
   if( s == "ret" )
     {
       addByte( 0xC9 );
-    }
-  else if( s == "ld hl,**" )
-    {
-      addByte( 0x21 );
     }
   else if( s == "nop" )
     {
@@ -379,10 +375,330 @@ void assem( string s )
     {
       addByte(0x2F);
     }
-  else if( s == "" )
+  else if( s == "jr nc, *" )
     {
-      addByte(0x00);
+      addByte(0x30);
     }
+  else if( s == "ld sp, **" )
+    {
+      addByte(0x31);
+    }
+  else if( s == "ld (**), a" )
+    {
+      addByte(0x32);
+    }
+  else if( s == "inc sp" )
+    {
+      addByte(0x33);
+    }
+  else if( s == "inc (hl)" )
+    {
+      addByte(0x34);
+    }
+  else if( s == "dec (hl)" )
+    {
+      addByte(0x35);
+    }
+  else if( s == "ld (hl), *" )
+    {
+      addByte(0x36);
+    }
+  else if( s == "scf" )
+    {
+      addByte(0x37);
+    }
+  else if( s == "jr c, *" )
+    {
+      addByte(0x38);
+    }
+  else if( s == "add hl, sp" )
+    {
+      addByte(0x39);
+    }
+  else if( s == "ld a, (**)" )
+    {
+      addByte(0x3A);
+    }
+  else if( s == "dec sp" )
+    {
+      addByte(0x3B);
+    }
+  else if( s == "inc a" )
+    {
+      addByte(0x3C);
+    }
+  else if( s == "dec a" )
+    {
+      addByte(0x3D);
+    }
+  else if( s == "ld a, *" )
+    {
+      addByte(0x3E);
+    }
+  else if( s == "ccf" )
+    {
+      addByte(0x3F);
+    }
+  else if( s == "ld b, b" )
+    {
+      addByte(0x40);
+    }
+  else if( s == "ld b, c" )
+    {
+      addByte(0x41);
+    }
+  else if( s == "ld b, d" )
+    {
+      addByte(0x42);
+    }
+  else if( s == "ld b, e" )
+    {
+      addByte(0x43);
+    }
+  else if( s == "ld b, h" )
+    {
+      addByte(0x44);
+    }
+  else if( s == "ld b, l" )
+    {
+      addByte(0x45);
+    }
+  else if( s == "ld b, (hl)" )
+    {
+      addByte(0x46);
+    }
+  else if( s == "ld b, a" )
+    {
+      addByte(0x47);
+    }
+  else if( s == "ld c, b" )
+    {
+      addByte(0x48);
+    }
+  else if( s == "ld c, c" )
+    {
+      addByte(0x49);
+    }
+  else if( s == "ld c, d" )
+    {
+      addByte(0x4A);
+    }
+  else if( s == "ld c, e" )
+    {
+      addByte(0x4B);
+    }
+  else if( s == "ld c, h" )
+    {
+      addByte(0x4C);
+    }
+  else if( s == "ld c, l" )
+    {
+      addByte(0x4D);
+    }
+  else if( s == "ld c, (hl)" )
+    {
+      addByte(0x4E);
+    }
+  else if( s == "ld c, a" )
+    {
+      addByte(0x4F);
+    }
+  else if( s == "ld d, b" )
+    {
+      addByte(0x50);
+    }
+  else if( s == "ld d, c" )
+    {
+      addByte(0x51);
+    }
+  else if( s == "ld d, d" )
+    {
+      addByte(0x52);
+    }
+  else if( s == "ld d, e" )
+    {
+      addByte(0x53);
+    }
+  else if( s == "ld d, h" )
+    {
+      addByte(0x54);
+    }
+  else if( s == "ld d, l" )
+    {
+      addByte(0x55);
+    }
+  else if( s == "ld d, (hl)" )
+    {
+      addByte(0x56);
+    }
+  else if( s == "ld d, a" )
+    {
+      addByte(0x57);
+    }
+  else if( s == "ld e, b" )
+    {
+      addByte(0x58);
+    }
+  else if( s == "ld e, c" )
+    {
+      addByte(0x59);
+    }
+  else if( s == "ld e, d" )
+    {
+      addByte(0x5A);
+    }
+  else if( s == "ld e, e" )
+    {
+      addByte(0x5B);
+    }
+  else if( s == "ld e, h" )
+    {
+      addByte(0x5C);
+    }
+  else if( s == "ld e, l" )
+    {
+      addByte(0x5D);
+    }
+  else if( s == "ld e, (hl)" )
+    {
+      addByte(0x5E);
+    }
+  else if( s == "ld e, a" )
+    {
+      addByte(0x5F);
+    }
+  else if( s == "ld h, b" )
+    {
+      addByte(0x60);
+    }
+  else if( s == "ld h, c" )
+    {
+      addByte(0x61);
+    }
+  else if( s == "ld h, d" )
+    {
+      addByte(0x62);
+    }
+  else if( s == "ld h, e" )
+    {
+      addByte(0x63);
+    }
+  else if( s == "ld h, h" )
+    {
+      addByte(0x64);
+    }
+  else if( s == "ld h, l" )
+    {
+      addByte(0x65);
+    }
+  else if( s == "ld h, (hl)" )
+    {
+      addByte(0x66);
+    }
+  else if( s == "ld h, a" )
+    {
+      addByte(0x67);
+    }
+  else if( s == "ld l, b" )
+    {
+      addByte(0x68);
+    }
+  else if( s == "ld l, c" )
+    {
+      addByte(0x69);
+    }
+  else if( s == "ld l, d" )
+    {
+      addByte(0x6A);
+    }
+  else if( s == "ld l, e" )
+    {
+      addByte(0x6B);
+    }
+  else if( s == "ld l, h" )
+    {
+      addByte(0x6C);
+    }
+  else if( s == "ld l, l" )
+    {
+      addByte(0x6D);
+    }
+  else if( s == "ld l, (hl)" )
+    {
+      addByte(0x6E);
+    }
+  else if( s == "ld l, a" )
+    {
+      addByte(0x6F);
+    }
+  else if( s == "ld (hl), b" )
+    {
+      addByte(0x70);
+    }
+  else if( s == "ld (hl), c" )
+    {
+      addByte(0x71);
+    }
+  else if( s == "ld (hl), d" )
+    {
+      addByte(0x72);
+    }
+  else if( s == "ld (hl), e" )
+    {
+      addByte(0x73);
+    }
+  else if( s == "ld (hl), h" )
+    {
+      addByte(0x74);
+    }
+  else if( s == "ld (hl), l" )
+    {
+      addByte(0x75);
+    }
+  else if( s == "halt" )
+    {
+      addByte(0x76);
+    }
+  else if( s == "ld (hl), a" )
+    {
+      addByte(0x77);
+    }
+  else if( s == "ld a, b" )
+    {
+      addByte(0x78);
+    }
+  else if( s == "ld a, c" )
+    {
+      addByte(0x79);
+    }
+  else if( s == "ld a, d" )
+    {
+      addByte(0x7A);
+    }
+  else if( s == "ld a, e" )
+    {
+      addByte(0x7B);
+    }
+  else if( s == "ld a, h" )
+    {
+      addByte(0x7C);
+    }
+  else if( s == "ld a, l" )
+    {
+      addByte(0x7D);
+    }
+  else if( s == "ld a, (hl)" )
+    {
+      addByte(0x7E);
+    }
+  else if( s == "ld a, a" )
+    {
+      addByte(0x7F);
+    }
+  //else if( s == "" )
+  //  {
+  //    addByte(0x);
+  //  }
 
 }
 int main(int argc, char *argv[])
@@ -415,21 +731,21 @@ int main(int argc, char *argv[])
   addByte( 0x6D );
   startCounting();
   // ==================================================
-  assem( "ld hl, **" ); addLabel(1); addWord();
+  a( "ld hl, **" ); addLabel(1); addWord();
   sysCall("PutS");
   
   sysCall("NewLine");
 
-  assem( "ld hl, **"); addLabel(2); addWord();
+  a( "ld hl, **"); addLabel(2); addWord();
   sysCall("PutS");
 
   sysCall("NewLine");
 
 
-  assem( "ld hl, **"); addWord( 0x1234 );
+  a( "ld hl, **"); addWord( 0x1234 );
   sysCall( "DispHL" );
   
-  assem( "ret" );
+  a( "ret" );
 
   // $9D9F
   addLabel(); addString( "Written in Asm" );

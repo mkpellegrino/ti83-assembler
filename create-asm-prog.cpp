@@ -695,6 +695,183 @@ void a( string s )
     {
       addByte(0x7F);
     }
+  else if( s == "add a,b" ){addByte(0x80);}
+  else if( s == "add a,c" ){addByte(0x81);}
+  else if( s == "add a,d" ){addByte(0x82);}
+  else if( s == "add a,e" ){addByte(0x83);}
+  else if( s == "add a,h" ){addByte(0x84);}
+  else if( s == "add a,l" ){addByte(0x85);}
+  else if( s == "add a,(hl)" ){addByte(0x86);}
+  else if( s == "add a,a" ){addByte(0x87);}
+  else if( s == "adc a,b" ){addByte(0x88);}
+  else if( s == "adc a,c" ){addByte(0x89);}
+  else if( s == "adc a,d" ){addByte(0x8A);}
+  else if( s == "adc a,e" ){addByte(0x8B);}
+  else if( s == "adc a,h" ){addByte(0x8C);}
+  else if( s == "adc a,l" ){addByte(0x8D);}
+  else if( s == "adc a,(hl)" ){addByte(0x8E);}
+  else if( s == "adc a,a" ){addByte(0x8F);}
+  else if( s == "subb" ){addByte(0x90);}
+  else if( s == "subc" ){addByte(0x91);}
+  else if( s == "subd" ){addByte(0x92);}
+  else if( s == "sube" ){addByte(0x93);}
+  else if( s == "subh" ){addByte(0x94);}
+  else if( s == "subl" ){addByte(0x95);}
+  else if( s == "sub(hl)" ){addByte(0x96);}
+  else if( s == "suba" ){addByte(0x97);}
+  else if( s == "sbc a,b" ){addByte(0x98);}
+  else if( s == "sbc a,c" ){addByte(0x99);}
+  else if( s == "sbc a,d" ){addByte(0x9A);}
+  else if( s == "sbc a,e" ){addByte(0x9B);}
+  else if( s == "sbc a,h" ){addByte(0x9C);}
+  else if( s == "sbc a,l" ){addByte(0x9D);}
+  else if( s == "sbc a,(hl)" ){addByte(0x9E);}
+  else if( s == "sbc a,a" ){addByte(0x9F);}
+  else if( s == "add a, b" ){addByte(0x80);}
+  else if( s == "add a, c" ){addByte(0x81);}
+  else if( s == "add a, d" ){addByte(0x82);}
+  else if( s == "add a, e" ){addByte(0x83);}
+  else if( s == "add a, h" ){addByte(0x84);}
+  else if( s == "add a, l" ){addByte(0x85);}
+  else if( s == "add a, (hl)" ){addByte(0x86);}
+  else if( s == "add a, a" ){addByte(0x87);}
+  else if( s == "adc a, b" ){addByte(0x88);}
+  else if( s == "adc a, c" ){addByte(0x89);}
+  else if( s == "adc a, d" ){addByte(0x8A);}
+  else if( s == "adc a, e" ){addByte(0x8B);}
+  else if( s == "adc a, h" ){addByte(0x8C);}
+  else if( s == "adc a, l" ){addByte(0x8D);}
+  else if( s == "adc a, (hl)" ){addByte(0x8E);}
+  else if( s == "adc a, a" ){addByte(0x8F);}
+  else if( s == "sub b" ){addByte(0x90);}
+  else if( s == "sub c" ){addByte(0x91);}
+  else if( s == "sub d" ){addByte(0x92);}
+  else if( s == "sub e" ){addByte(0x93);}
+  else if( s == "sub h" ){addByte(0x94);}
+  else if( s == "sub l" ){addByte(0x95);}
+  else if( s == "sub (hl)" ){addByte(0x96);}
+  else if( s == "sub a" ){addByte(0x97);}
+  else if( s == "sbc a, b" ){addByte(0x98);}
+  else if( s == "sbc a, c" ){addByte(0x99);}
+  else if( s == "sbc a, d" ){addByte(0x9A);}
+  else if( s == "sbc a, e" ){addByte(0x9B);}
+  else if( s == "sbc a, h" ){addByte(0x9C);}
+  else if( s == "sbc a, l" ){addByte(0x9D);}
+  else if( s == "sbc a, (hl)" ){addByte(0x9E);}
+  else if( s == "sbc a, a" ){addByte(0x9F);}
+  else if( s == "and b" ){addByte(0xA0);}
+  else if( s == "and c" ){addByte(0xA1);}
+  else if( s == "and d" ){addByte(0xA2);}
+  else if( s == "and e" ){addByte(0xA3);}
+  else if( s == "and h" ){addByte(0xA4);}
+  else if( s == "and l" ){addByte(0xA5);}
+  else if( s == "and (hl)" ){addByte(0xA6);}
+  else if( s == "and a" ){addByte(0xA7);}
+  else if( s == "and b" ){addByte(0xA8);}
+  else if( s == "xor c" ){addByte(0xA9);}
+  else if( s == "xor d" ){addByte(0xAA);}
+  else if( s == "xor e" ){addByte(0xAB);}
+  else if( s == "xor h" ){addByte(0xAC);}
+  else if( s == "xor l" ){addByte(0xAD);}
+  else if( s == "xor (hl)" ){addByte(0xAE);}
+  else if( s == "xor a" ){addByte(0xAF);}
+  else if( s == "or b" ){addByte(0xB0);}
+  else if( s == "or c" ){addByte(0xB1);}
+  else if( s == "or d" ){addByte(0xB2);}
+  else if( s == "or e" ){addByte(0xB3);}
+  else if( s == "or h" ){addByte(0xB4);}
+  else if( s == "or l" ){addByte(0xB5);}
+  else if( s == "or (hl)" ){addByte(0xB6);}
+  else if( s == "or a" ){addByte(0xB7);}
+  else if( s == "cp b" ){addByte(0xB8);}
+  else if( s == "cp c" ){addByte(0xB9);}
+  else if( s == "cp d" ){addByte(0xBA);}
+  else if( s == "cp e" ){addByte(0xBB);}
+  else if( s == "cp h" ){addByte(0xBC);}
+  else if( s == "cp l" ){addByte(0xBD);}
+  else if( s == "cp (hl)" ){addByte(0xBE);}
+  else if( s == "cp a" ){addByte(0xBF);}
+  else if( s == "ret nz" ){addByte(0xC0);}
+  else if( s == "pop bc" ){addByte(0xC1);}
+  else if( s == "jp nz, **" ){addByte(0xC2);}
+  else if( s == "jp **" ){addByte(0xC3);}
+  else if( s == "call nz, **" ){addByte(0xC4);}
+  else if( s == "push bc" ){addByte(0xC5);}
+  else if( s == "add a, *" ){addByte(0xC6);}
+  else if( s == "rst 0x00" ){addByte(0xC7);}
+  else if( s == "ret z" ){addByte(0xC8);}
+  else if( s == "ret" ){addByte(0xC9);}
+  else if( s == "jp z, **" ){addByte(0xCA);}
+  else if( s == "BITS" )
+    {
+      cerr << "BITS Not Yet Implemented" << endl;
+      addByte(0xCB);
+    }
+  else if( s == "call z, **" ){addByte(0xCC);}
+  else if( s == "call **" ){addByte(0xCD);}
+  else if( s == "adc a, *" ){addByte(0xCE);}
+  else if( s == "rst 0x08" ){addByte(0xCF);}
+  else if( s == "ret nc" ){addByte(0xD0);}
+  else if( s == "pop de" ){addByte(0xD1);}
+  else if( s == "jp nc, **" ){addByte(0xD2);}
+  else if( s == "out (*), a" ){addByte(0xD3);}
+  else if( s == "call nc, **" ){addByte(0xD4);}
+  else if( s == "push de" ){addByte(0xD5);}
+  else if( s == "sub *" ){addByte(0xD6);}
+  else if( s == "rst 0x10" ){addByte(0xD7);}
+  else if( s == "ret c" ){addByte(0xD8);}
+  else if( s == "exx" ){addByte(0xD9);}
+  else if( s == "jp c, **" ){addByte(0xDA);}
+  else if( s == "in a, (*)" ){addByte(0xDB);}
+  else if( s == "call c, **" ){addByte(0xDC);}
+  else if( s == "IX" )
+    {
+      cerr << "IX Not Yet Implemented" << endl;
+      addByte(0xDD);
+    }
+  else if( s == "sbc a, *" ){addByte(0xDE);}
+  else if( s == "rst 0x18" ){addByte(0xDF);}
+  else if( s == "ret po" ){addByte(0xE0);}
+  else if( s == "pop hl" ){addByte(0xE1);}
+  else if( s == "jp po, **" ){addByte(0xE2);}
+  else if( s == "ex (sp), hl" ){addByte(0xE3);}
+  else if( s == "call po, **" ){addByte(0xE4);}
+  else if( s == "push hl" ){addByte(0xE5);}
+  else if( s == "and *" ){addByte(0xE6);}
+  else if( s == "rst 0x20" ){addByte(0xE7);}
+  else if( s == "ret pe" ){addByte(0xE8);}
+  else if( s == "jp (hl)" ){addByte(0xE9);}
+  else if( s == "jp pe, **" ){addByte(0xEA);}
+  else if( s == "ex de, hl" ){addByte(0xEB);}
+  else if( s == "call pe, **" ){addByte(0xEC);}
+  else if( s == "EXTD" )
+    {
+      cerr << "EXTD Not Yet Implemented" << endl;
+      addByte(0xED);
+    }
+  else if( s == "xor *" ){addByte(0xEE);}
+  else if( s == "rst 0x28" ){addByte(0xEF);}
+  else if( s == "ret p" ){addByte(0xF0);}
+  else if( s == "pop af" ){addByte(0xF1);}
+  else if( s == "jp p, **" ){addByte(0xF2);}
+  else if( s == "di" ){addByte(0xF3);}
+  else if( s == "call p, **" ){addByte(0xF4);}
+  else if( s == "push af" ){addByte(0xF5);}
+  else if( s == "or *" ){addByte(0xF6);}
+  else if( s == "rst 0x30" ){addByte(0xF7);}
+  else if( s == "ret m" ){addByte(0xF8);}
+  else if( s == "ld sp, hl" ){addByte(0xF9);}
+  else if( s == "jp m, **" ){addByte(0xFA);}
+  else if( s == "ei" ){addByte(0xFB);}
+  else if( s == "call m, **" ){addByte(0xFC);}
+  else if( s == "IY" )
+    {
+      cerr << "IY Not Yet Implemented" << endl;
+      addByte(0xFD);
+    }
+  else if( s == "cp *" ){addByte(0xFE);}
+  else if( s == "rst 0x38" ){addByte(0xFF);}
+
   //else if( s == "" )
   //  {
   //    addByte(0x);
@@ -702,7 +879,12 @@ void a( string s )
 
 }
 int main(int argc, char *argv[])
-{  
+{
+  if( argc != 2 )
+    {
+      cerr << "you must supply an output filename" << endl;
+      exit(-1);
+    }
   FILE *binary = fopen(argv[1], "wb");
 
   addString( "**TI83F*" );

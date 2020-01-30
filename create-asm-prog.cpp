@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <vector>
 #include <cctype>
+#include <cstdlib>
 
 #define RealObj 0x00
 #define _OP1 0x8478
@@ -40,7 +41,7 @@
 #define _tZ 0x5A
 #define _tTheta 0x5B
 #define _CurCol 0x844C
-
+#define _CurRow 0x844B
 using namespace std;
 
 vector<unsigned char> byte_vector;
@@ -112,6 +113,17 @@ public:
 	    compilation_failed=1;
 	    error_count++;
 	  }
+
+	// OPTIMIZE HERE
+	
+	{
+	  unsigned char c = byte_vector[index-1];
+	  if(  ((c==0xC3)||(c==0xC2)||(c==0xD2)||(c==0xE2)||(c==0xF2)||(c==0xCA)||(c==0xDA)||(c==0xEA)||(c==0xFA)||(c==0xE9)) && (abs(ml-memory_location)<256) )
+	    {
+	      cerr << "Jump [" << index-1 << "] could be made relative...  distance is: " << abs( ml-memory_location )<< " [" << name << "]" << endl;
+	    }
+
+	}
 	byte_vector[index]=ml&0xFF;
 	byte_vector[index+1]=(ml&0xFF00)/0xFF;
       }
@@ -274,13 +286,6 @@ void addAddress( string s )
 
   label l = label(s);
   label_vector.push_back( l );
-
-  // OPTIMIZATIONS SUGGESTIONS
-  if( byte_vector[byte_vector.size()-1] == 0xC3 )
-    {
-      cerr << "We found a JP at " << hex << program_index << ":" << dec << program_index << endl;
-    }
-  
   addWord();
 }
 
@@ -1411,36 +1416,38 @@ void functionUserInput()
   a("cp *" ); addByte( 0x21 ); // sk0
   a( "jr z, *" ); addOffset( "readkeyA_zero" );
   a("cp *" ); addByte( 0x14 ); // sk9
-  a("jp z, **"); addAddress("readkeyA_nine" );
+  
+  a("jr z, *"); addOffset("readkeyA_nine" );
   a("cp *" ); addByte( 0x1C ); // sk8 
-  a("jp z, **"); addAddress("readkeyA_eight" );
+
+  a("jr z, *"); addOffset("readkeyA_eight" );
   a("cp *" ); addByte( 0x24 ); // sk7
-  a("jp z, **"); addAddress("readkeyA_seven" );
+  a("jr z, *"); addOffset("readkeyA_seven" );
   a("cp *" ); addByte( 0x13 ); // sk6
-  a("jp z, **"); addAddress ("readkeyA_six" );
+  a("jr z, *"); addOffset ("readkeyA_six" );
   a("cp *" ); addByte( 0x1B ); // sk5
-  a("jp z, **"); addAddress ("readkeyA_five" );
+  a("jr z, *"); addOffset ("readkeyA_five" );
   a("cp *" ); addByte( 0x23 ); // sk4
-  a("jp z, **"); addAddress ("readkeyA_four" );
+  a("jr z, *"); addOffset ("readkeyA_four" );
   a("cp *" ); addByte( 0x12 ); // sk3
-  a("jp z, **"); addAddress ("readkeyA_three" );
+  a("jr z, *"); addOffset ("readkeyA_three" );
   a("cp *" ); addByte( 0x1A ); // sk2
-  a("jp z, **"); addAddress("readkeyA_two" );
+  a("jr z, *"); addOffset("readkeyA_two" );
   a("cp *" ); addByte( 0x22 ); // sk1
   
-  a("jp z, **"); addAddress("readkeyA_one" );
+  a("jr z, *"); addOffset("readkeyA_one" );
   a("cp *" ); addByte( 0x09 ); // skEnter
-  a("jp z, **"); addAddress("readkeyA_cr" );
+  a("jr z, *"); addOffset("readkeyA_cr" );
   a("cp *" ); addByte( 0x19 ); // skDecPnt
-  a("jp z, **"); addAddress ("readkeyA_decpt" );
+  a("jr z, *"); addOffset ("readkeyA_decpt" );
   a("cp *" ); addByte( 0x0B ); // skSub
-  a("jp z, **"); addAddress ("readkeyA_negative" );
+  a("jr z, *"); addOffset ("readkeyA_negative" );
   a("cp *" ); addByte( 0x11 ); // skChs
-  a("jp z, **"); addAddress("readkeyA_negative" );
+  a("jr z, *"); addOffset("readkeyA_negative" );
   a("cp *" );addByte( 0x02 ); // skLeft
-  a("jp z, **"); addAddress("readkeyA_backspace" );
+  a("jr z, *"); addOffset("readkeyA_backspace" );
   a("cp *" );addByte( 0x38 ); // skDel
-  a("jp z, **"); addAddress("readkeyA_backspace" );
+  a("jr z, *"); addOffset("readkeyA_backspace" );
   a("jr *" ); addOffset("readkeyA0" );
 
   
@@ -1464,34 +1471,34 @@ void functionUserInput()
   a("ret" );
   addLabel("readkeyA_zero" );
   a( "ld a, *"); addByte( 0x30 );
-  a( "jp **" ); addAddress( "readkeyA1" );
+  a( "jr *" ); addOffset( "readkeyA1" );
   addLabel("readkeyA_nine" );
   a( "ld a, *" ); addByte( 0x39 );
-  a( "jp **" ); addAddress( "readkeyA1" );
+  a( "jr *" ); addOffset( "readkeyA1" );
   addLabel("readkeyA_eight" );
   a( "ld a, *"); addByte( 0x38 );
-  a( "jp **"); addAddress( "readkeyA1" ); //a("jp readkeyA1" );
+  a( "jr *"); addOffset( "readkeyA1" ); //a("jp readkeyA1" );
   addLabel("readkeyA_seven" );
   a( "ld a, *"); addByte( 0x37 );//  a("ld a, $37" );
-  a( "jp **"); addAddress( "readkeyA1" );
+  a( "jr *"); addOffset( "readkeyA1" );
   addLabel("readkeyA_six" );
   a( "ld a, *"); addByte( 0x36 );//a("ld a, $36" );
-  a( "jp **"); addAddress( "readkeyA1" );
+  a( "jr *"); addOffset( "readkeyA1" );
   addLabel("readkeyA_five" );
   a( "ld a, *"); addByte( 0x35 );// a("ld a, $35" );
-  a( "jp **"); addAddress( "readkeyA1" );
+  a( "jr *"); addOffset( "readkeyA1" );
   addLabel("readkeyA_four" );
   a( "ld a, *"); addByte( 0x34 );// a("ld a, $34" );
-  a( "jp **"); addAddress( "readkeyA1" );
+  a( "jr *"); addOffset( "readkeyA1" );
   addLabel("readkeyA_three" );
   a( "ld a, *"); addByte( 0x33 );//a("ld a, $33" );
-  a( "jp **"); addAddress( "readkeyA1" );
+  a( "jr *"); addOffset( "readkeyA1" );
   addLabel("readkeyA_two" );
   a( "ld a, *"); addByte( 0x32 );//a("ld a, $32" );
-  a( "jp **"); addAddress( "readkeyA1" );
+  a( "jr *"); addOffset( "readkeyA1" );
   addLabel("readkeyA_one" );
   a( "ld a, *"); addByte( 0x31 );//a("ld a, $31" );
-  a( "jp **"); addAddress( "readkeyA1" );
+  a( "jr *"); addOffset( "readkeyA1" );
   addLabel("readkeyA_cr" );
   a("ld a, (**)"); addAddress( "text_buffer_length" );
   a("or a" );
@@ -1499,19 +1506,19 @@ void functionUserInput()
   a( "jr z, *" ); addOffset("readkeyA0");
 
   a( "ld a, *"); addByte( 0x00 );//a("ld a, $00" );
-  a( "jp **" ); addAddress( "readkeyA2" );
+  a( "jr *" ); addOffset( "readkeyA2" );
   addLabel("readkeyA_decpt" );
   a( "ld a, *"); addByte( '.' );
   sysCall( "PutC" );
 
   a( "ld a, *" ); addByte( 0x3A ); // tDecPt
-  a( "jp **" ); addAddress( "readkeyA2" );
+  a( "jr *" ); addOffset( "readkeyA2" );
   addLabel("readkeyA_negative" );
   a( "ld a, *"); addByte( '-' );//a("ld a, '-'" );
   sysCall( "PutC" );
 
   a( "ld a, *" ); addByte( 0xB0 ); // tChs
-  a( "jp **" ); addAddress( "readkeyA2" );
+  a( "jr *" ); addOffset( "readkeyA2" );
   addLabel("readkeyA_backspace" );
   a( "ld a, (**)" ); addAddress( "text_buffer_length" );
 
@@ -1744,28 +1751,50 @@ int main(int argc, char *argv[])
   
   // ================================================================================================================================================================================================
 
-  a("ld b, *");addByte( 0x0A );
-  
-  addLabel("Label1");
-  a( "ld h, b" );
-  a( "ld l, c" );
-  a( "push bc" );
-  sysCall( "DispHL" );
+  sysCall( "RunIndicOff" );
+  a( "ld hl, **" ); addAddress( "Label2" );
+  sysCall( "PutS" );
   sysCall( "NewLine" );
-  a( "pop bc" );
-  a( "djnz *" );
-  addOffset("Label1");
+  
+  a( "call **" ); addAddress( "getuserinput" );
 
-  a( "ld hl, **" ); addWord( _OP1 );
+  a( "ld hl, **" ); addAddress( "FP_bfr" );
+  a( "ld de, **" ); addAddress( "FP_x1" );
+  sysCall( "Mov9B" );
+  sysCall( "NewLine" );
+
+  a( "call **" ); addAddress( "getuserinput" );
+
+  a( "ld hl, **" ); addAddress( "FP_bfr" );
   a( "ld de, **" ); addAddress( "FP_x2" );
   sysCall( "Mov9B" );
-  a( "ld a, *" ); addByte( _tY );
-  a( "ld (**), a" ); addAddress( "variabletoken" );
-  a( "ld hl, **" ); addAddress( "FP_x2" );
-  a( "call **" ); addAddress( "storevariable" );
+  sysCall( "NewLine" );
 
+  a( "ld hl, **" ); addAddress( "FP_x2" );
+  sysCall( "Mov9ToOP1" );
+  sysCall( "OP1ToOP2" );
+
+  a( "ld hl, **" ); addAddress( "FP_x1" );
+  sysCall( "Mov9ToOP1" );
+
+  sysCall( "FPSub" );
+  sysCall( "FPSquare" );
+
+  a( "call **" ); addAddress( "dispOP1" );
+  a( "ld a, *" ); addByte( _tX ); // << tX
+  a( "ld (**), a"); addAddress( "variabletoken" );
+  a( "ld hl, **" ); addWord( _OP1 );
+  a( "call **" ); addAddress( "storevariable" );
+   
+  sysCall( "RunIndicOn" );
   a( "ret" );
+  
+  addFP( "FP_x1" );
   addFP( "FP_x2" );
+  addLabel( "Label1" );
+  addString( "Enter X's:" );
+  addLabel( "Label2" );
+  addByte( 0x41 ); addByte( 0x51 ); addByte( 0x62 ); addByte( 0x6D ); addByte( 0x00 );
   
   functionStoreVariable();
   functiondispOP1();

@@ -7,13 +7,45 @@
 #define RealObj 0x00
 #define _OP1 0x8478
 #define _OP2 0x8483
-#define _tY 0x59
+#define _OP3 0x848E
+#define _OP4 0x8499
+#define _OP5 0x84A4
+#define _OP6 0x84AF
+
+#define _tA 0x41
+#define _tB 0x42
+#define _tC 0x43
+#define _tD 0x44
+#define _tE 0x45
+#define _tF 0x46
+#define _tG 0x47
+#define _tH 0x48
+#define _tI 0x49
+#define _tJ 0x4A
+#define _tK 0x4B
+#define _tL 0x4C
+#define _tM 0x4D
+#define _tN 0x4E
+#define _tO 0x4F
+#define _tP 0x50
+#define _tQ 0x51
+#define _tR 0x52
+#define _tS 0x53
+#define _tT 0x54
+#define _tU 0x55
+#define _tV 0x56
+#define _tW 0x57
 #define _tX 0x58
+#define _tY 0x59
+#define _tZ 0x5A
+#define _tTheta 0x5B
+#define _CurCol 0x844C
 
 using namespace std;
 
 vector<unsigned char> byte_vector;
 
+int error_count=0;
 int compilation_failed=0;
 int memorylocation;
 int start_counting=0;
@@ -78,6 +110,7 @@ public:
 	    cerr << endl << "*** label wasn't found [" << name << "] - compilation failed ***" << endl;
 	    cerr << "    program index: 0x" << hex << uppercase << program_index << " (" << dec << program_index << " decimal)" << endl << endl;
 	    compilation_failed=1;
+	    error_count++;
 	  }
 	byte_vector[index]=ml&0xFF;
 	byte_vector[index+1]=(ml&0xFF00)/0xFF;
@@ -148,10 +181,11 @@ public:
 	cerr << endl << "*** relative jump is too far - compilation failed ***" << endl;
 	cerr << "    program index: 0x" << hex << uppercase << from << " (" << dec << from << " decimal)" << endl << endl;
 	compilation_failed=1;
+	error_count++;
       }
     byte_vector[from]=(diff&0xFF);// Actually change the code
 #ifdef DEBUG
-    cerr << "processing offset (diff=" << hex << (unsigned int) (diff&0xFF) << ")" << endl;
+    cerr << "processing offset [diff=" << hex << (unsigned int) (diff&0xFF) << " hex][" << dec << (diff&0xFF) << " dec](" << offset_name << ")" << endl;
 #endif
     
   };
@@ -235,19 +269,25 @@ void addWord()
 void addAddress( string s )
 {
 #ifdef DEBUG
-  cerr << "creating placeholder at [" << hex << memorylocation << "][" << program_index << "] to [" << s << "]" << endl;
+  cerr << "creating placeholder at [" << hex << memorylocation << "][" << program_index << "] for [" << s << "]" << endl;
 #endif
 
   label l = label(s);
   label_vector.push_back( l );
-  addWord();
 
+  // OPTIMIZATIONS SUGGESTIONS
+  if( byte_vector[byte_vector.size()-1] == 0xC3 )
+    {
+      cerr << "We found a JP at " << hex << program_index << ":" << dec << program_index << endl;
+    }
+  
+  addWord();
 }
 
 void addAddress( int i )
 {
 #ifdef DEBUG
-  cerr << "creating placeholder at [" << hex << memorylocation << "][" << program_index << "] to label #[" << i << "]" << endl;
+  cerr << "creating placeholder at [" << hex << memorylocation << "][" << program_index << "] for label #[" << i << "]" << endl;
 #endif
   label l = label(i);
   label_vector.push_back( l );
@@ -256,10 +296,7 @@ void addAddress( int i )
 
 void addString( string s )
 {
-  for( int i=0; i<s.size(); i++ )
-    {
-      addByte( s[i] );
-    }
+  for( int i=0; i<s.size(); i++ ) addByte( s[i] );
   if( start_counting == 1 ) addByte( 0x00 );
 }
 
@@ -280,10 +317,7 @@ void setName( string s )
   else
     {
       name.resize(8,0x00);
-      for( int i=0; i<8; i++ )
-	{
-	  name[i]=toupper(name[i]);
-	}
+      for( int i=0; i<8; i++ ) name[i]=toupper(name[i]);
       addString(name);
     }
 }
@@ -1006,6 +1040,7 @@ void sysCall( string s )
 	cerr << endl << "*** unknown system call [" << s << "] - compilation failed ***" << endl;
 	cerr << "    program index: 0x" << hex << uppercase << program_index << " (" << dec << program_index << " decimal)" << endl << endl;
 	compilation_failed=1;
+	error_count++;
       }
     
     
@@ -1013,522 +1048,135 @@ void sysCall( string s )
 
 void a( string s )
 {
-  if( s == "ret" )
-    {
-      addByte( 0xC9 );
-    }
-  else if( s == "nop" )
-    {
-      addByte( 0x00 );
-    }
-  else if( s == "ld bc, **" )
-    {
-      addByte(0x01);
-    }
-  else if( s == "ld (bc), a" )
-    {
-      addByte(0x02);
-    }
-  else if( s == "inc bc" )
-    {
-      addByte(0x03);
-    }
-  else if( s == "inc b" )
-    {
-      addByte(0x04);
-    }
-  else if( s == "dec b" )
-    {
-      addByte(0x05);
-    }
-  else if( s == "ld b, *" )
-    {
-      addByte(0x06);
-    }
-  else if( s == "rlca" )
-    {
-      addByte(0x07);
-    }
-  else if( s == "ex af, af'" )
-    {
-      addByte(0x08);
-    }
-  else if( s == "add hl, bc" )
-    {
-      addByte(0x09);
-    }
-  else if( s == "ld a, (bc)" )
-    {
-      addByte(0x0A);
-    }
-  else if( s == "dec bc" )
-    {
-      addByte(0x0B);
-    }
-  else if( s == "inc c" )
-    {
-      addByte(0x0C);
-    }
-  else if( s == "dec c" )
-    {
-      addByte(0x0D);
-    }
-  else if( s == "ld c, *" )
-    {
-      addByte(0x0E);
-    }
-  else if( s == "rrca" )
-    {
-      addByte(0x0F);
-    }
-  else if( s == "djnz *" )
-    {
-      addByte(0x10);
-    }
-  else if( s == "ld de, **" )
-    {
-      addByte(0x11);
-    }
-  else if( s == "ld (de), a" )
-    {
-      addByte(0x12);
-    }
-  else if( s == "inc de" )
-    {
-      addByte(0x13);
-    }
-  else if( s == "inc d" )
-    {
-      addByte(0x14);
-    }
-  else if( s == "dec d" )
-    {
-      addByte(0x15);
-    }
-  else if( s == "ld d, *" )
-    {
-      addByte(0x16);
-    }
-  else if( s == "rla" )
-    {
-      addByte(0x17);
-    }
-  else if( s == "jr *" )
-    {
-      addByte(0x18);
-    }
-  else if( s == "add hl, de" )
-    {
-      addByte(0x19);
-    }
-  else if( s == "ld a, (de)" )
-    {
-      addByte(0x1A);
-    }
-  else if( s == "dec de" )
-    {
-      addByte(0x1B);
-    }
-  else if( s == "inc e" )
-    {
-      addByte(0x1C);
-    }
-  else if( s == "dec e" )
-    {
-      addByte(0x1D);
-    }
-  else if( s == "ld e, *" )
-    {
-      addByte(0x1E);
-    }
-  else if( s == "rra" )
-    {
-      addByte(0x1F);
-    }
-  else if( s == "jr nz, *" )
-    {
-      addByte(0x20);
-    }
-  else if( s == "ld hl, **" )
-    {
-      addByte(0x21);
-    }
-  else if( s == "ld (**), hl" )
-    {
-      addByte(0x22);
-    }
-  else if( s == "inc hl" )
-    {
-      addByte(0x23);
-    }
-  else if( s == "inc h" )
-    {
-      addByte(0x24);
-    }
-  else if( s == "dec h" )
-    {
-      addByte(0x25);
-    }
-  else if( s == "ld h, *" )
-    {
-      addByte(0x26);
-    }
-  else if( s == "daa" )
-    {
-      addByte(0x27);
-    }
-  else if( s == "jr z, *" )
-    {
-      addByte(0x28);
-    }
-  else if( s == "add hl, hl" )
-    {
-      addByte(0x29);
-    }
-  else if( s == "ld hl, (**)" )
-    {
-      addByte(0x2A);
-    }
-  else if( s == "dec hl" )
-    {
-      addByte(0x2B);
-    }
-  else if( s == "inc l" )
-    {
-      addByte(0x2C);
-    }
-  else if( s == "dec l" )
-    {
-      addByte(0x2D);
-    }
-  else if( s == "ld l, *" )
-    {
-      addByte(0x2E);
-    }
-  else if( s == "cpl" )
-    {
-      addByte(0x2F);
-    }
-  else if( s == "jr nc, *" )
-    {
-      addByte(0x30);
-    }
-  else if( s == "ld sp, **" )
-    {
-      addByte(0x31);
-    }
-  else if( s == "ld (**), a" )
-    {
-      addByte(0x32);
-    }
-  else if( s == "inc sp" )
-    {
-      addByte(0x33);
-    }
-  else if( s == "inc (hl)" )
-    {
-      addByte(0x34);
-    }
-  else if( s == "dec (hl)" )
-    {
-      addByte(0x35);
-    }
-  else if( s == "ld (hl), *" )
-    {
-      addByte(0x36);
-    }
-  else if( s == "scf" )
-    {
-      addByte(0x37);
-    }
-  else if( s == "jr c, *" )
-    {
-      addByte(0x38);
-    }
-  else if( s == "add hl, sp" )
-    {
-      addByte(0x39);
-    }
-  else if( s == "ld a, (**)" )
-    {
-      addByte(0x3A);
-    }
-  else if( s == "dec sp" )
-    {
-      addByte(0x3B);
-    }
-  else if( s == "inc a" )
-    {
-      addByte(0x3C);
-    }
-  else if( s == "dec a" )
-    {
-      addByte(0x3D);
-    }
-  else if( s == "ld a, *" )
-    {
-      addByte(0x3E);
-    }
-  else if( s == "ccf" )
-    {
-      addByte(0x3F);
-    }
-  else if( s == "ld b, b" )
-    {
-      addByte(0x40);
-    }
-  else if( s == "ld b, c" )
-    {
-      addByte(0x41);
-    }
-  else if( s == "ld b, d" )
-    {
-      addByte(0x42);
-    }
-  else if( s == "ld b, e" )
-    {
-      addByte(0x43);
-    }
-  else if( s == "ld b, h" )
-    {
-      addByte(0x44);
-    }
-  else if( s == "ld b, l" )
-    {
-      addByte(0x45);
-    }
-  else if( s == "ld b, (hl)" )
-    {
-      addByte(0x46);
-    }
-  else if( s == "ld b, a" )
-    {
-      addByte(0x47);
-    }
-  else if( s == "ld c, b" )
-    {
-      addByte(0x48);
-    }
-  else if( s == "ld c, c" )
-    {
-      addByte(0x49);
-    }
-  else if( s == "ld c, d" )
-    {
-      addByte(0x4A);
-    }
-  else if( s == "ld c, e" )
-    {
-      addByte(0x4B);
-    }
-  else if( s == "ld c, h" )
-    {
-      addByte(0x4C);
-    }
-  else if( s == "ld c, l" )
-    {
-      addByte(0x4D);
-    }
-  else if( s == "ld c, (hl)" )
-    {
-      addByte(0x4E);
-    }
-  else if( s == "ld c, a" )
-    {
-      addByte(0x4F);
-    }
-  else if( s == "ld d, b" )
-    {
-      addByte(0x50);
-    }
-  else if( s == "ld d, c" )
-    {
-      addByte(0x51);
-    }
-  else if( s == "ld d, d" )
-    {
-      addByte(0x52);
-    }
-  else if( s == "ld d, e" )
-    {
-      addByte(0x53);
-    }
-  else if( s == "ld d, h" )
-    {
-      addByte(0x54);
-    }
-  else if( s == "ld d, l" )
-    {
-      addByte(0x55);
-    }
-  else if( s == "ld d, (hl)" )
-    {
-      addByte(0x56);
-    }
-  else if( s == "ld d, a" )
-    {
-      addByte(0x57);
-    }
-  else if( s == "ld e, b" )
-    {
-      addByte(0x58);
-    }
-  else if( s == "ld e, c" )
-    {
-      addByte(0x59);
-    }
-  else if( s == "ld e, d" )
-    {
-      addByte(0x5A);
-    }
-  else if( s == "ld e, e" )
-    {
-      addByte(0x5B);
-    }
-  else if( s == "ld e, h" )
-    {
-      addByte(0x5C);
-    }
-  else if( s == "ld e, l" )
-    {
-      addByte(0x5D);
-    }
-  else if( s == "ld e, (hl)" )
-    {
-      addByte(0x5E);
-    }
-  else if( s == "ld e, a" )
-    {
-      addByte(0x5F);
-    }
-  else if( s == "ld h, b" )
-    {
-      addByte(0x60);
-    }
-  else if( s == "ld h, c" )
-    {
-      addByte(0x61);
-    }
-  else if( s == "ld h, d" )
-    {
-      addByte(0x62);
-    }
-  else if( s == "ld h, e" )
-    {
-      addByte(0x63);
-    }
-  else if( s == "ld h, h" )
-    {
-      addByte(0x64);
-    }
-  else if( s == "ld h, l" )
-    {
-      addByte(0x65);
-    }
-  else if( s == "ld h, (hl)" )
-    {
-      addByte(0x66);
-    }
-  else if( s == "ld h, a" )
-    {
-      addByte(0x67);
-    }
-  else if( s == "ld l, b" )
-    {
-      addByte(0x68);
-    }
-  else if( s == "ld l, c" )
-    {
-      addByte(0x69);
-    }
-  else if( s == "ld l, d" )
-    {
-      addByte(0x6A);
-    }
-  else if( s == "ld l, e" )
-    {
-      addByte(0x6B);
-    }
-  else if( s == "ld l, h" )
-    {
-      addByte(0x6C);
-    }
-  else if( s == "ld l, l" )
-    {
-      addByte(0x6D);
-    }
-  else if( s == "ld l, (hl)" )
-    {
-      addByte(0x6E);
-    }
-  else if( s == "ld l, a" )
-    {
-      addByte(0x6F);
-    }
-  else if( s == "ld (hl), b" )
-    {
-      addByte(0x70);
-    }
-  else if( s == "ld (hl), c" )
-    {
-      addByte(0x71);
-    }
-  else if( s == "ld (hl), d" )
-    {
-      addByte(0x72);
-    }
-  else if( s == "ld (hl), e" )
-    {
-      addByte(0x73);
-    }
-  else if( s == "ld (hl), h" )
-    {
-      addByte(0x74);
-    }
-  else if( s == "ld (hl), l" )
-    {
-      addByte(0x75);
-    }
-  else if( s == "halt" )
-    {
-      addByte(0x76);
-    }
-  else if( s == "ld (hl), a" )
-    {
-      addByte(0x77);
-    }
-  else if( s == "ld a, b" )
-    {
-      addByte(0x78);
-    }
-  else if( s == "ld a, c" )
-    {
-      addByte(0x79);
-    }
-  else if( s == "ld a, d" )
-    {
-      addByte(0x7A);
-    }
-  else if( s == "ld a, e" )
-    {
-      addByte(0x7B);
-    }
-  else if( s == "ld a, h" )
-    {
-      addByte(0x7C);
-    }
-  else if( s == "ld a, l" )
-    {
-      addByte(0x7D);
-    }
-  else if( s == "ld a, (hl)" )
-    {
-      addByte(0x7E);
-    }
-  else if( s == "ld a, a" )
-    {
-      addByte(0x7F);
-    }
+  if( s == "ret" ){  addByte( 0xC9 );}
+  else if( s == "nop" ){  addByte( 0x00 );}
+  else if( s == "ld bc, **" ){  addByte(0x01);}
+  else if( s == "ld (bc), a" ){  addByte(0x02);}
+  else if( s == "inc bc" ){  addByte(0x03);}
+  else if( s == "inc b" ){  addByte(0x04);}
+  else if( s == "dec b" ){  addByte(0x05);}
+  else if( s == "ld b, *" ){  addByte(0x06);}
+  else if( s == "rlca" ){  addByte(0x07);}
+  else if( s == "ex af, af'" ){  addByte(0x08);}
+  else if( s == "add hl, bc" ){  addByte(0x09);}
+  else if( s == "ld a, (bc)" ){  addByte(0x0A);}
+  else if( s == "dec bc" ){  addByte(0x0B);}
+  else if( s == "inc c" ){  addByte(0x0C);}
+  else if( s == "dec c" ){  addByte(0x0D);}
+  else if( s == "ld c, *" ){  addByte(0x0E);}
+  else if( s == "rrca" ){  addByte(0x0F);}
+  else if( s == "djnz *" ){  addByte(0x10);}
+  else if( s == "ld de, **" ){  addByte(0x11);}
+  else if( s == "ld (de), a" ){  addByte(0x12);}
+  else if( s == "inc de" ){  addByte(0x13);}
+  else if( s == "inc d" ){  addByte(0x14);}
+  else if( s == "dec d" ){  addByte(0x15);}
+  else if( s == "ld d, *" ){  addByte(0x16);}
+  else if( s == "rla" ){  addByte(0x17);}
+  else if( s == "jr *" ){  addByte(0x18);}
+  else if( s == "add hl, de" ){  addByte(0x19);}
+  else if( s == "ld a, (de)" ){  addByte(0x1A);}
+  else if( s == "dec de" ){  addByte(0x1B);}
+  else if( s == "inc e" ){  addByte(0x1C);}
+  else if( s == "dec e" ){  addByte(0x1D);}
+  else if( s == "ld e, *" ){  addByte(0x1E);}
+  else if( s == "rra" ){  addByte(0x1F);}
+  else if( s == "jr nz, *" ){  addByte(0x20);}
+  else if( s == "ld hl, **" ){  addByte(0x21);}
+  else if( s == "ld (**), hl" ){  addByte(0x22);}
+  else if( s == "inc hl" ){  addByte(0x23);}
+  else if( s == "inc h" ){  addByte(0x24);}
+  else if( s == "dec h" ){  addByte(0x25);}
+  else if( s == "ld h, *" ){  addByte(0x26);}
+  else if( s == "daa" ){  addByte(0x27);}
+  else if( s == "jr z, *" ){  addByte(0x28);}
+  else if( s == "add hl, hl" ){  addByte(0x29);}
+  else if( s == "ld hl, (**)" ){  addByte(0x2A);}
+  else if( s == "dec hl" ){  addByte(0x2B);}
+  else if( s == "inc l" ){  addByte(0x2C);}
+  else if( s == "dec l" ){  addByte(0x2D);}
+  else if( s == "ld l, *" ){  addByte(0x2E);}
+  else if( s == "cpl" ){  addByte(0x2F);}
+  else if( s == "jr nc, *" ){  addByte(0x30);}
+  else if( s == "ld sp, **" ){  addByte(0x31);}
+  else if( s == "ld (**), a" ){  addByte(0x32);}
+  else if( s == "inc sp" ){  addByte(0x33);}
+  else if( s == "inc (hl)" ){  addByte(0x34);}
+  else if( s == "dec (hl)" ){  addByte(0x35);}
+  else if( s == "ld (hl), *" ){  addByte(0x36);}
+  else if( s == "scf" ){  addByte(0x37);}
+  else if( s == "jr c, *" ){  addByte(0x38);}
+  else if( s == "add hl, sp" ){  addByte(0x39);}
+  else if( s == "ld a, (**)" ){  addByte(0x3A);}
+  else if( s == "dec sp" ){  addByte(0x3B);}
+  else if( s == "inc a" ){  addByte(0x3C);}
+  else if( s == "dec a" ){  addByte(0x3D);}
+  else if( s == "ld a, *" ){  addByte(0x3E);}
+  else if( s == "ccf" ){  addByte(0x3F);}
+  else if( s == "ld b, b" ){  addByte(0x40);}
+  else if( s == "ld b, c" ){  addByte(0x41);}
+  else if( s == "ld b, d" ){  addByte(0x42);}
+  else if( s == "ld b, e" ){  addByte(0x43);}
+  else if( s == "ld b, h" ){  addByte(0x44);}
+  else if( s == "ld b, l" ){  addByte(0x45);}
+  else if( s == "ld b, (hl)" ){  addByte(0x46);}
+  else if( s == "ld b, a" ){  addByte(0x47);}
+  else if( s == "ld c, b" ){  addByte(0x48);}
+  else if( s == "ld c, c" ){  addByte(0x49);}
+  else if( s == "ld c, d" ){  addByte(0x4A);}
+  else if( s == "ld c, e" ){  addByte(0x4B);}
+  else if( s == "ld c, h" ){  addByte(0x4C);}
+  else if( s == "ld c, l" ){  addByte(0x4D);}
+  else if( s == "ld c, (hl)" ){  addByte(0x4E);}
+  else if( s == "ld c, a" ){  addByte(0x4F);}
+  else if( s == "ld d, b" ){  addByte(0x50);}
+  else if( s == "ld d, c" ){  addByte(0x51);}
+  else if( s == "ld d, d" ){  addByte(0x52);}
+  else if( s == "ld d, e" ){  addByte(0x53);}
+  else if( s == "ld d, h" ){  addByte(0x54);}
+  else if( s == "ld d, l" ){  addByte(0x55);}
+  else if( s == "ld d, (hl)" ){  addByte(0x56);}
+  else if( s == "ld d, a" ){  addByte(0x57);}
+  else if( s == "ld e, b" ){  addByte(0x58);}
+  else if( s == "ld e, c" ){  addByte(0x59);}
+  else if( s == "ld e, d" ){  addByte(0x5A);}
+  else if( s == "ld e, e" ){  addByte(0x5B);}
+  else if( s == "ld e, h" ){  addByte(0x5C);}
+  else if( s == "ld e, l" ){  addByte(0x5D);}
+  else if( s == "ld e, (hl)" ){  addByte(0x5E);}
+  else if( s == "ld e, a" ){  addByte(0x5F);}
+  else if( s == "ld h, b" ){  addByte(0x60);}
+  else if( s == "ld h, c" ){  addByte(0x61);}
+  else if( s == "ld h, d" ){  addByte(0x62);}
+  else if( s == "ld h, e" ){  addByte(0x63);}
+  else if( s == "ld h, h" ){  addByte(0x64);}
+  else if( s == "ld h, l" ){  addByte(0x65);}
+  else if( s == "ld h, (hl)" ){  addByte(0x66);}
+  else if( s == "ld h, a" ){  addByte(0x67);}
+  else if( s == "ld l, b" ){  addByte(0x68);}
+  else if( s == "ld l, c" ){  addByte(0x69);}
+  else if( s == "ld l, d" ){  addByte(0x6A);}
+  else if( s == "ld l, e" ){  addByte(0x6B);}
+  else if( s == "ld l, h" ){  addByte(0x6C);}
+  else if( s == "ld l, l" ){  addByte(0x6D);}
+  else if( s == "ld l, (hl)" ){  addByte(0x6E);}
+  else if( s == "ld l, a" ){  addByte(0x6F);}
+  else if( s == "ld (hl), b" ){  addByte(0x70);}
+  else if( s == "ld (hl), c" ){  addByte(0x71);}
+  else if( s == "ld (hl), d" ){  addByte(0x72);}
+  else if( s == "ld (hl), e" ){  addByte(0x73);}
+  else if( s == "ld (hl), h" ){  addByte(0x74);}
+  else if( s == "ld (hl), l" ){  addByte(0x75);}
+  else if( s == "halt" ){  addByte(0x76);}
+  else if( s == "ld (hl), a" ){  addByte(0x77);}
+  else if( s == "ld a, b" ){  addByte(0x78);}
+  else if( s == "ld a, c" ){  addByte(0x79);}
+  else if( s == "ld a, d" ){  addByte(0x7A);}
+  else if( s == "ld a, e" ){  addByte(0x7B);}
+  else if( s == "ld a, h" ){  addByte(0x7C);}
+  else if( s == "ld a, l" ){  addByte(0x7D);}
+  else if( s == "ld a, (hl)" ){  addByte(0x7E);}
+  else if( s == "ld a, a" ){  addByte(0x7F);}
   else if( s == "add a,b" ){addByte(0x80);}
   else if( s == "add a,c" ){addByte(0x81);}
   else if( s == "add a,d" ){addByte(0x82);}
@@ -1638,8 +1286,14 @@ void a( string s )
   else if( s == "jp z, **" ){addByte(0xCA);}
   else if( s == "BITS" )
     {
-      cerr << "BITS Not Yet Implemented" << endl;
-      addByte(0xCB);
+      //addByte(0xCB);
+      error_count++;
+      cerr << endl << "*** instruction not implemented yet [" << s << "] - compilation failed ***" << endl;
+      cerr << "    program index: 0x" << hex << uppercase << program_index << " (" << dec << program_index << " decimal)" << endl << endl;
+      compilation_failed=1;
+
+
+      
     }
   else if( s == "call z, **" ){addByte(0xCC);}
   else if( s == "call **" ){addByte(0xCD);}
@@ -1660,8 +1314,11 @@ void a( string s )
   else if( s == "call c, **" ){addByte(0xDC);}
   else if( s == "IX" )
     {
-      cerr << "IX Not Yet Implemented" << endl;
-      addByte(0xDD);
+      //addByte(0xDD);
+      error_count++;
+      cerr << endl << "*** instruction not implemented yet [" << s << "] - compilation failed ***" << endl;
+      cerr << "    program index: 0x" << hex << uppercase << program_index << " (" << dec << program_index << " decimal)" << endl << endl;
+      compilation_failed=1;
     }
   else if( s == "sbc a, *" ){addByte(0xDE);}
   else if( s == "rst 0x18" ){addByte(0xDF);}
@@ -1680,8 +1337,11 @@ void a( string s )
   else if( s == "call pe, **" ){addByte(0xEC);}
   else if( s == "EXTD" )
     {
-      cerr << "EXTD Not Yet Implemented" << endl;
-      addByte(0xED);
+      error_count++;
+      cerr << endl << "*** instruction not implemented yet [" << s << "] - compilation failed ***" << endl;
+      cerr << "    program index: 0x" << hex << uppercase << program_index << " (" << dec << program_index << " decimal)" << endl << endl;
+      compilation_failed=1;
+      //addByte(0xED);
     }
   else if( s == "ldir" ){addByte(0xED);addByte(0xB0);}
   
@@ -1702,8 +1362,11 @@ void a( string s )
   else if( s == "call m, **" ){addByte(0xFC);}
   else if( s == "IY" )
     {
-      cerr << "IY Not Yet Implemented" << endl;
-      addByte(0xFD);
+      error_count++;
+      cerr << endl << "*** instruction not implemented yet [" << s << "] - compilation failed ***" << endl;
+      cerr << "    program index: 0x" << hex << uppercase << program_index << " (" << dec << program_index << " decimal)" << endl << endl;
+      compilation_failed=1;
+      //addByte(0xFD);
     }
   else if( s == "cp *" ){addByte(0xFE);}
   else if( s == "rst 0x38" ){addByte(0xFF);}
@@ -1712,6 +1375,7 @@ void a( string s )
       cerr << endl << "*** unknown instruction [" << s << "] - compilation failed ***" << endl;
       cerr << "    program index: 0x" << hex << uppercase << program_index << " (" << dec << program_index << " decimal)" << endl << endl;
       compilation_failed=1;
+      error_count++;
     }
 
   //else if( s == "" )
@@ -1719,6 +1383,12 @@ void a( string s )
   //    addByte(0x);
   //  }
 
+}
+
+void addFP( string name )
+{
+  addLabel( name );
+  for( int i=0; i<9; i++ ) addByte( 0x00 );// 9 bytes for FP_x2
 }
 
 int relativeJump(int i)
@@ -1729,11 +1399,261 @@ int relativeJump(int i)
   return ( label_cr_vector[i-1].getMemoryLocation() - memorylocation -2);
 }
 
+void functionUserInput()
+{
+  addLabel( "readkeyA"); 
+  a("push af");
+  a("push hl");
+  addLabel("readkeyA0");
+  sysCall( "GetCSC" );
+  a("or a" );
+  a("jr z, *" ); addOffset( "readkeyA0" );
+  a("cp *" ); addByte( 0x21 ); // sk0
+  a( "jr z, *" ); addOffset( "readkeyA_zero" );
+  a("cp *" ); addByte( 0x14 ); // sk9
+  a("jp z, **"); addAddress("readkeyA_nine" );
+  a("cp *" ); addByte( 0x1C ); // sk8 
+  a("jp z, **"); addAddress("readkeyA_eight" );
+  a("cp *" ); addByte( 0x24 ); // sk7
+  a("jp z, **"); addAddress("readkeyA_seven" );
+  a("cp *" ); addByte( 0x13 ); // sk6
+  a("jp z, **"); addAddress ("readkeyA_six" );
+  a("cp *" ); addByte( 0x1B ); // sk5
+  a("jp z, **"); addAddress ("readkeyA_five" );
+  a("cp *" ); addByte( 0x23 ); // sk4
+  a("jp z, **"); addAddress ("readkeyA_four" );
+  a("cp *" ); addByte( 0x12 ); // sk3
+  a("jp z, **"); addAddress ("readkeyA_three" );
+  a("cp *" ); addByte( 0x1A ); // sk2
+  a("jp z, **"); addAddress("readkeyA_two" );
+  a("cp *" ); addByte( 0x22 ); // sk1
+  
+  a("jp z, **"); addAddress("readkeyA_one" );
+  a("cp *" ); addByte( 0x09 ); // skEnter
+  a("jp z, **"); addAddress("readkeyA_cr" );
+  a("cp *" ); addByte( 0x19 ); // skDecPnt
+  a("jp z, **"); addAddress ("readkeyA_decpt" );
+  a("cp *" ); addByte( 0x0B ); // skSub
+  a("jp z, **"); addAddress ("readkeyA_negative" );
+  a("cp *" ); addByte( 0x11 ); // skChs
+  a("jp z, **"); addAddress("readkeyA_negative" );
+  a("cp *" );addByte( 0x02 ); // skLeft
+  a("jp z, **"); addAddress("readkeyA_backspace" );
+  a("cp *" );addByte( 0x38 ); // skDel
+  a("jp z, **"); addAddress("readkeyA_backspace" );
+  a("jr *" ); addOffset("readkeyA0" );
 
+  
+  addLabel("readkeyA1");
 
+  sysCall( "PutC" );
+
+  addLabel("readkeyA2");
+
+  a("ld (**), a" ); addAddress( "readkeyA_byte" );
+
+  a( "ld hl, (**)"); addAddress("text_buffer_ptr");
+  a("ld (hl), a" );
+  a("inc hl" );
+  a( "ld (**), hl"); addAddress("text_buffer_ptr");
+  a( "ld a, (**)" ); addAddress( "text_buffer_length" );
+  a("inc a" );
+  a( "ld (**), a"); addAddress(  "text_buffer_length" );
+  a("pop hl" );
+  a("pop af" );
+  a("ret" );
+  addLabel("readkeyA_zero" );
+  a( "ld a, *"); addByte( 0x30 );
+  a( "jp **" ); addAddress( "readkeyA1" );
+  addLabel("readkeyA_nine" );
+  a( "ld a, *" ); addByte( 0x39 );
+  a( "jp **" ); addAddress( "readkeyA1" );
+  addLabel("readkeyA_eight" );
+  a( "ld a, *"); addByte( 0x38 );
+  a( "jp **"); addAddress( "readkeyA1" ); //a("jp readkeyA1" );
+  addLabel("readkeyA_seven" );
+  a( "ld a, *"); addByte( 0x37 );//  a("ld a, $37" );
+  a( "jp **"); addAddress( "readkeyA1" );
+  addLabel("readkeyA_six" );
+  a( "ld a, *"); addByte( 0x36 );//a("ld a, $36" );
+  a( "jp **"); addAddress( "readkeyA1" );
+  addLabel("readkeyA_five" );
+  a( "ld a, *"); addByte( 0x35 );// a("ld a, $35" );
+  a( "jp **"); addAddress( "readkeyA1" );
+  addLabel("readkeyA_four" );
+  a( "ld a, *"); addByte( 0x34 );// a("ld a, $34" );
+  a( "jp **"); addAddress( "readkeyA1" );
+  addLabel("readkeyA_three" );
+  a( "ld a, *"); addByte( 0x33 );//a("ld a, $33" );
+  a( "jp **"); addAddress( "readkeyA1" );
+  addLabel("readkeyA_two" );
+  a( "ld a, *"); addByte( 0x32 );//a("ld a, $32" );
+  a( "jp **"); addAddress( "readkeyA1" );
+  addLabel("readkeyA_one" );
+  a( "ld a, *"); addByte( 0x31 );//a("ld a, $31" );
+  a( "jp **"); addAddress( "readkeyA1" );
+  addLabel("readkeyA_cr" );
+  a("ld a, (**)"); addAddress( "text_buffer_length" );
+  a("or a" );
+
+  a( "jr z, *" ); addOffset("readkeyA0");
+
+  a( "ld a, *"); addByte( 0x00 );//a("ld a, $00" );
+  a( "jp **" ); addAddress( "readkeyA2" );
+  addLabel("readkeyA_decpt" );
+  a( "ld a, *"); addByte( '.' );
+  sysCall( "PutC" );
+
+  a( "ld a, *" ); addByte( 0x3A ); // tDecPt
+  a( "jp **" ); addAddress( "readkeyA2" );
+  addLabel("readkeyA_negative" );
+  a( "ld a, *"); addByte( '-' );//a("ld a, '-'" );
+  sysCall( "PutC" );
+
+  a( "ld a, *" ); addByte( 0xB0 ); // tChs
+  a( "jp **" ); addAddress( "readkeyA2" );
+  addLabel("readkeyA_backspace" );
+  a( "ld a, (**)" ); addAddress( "text_buffer_length" );
+
+  a("or a" );
+  a( "jr z, *" ); addOffset("readkeyA0");
+  a("dec a" );
+  a( "ld (**), a" ); addAddress( "text_buffer_length" );
+
+  //a("ld (text_buffer_length), a" );
+  a("push af" );
+  a( "ld a, (**)" ); addAddress( _CurCol );
+  a("dec a" );
+  a( "ld (**), a" ); addAddress( _CurCol );
+  a( "ld a, *"); addByte( ' ' );//a("ld a, ' '" );
+  sysCall( "PutC" );
+  a( "ld a, (**)" ); addAddress( _CurCol );
+  a("dec a" );
+  a( "ld (**), a" ); addAddress( _CurCol );
+
+  a("pop af" );
+  a("push hl" );
+  a( "ld hl, (**)" );addAddress( "text_buffer_ptr" );
+  a("dec hl" );
+  a( "ld (**), hl"); addAddress( "text_buffer_ptr" );
+  a("pop hl" );
+
+  a( "jr *"); addOffset( "readkeyA0" );
+  addLabel("create_equation" );
+  a( "ld hl, **" ); addAddress( "equationName" );
+  sysCall( "Mov9ToOP1" );
+  sysCall( "FindSym" );
+  a( "jr c, *" ); addOffset( "storeEqu" ); 
+  sysCall( "DelVar" );
+  addLabel("storeEqu" );
+  a( "ld a, (**)" ); addAddress( "text_buffer_length" );
+
+  a("ld h, *"); addByte( 0x00 );
+  a("ld l, a" );
+  sysCall( "CreateEqu" );
+  a("inc de" );
+  a("inc de" );
+  a( "ld hl, **"); addAddress( "text_buffer" );
+  a( "ld a, (**)" ); addAddress( "text_buffer_length" );
+
+  a( "ld b, *"); addByte( 0x00 );
+  a("ld c, a" );
+  a("ldir" );
+  a("ret" );
+  addLabel("store9_hl");
+  addWord( 0x0000 );
+  addLabel("store9_de");
+  addWord( 0x0000 );
+  addLabel("getuserinput");
+  a("push hl" );
+  a("push af" );
+  a("push bc" );
+  a("push de" );
+  a("xor a" );
+  a( "ld (**), a" ); addAddress( "text_buffer_length" );
+  a( "ld hl, **"); addAddress( "text_buffer" );
+  a( "ld (**), hl"); addAddress( "text_buffer_ptr" );
+  a( "ld hl, **"); addAddress( "prompt_text" );
+  sysCall( "PutS" );
+  addLabel("readmore" );
+  a( "call **" ); addAddress( "readkeyA" );
+
+  a( "ld a, (**)" ); addAddress( "text_buffer_length" );
+
+  a( "cp *" ); addByte( 0x18 );
+  a( "jr z, *" ); addOffset( "buffer_filled" );
+
+  a( "ld a, (**)"); addAddress( "readkeyA_byte" );
+  a("or a" );
+  a( "jr z, *" ); addOffset( "buffer_filled" );
+  a( "jr *" ); addOffset( "readmore" );
+  addLabel("buffer_filled" );
+
+  a( "ld a, (**)" ); addAddress( "text_buffer_length" );
+
+  
+  a("dec a" );
+
+  a( "ld (**), a" ); addAddress( "text_buffer_length" );
+
+  a("call **"); addAddress( "create_equation" );
+  a( "ld hl, **" ); addAddress( "equationName" );
+  a( "ld de, **" ); addWord( _OP1 );
+
+  a( "ld bc, **" ); addWord( 0x0004 );
+  a("ldir" );
+  sysCall( "ParseInp" );
+  a("ld hl, **" ); addWord( _OP1 );
+
+  a( "ld de, **" ); addAddress( "FP_bfr" );
+  a( "ld bc, **" ); addWord( 0x0009 );
+  a("ldir" );
+  a( "ld hl, **" ); addAddress( "equationName" );
+  //a("ld hl, equationName" );
+  sysCall( "Mov9ToOP1" );
+  sysCall( "FindSym" );
+  sysCall( "DelVar" );
+  a("pop de" );
+  a("pop bc" );
+  a("pop af" );
+  a("pop hl" );
+  a("ret" );
+  addFP("FP_bfr");
+  addLabel("readkeyA_byte" );
+  addByte(0x00);
+  addLabel("readkeyA_byte");
+  addByte( 0x00 );
+  
+  addLabel("equationName");
+  //.db EquObj, tVarEqu, tY3, 0x00;
+  addByte( 0x00 ); addByte( 0x5E ); addByte( 0x12 ); addByte( 0x00 );
+  addLabel("text_buffer_length" );
+  addByte( 0x00 );
+  
+  addLabel("text_buffer_ptr" );
+  addWord( 0x0000 );
+  addLabel("text_buffer");
+  for( int i=0; i<25; i++ ) addByte(0x00);
+  
+  addLabel("prompt_text");
+  addByte( '>' ); addByte( ' '); addByte( 0x00 );
+	 
+      
+
+}
+void functiondispOP1()
+{
+  addLabel( "dispOP1" );
+  a( "ld a, *"); addByte( 0x09 );
+  sysCall( "FormReal" );
+  a( "ld hl, **" ); addWord( _OP3 );
+  sysCall( "PutS" );
+  sysCall( "NewLine" );
+  a( "ret" );
+
+}
 void functionStoreVariable()
 {
-
   addLabel( "storevariable" );
 
   a("ld (**), a"); addAddress( "variabletoken"); 
@@ -1845,11 +1765,11 @@ int main(int argc, char *argv[])
   a( "call **" ); addAddress( "storevariable" );
 
   a( "ret" );
-  addLabel( "FP_x2" );
-  for( int i=0; i<9; i++ ) addByte( 0x00 );// 9 bytes for FP_x2
-
-  functionStoreVariable();
+  addFP( "FP_x2" );
   
+  functionStoreVariable();
+  functiondispOP1();
+  functionUserInput();
   // ================================================================================================================================================================================================
 
 
@@ -1881,6 +1801,7 @@ int main(int argc, char *argv[])
 
   if( compilation_failed )
     {
+      cerr << "Error Count: " << dec << error_count << endl;
       fclose(binary);
       exit(-1);
     }
@@ -1893,7 +1814,7 @@ int main(int argc, char *argv[])
   cerr << endl << "*** Compilation success ***" << endl << endl;
   cerr << "    Filename: " << argv[1] << endl;
   cerr << "     TI Name: " << name << endl;    
-  cerr << "        Size: " << byte_vector.size() << " bytes" << endl << endl;
+  cerr << "        Size: " << dec << byte_vector.size() << " bytes" << endl << endl;
   fclose( binary );
   return 0;
 }

@@ -995,7 +995,7 @@ int main(int argc, char *argv[])
 	      break;
 	    case 0xEF:
 	      instruction="rst 0x28";
-	      post=0;
+	      post=2;
 	      break;
 	    case 0xF0:
 	      instruction="ret p";

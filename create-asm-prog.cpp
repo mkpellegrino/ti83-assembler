@@ -100,6 +100,7 @@ public:
 	int ml=-1;
 	for( int i=0; i<label_cr_vector.size(); i++ )
 	  {
+	    
 	    if( label_cr_vector[i].getName() == name )
 	      {
 		ml=label_cr_vector[i].getMemoryLocation();
@@ -118,9 +119,9 @@ public:
 	
 	{
 	  unsigned char c = byte_vector[index-1];
-	  if(  ((c==0xC3)||(c==0xC2)||(c==0xD2)||(c==0xE2)||(c==0xF2)||(c==0xCA)||(c==0xDA)||(c==0xEA)||(c==0xFA)||(c==0xE9)) && (abs(ml-memory_location)<256) )
+	  if(  ((c==0xC3)||(c==0xC2)||(c==0xD2)||(c==0xE2)||(c==0xF2)||(c==0xCA)||(c==0xDA)||(c==0xEA)||(c==0xFA)||(c==0xE9)) && (abs(ml-memory_location)<126) )
 	    {
-	      cerr << "Jump [" << index-1 << "] could be made relative...  distance is: " << abs( ml-memory_location )<< " [" << name << "]" << endl;
+	      cerr << "*** jump [" << index-1 << "] could be made relative...  distance is: " << dec << abs( ml-memory_location )<< " [" << name << "]" << endl;
 	    }
 
 	}
@@ -153,21 +154,21 @@ public:
   offset(){};
   offset(string  s)
   {
-#ifdef DEBUG
-    cerr << "Creating an offset to Label: " << s << " from prog index " << program_index << endl;
-#endif
-    from=program_index;
+    from=program_index-1;
     offset_name=s;
     label_number=-1;
+#ifdef DEBUG
+    cerr << "creating an offset to label: " << s << " from prog index " << program_index << endl;
+#endif
   };
   
   offset(int i)
   {
-#ifdef DEBUG
-    cerr << "Creating an offset to Label #" << i << " from prog index " << program_index << endl;
-#endif
-    from=program_index;
+    from=program_index-1;
     label_number=i;
+#ifdef DEBUG
+    cerr << "creating an offset to label #" << i << " from prog index " << program_index << endl;
+#endif
   };
   ~offset(){};
 
@@ -187,15 +188,19 @@ public:
 
       }
     to=label_cr_vector[label_number-1].getIndex();
-    diff=to-from-1;
-    if( diff > 255 )
+    diff=to-from-2;
+#ifdef DEBUG
+    cerr << endl << "offset -> label [" << dec << from << " -> " << to << "]\tdiff: " << diff << endl << endl;
+#endif
+    
+    if( (diff>126) || (diff<-126) )
       {
 	cerr << endl << "*** relative jump is too far - compilation failed ***" << endl;
-	cerr << "    program index: 0x" << hex << uppercase << from << " (" << dec << from << " decimal)" << endl << endl;
+	cerr << "    program index: 0x" << hex << uppercase << from << " (" << dec << from << " decimal)" << " to [" << offset_name << "]" << endl << endl;
 	compilation_failed=1;
 	error_count++;
       }
-    byte_vector[from]=(diff&0xFF);// Actually change the code
+    byte_vector[from+1]=(diff&0xFF);// Actually change the code
 #ifdef DEBUG
     cerr << "processing offset [diff=" << hex << (unsigned int) (diff&0xFF) << " hex][" << dec << (diff&0xFF) << " dec](" << offset_name << ")" << endl;
 #endif
@@ -207,7 +212,7 @@ private:
   int label_number;// Which label number i am pointing to
   int from;// Where this is in the code.
   int to;//Where are we going?
-  int diff;//How far is it to there?
+  signed int diff;//How far is it to there?
 };
 
 void startCounting()
@@ -219,17 +224,18 @@ void startCounting()
 void addLabel( string s )
 {
 #ifdef DEBUG
-  cerr << "creating label at [" << hex << memorylocation << "][" << program_index << "] called [" << s << "]" << endl;
+  cerr <<  "[" << hex << program_index << "] creating label at [" << hex << memorylocation << "] called [" << s << "]" << endl;
 #endif
-
+  
   
   label l=label(s);
   label_cr_vector.push_back( l );
 }
+
 void addLabel()
 {
 #ifdef DEBUG
-  cerr << "creating label at [" << hex << memorylocation << "][" << program_index << "] with no name" << endl;
+  cerr << "[" << hex << program_index << " creating label at [" << hex << memorylocation << "] with no name" << endl;
 #endif
 
   label l = label();
@@ -238,6 +244,9 @@ void addLabel()
 
 void subtractByte()
 {
+#ifdef DEBUG
+  
+#endif
   program_index--;
   if( start_counting == 1) memorylocation--;
   byte_vector.erase(byte_vector.begin()+byte_vector.size()-1);
@@ -248,6 +257,9 @@ void addByte( unsigned char b )
   program_index++;
   if( start_counting == 1) memorylocation++;  
   byte_vector.push_back( (unsigned char) b );
+  //#ifdef DEBUG
+  //cerr << "Program Index [" << hex << program_index << "]" << endl;
+  //#endif
 }
 
 void addOffset(string s)
@@ -270,12 +282,13 @@ void addWord( int w )
 }
 void addWord()
 {
-  for( int i=0; i<2; i++ )
-    {
-      program_index++;
-      if( start_counting == 1) memorylocation++;  
-      byte_vector.push_back( (unsigned char) 0x00 );
-    }
+  addWord( 0x0000 );
+  //for( int i=0; i<2; i++ )
+  //  {
+  //    program_index++;
+  //    if( start_counting == 1) memorylocation++;  
+  //    byte_vector.push_back( (unsigned char) 0x00 );
+  //  }
 }
 
 void addAddress( string s )
@@ -286,7 +299,7 @@ void addAddress( string s )
 
   label l = label(s);
   label_vector.push_back( l );
-  addWord();
+  addWord(0x0000);
 }
 
 void addAddress( int i )
@@ -296,7 +309,7 @@ void addAddress( int i )
 #endif
   label l = label(i);
   label_vector.push_back( l );
-  addWord();
+  addWord(0x0000);
 }
 
 void addString( string s )
@@ -1404,6 +1417,300 @@ int relativeJump(int i)
   return ( label_cr_vector[i-1].getMemoryLocation() - memorylocation -2);
 }
 
+void functionUI()
+{
+  //=====================================================================
+  addLabel( "functionUI()" );
+  // set row and col
+  a( "ld hl, **" ); addWord( 0x0000 );
+  a( "ld (**), hl" ); addWord( _CurRow );
+
+  // clear out the buffer
+  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_start" );  
+  a( "ld (**), hl");addAddress( "functionUI_text_bfr_ptr" );
+  
+  a( "ld bc, **" ); addWord(0x0A00);// The buffer is 10 bytes
+  //====================================================================
+  addLabel( "functionUI_clear_bfr_top" );
+
+  // Store a zero at hl
+  a( "ld (hl), *" ); addByte(0x00);
+  a( "inc hl" );
+  a( "djnz *" ); addOffset( "functionUI_clear_bfr_top" ); // do this 10 times
+
+
+  a( "ld hl, **" ); addAddress("functionUI_text_bfr_size");
+  a( "ld (hl), *" ); addByte( 0x00 ); // Store a Zero as the buffer size
+
+  // store the address of the buffer
+  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_start" );
+  a( "ld (**), hl");addAddress( "functionUI_text_bfr_ptr" );
+
+  //=====================================================================
+  addLabel("functionUI_top");
+
+  // if buffer is full then return out of the function
+  a( "ld a, (**)" );addAddress("functionUI_text_bfr_size");
+  a( "cp *" ); addByte( 0x0A );  
+  a( "jp nc, **" ); addAddress( "functionUI_return" );
+
+  addLabel( "functionUI_getscan" );
+  
+  sysCall( "GetCSC" );
+  
+  a( "cp *" ); addByte( 0x00 );
+  a( "jr z, *" ); addOffset( "functionUI_getscan" );
+
+  // Store the entered key here
+  a( "ld (**), a" ); addAddress( "functionUI_key" );
+  
+  a( "cp *" ); addByte( 0x09 ); // kEnter
+  a( "jp z, **");addAddress( "functionUI_cr" );
+
+  // for debugging
+  //a( "jr *"); addOffset( "functionUI_getscan" );
+  // for debugging
+
+  a( "cp *" ); addByte( 0x38 ); // Del
+  a( "jp z, **");addAddress( "functionUI_delete" );
+  a( "cp *" ); addByte( 0x02 ); // kLeft
+  a( "jp z, **");addAddress( "functionUI_delete" );
+
+  a( "cp *" ); addByte( 0x11 ); // Negative
+  a( "jp z, **");addAddress( "functionUI_sign" );
+  a( "cp *" ); addByte( 0x0B ); // Minus
+  a( "jp z, **");addAddress( "functionUI_sign" );
+
+  a( "cp *" ); addByte( 0x21 ); // k0
+  a( "jp z, **");addAddress( "functionUI_digit" );
+  a( "cp *" ); addByte( 0x22 ); // k1
+  a( "jp z, **");addAddress( "functionUI_digit" );
+  a( "cp *" ); addByte( 0x1A ); // k2
+  a( "jp z, **");addAddress( "functionUI_digit" );
+  a( "cp *" ); addByte( 0x12 ); // k3
+  a( "jp z, **");addAddress( "functionUI_digit" );
+  a( "cp *" ); addByte( 0x23 ); // k4
+  a( "jp z, **");addAddress( "functionUI_digit" );
+  a( "cp *" ); addByte( 0x1B ); // k5
+  a( "jp z, **");addAddress( "functionUI_digit" );
+  a( "cp *" ); addByte( 0x13 ); // k6
+  a( "jp z, **");addAddress( "functionUI_digit" );
+  a( "cp *" ); addByte( 0x24 ); // k7
+  a( "jp z, **");addAddress( "functionUI_digit" );
+  a( "cp *" ); addByte( 0x1C ); // k8
+  a( "jp z, **");addAddress( "functionUI_digit" );
+  a( "cp *" ); addByte( 0x14 ); // k9
+  a( "jp z, **");addAddress( "functionUI_digit" );
+  a( "cp *" ); addByte( 0x19 ); // DecPt
+  a( "jp z, **");addAddress( "functionUI_digit" );
+
+  
+  a( "jr *" ); addOffset("functionUI_getscan");
+  
+  //=====================================================================
+
+  // A Table to help convert from scan codes to t values
+  addLabel("functionUI_lookuptable");
+  addByte(0x33);
+  addByte(0x36);
+  addByte(0x39);
+  addByte('-');
+  addByte(0xFF);
+  addByte(0xFF);
+  addByte(0xFF);
+  addByte(0x3A);
+  addByte(0x32);
+  addByte(0x35);
+  addByte(0x38);
+  addByte(0xFF);
+  addByte(0xFF);
+  addByte(0xFF);
+  addByte(0xFF);
+  addByte(0x30);
+  addByte(0x31);
+  addByte(0x34);
+  addByte(0x37);
+  
+  addLabel( "functionUI_return" );
+  
+  // reset the ptr here
+  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_start" );
+  a( "ld (**), hl" ); addAddress( "functionUI_text_bfr_ptr" );
+  
+
+  addLabel("functionUI_lookupNextByte" );
+  a( "ld c, *" ); addByte( 0x12 );
+  a( "ld hl, (**)" ); addAddress("functionUI_text_bfr_ptr");// functionUI_lookuptable
+  a( "ld a, (hl)" );
+  a( "cp *" ); addByte( 0x00 );
+  a( "jr z, *" ); addOffset( "functionUI_no_more_bytes" );
+
+  
+  a( "sub c" );
+  a( "ld c, a" );
+  a( "ld b, *" ); addByte( 0x00 );  
+  a( "ld hl, **" ); addAddress( "functionUI_lookuptable" );
+  a( "add hl, bc" );
+
+  
+  
+  a( "ld a, (hl)" );
+  a( "ld hl, (**)" );  addAddress( "functionUI_text_bfr_ptr" );
+  a( "ld (hl), a" );
+
+  // increase the ptr
+  a( "ld hl, **" ); addAddress("functionUI_text_bfr_ptr");
+  a( "inc (hl)" );
+  a( "jr *" ); addOffset( "functionUI_lookupNextByte" );
+  
+  addLabel("functionUI_no_more_bytes" );
+
+
+  
+  
+  // now hl points to the correct character
+  a( "ld hl, **" ); addAddress("functionUI_text_bfr_start" );
+  sysCall( "PutS" );
+  sysCall( "NewLine" );
+  
+  a( "ret" );
+
+  //=====================================================================
+  addLabel( "functionUI_delete" );
+ 
+  // if( count == 0 ) then go back to top of loop
+  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_size" );
+  a( "ld a, (hl)");
+  a( "cp *" ); addByte( 0x00 );
+  a( "jp z, **" ); addAddress("functionUI_top");
+
+  // else delete one of the bytes and dec the size
+  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_ptr" );
+  a( "ld (hl), *" ); addByte( 0x00 ); // Store a in the buffer
+  
+  a( "dec hl" ); // move back one element
+
+  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_size" );
+  a( "dec (hl)" );
+
+  // todo erase the previously type character
+
+  a( "jp **" ); addAddress( "functionUI_top" );
+  
+  //=====================================================================
+  addLabel( "functionUI_sign" );
+
+  // zero out a
+  a( "xor a" );
+  // if buffersize>0 then go back to the top of the loop
+  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_size" );
+  a( "ld b, (hl)" );
+  a( "cp b" );
+  a( "jp c, **" ); addAddress( "functionUI_top");
+
+
+  // For Debugging Purposes
+  a( "push af" );
+  a( "push hl" );
+  a( "ld hl, **" ); addAddress( "functionUI_minus_txt" ); sysCall("PutS" );sysCall("NewLine");
+  a( "pop hl" );
+  a( "pop af" );
+
+  
+  
+  // if we're here then they entered a negative sign
+  // put a negative sign in the buffer
+  a( "ld a, *" ); addByte( 0x15 );
+  a( "ld hl, (**)" ); addAddress( "functionUI_text_bfr_ptr" );  
+  a( "ld (hl), a" );
+  a( "inc hl" );  
+  a( "ld (**), hl" );addAddress( "functionUI_text_bfr_ptr" );
+  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_size" );
+  a( "inc (hl)" );
+
+  // todo: move the cursor
+  //a( "ld a, *" ); addByte( '*' );
+  //sysCall( "PutC" );
+
+  // TO DO - move the cursor and 
+  // go back to the top of the loop
+  a( "jp **"); addAddress( "functionUI_top" );
+ 
+  //=====================================================================
+  addLabel( "functionUI_digit" );
+  //a( "ld hl, **" ); addAddress( "functionUI_digit_txt" ); sysCall("PutS" );sysCall("NewLine");
+
+  // if we're here then they entered a negative sign
+  // put a negative sign in the buffer
+  a( "ld a, (**)" ); addAddress( "functionUI_key" );
+  a( "ld hl, (**)" ); addAddress( "functionUI_text_bfr_ptr" );  
+  a( "ld (hl), a" );
+  a( "inc hl" );  
+  a( "ld (**), hl" );addAddress( "functionUI_text_bfr_ptr" );
+  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_size" );
+  a( "inc (hl)" );
+
+  
+  
+  a( "ld a, (**)" ); addAddress( "functionUI_key" );
+  sysCall( "PutC" );
+  
+  a( "jp **" ); addAddress( "functionUI_top" );
+
+  
+  // 
+  // if we're here then they entered a negative sign
+  // put a negative sign in the buffer
+  //
+  /*a( "ld hl, **" ); addAddress( "functionUI_text_bfr_ptr" );
+  a( "ld (hl), a" );
+  // increase the ptr and store it.
+  a( "inc hl" );
+  a( "ld (**), hl");addAddress( "functionUI_text_bfr_ptr" );
+
+  // increase the size of the entered text
+  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_size" );
+  a( "ld b, (hl)" );
+  a( "inc b" );
+  a( "ld (hl), b");
+
+  a( "ld a, *" ); addByte( '*' );
+  sysCall( "PutC" );
+
+  // go back to the top of the loop
+  a( "jp **"); addAddress( "functionUI_top" );*/
+
+  //=====================================================================
+  addLabel( "functionUI_cr" );
+
+  
+  a( "jp **" ); addAddress( "functionUI_return" );  
+  //=====================================================================
+  addLabel( "functionUI_text_bfr_size" );
+  addByte( 0x00 );
+  addLabel( "functionUI_text_bfr_ptr" );
+  addWord( 0x0000 );
+  addLabel( "functionUI_text_bfr_start" );
+  for( int i=0; i< 11; i++ ) addByte( 0x00 );
+  addLabel( "functionUI_key" );
+  addByte( 0x00 );
+
+
+  addLabel( "functionUI_final_bfr" );
+  for( int i=0; i< 11; i++ ) addByte( 0x00 );
+
+  addLabel( "functionUI_digit_txt" );
+  addString( "Digit" );
+  addLabel( "functionUI_minus_txt" );
+  addString( "Minus" );
+  addLabel( "functionUI_delete_txt" );
+  addString( "Delete" );
+  addLabel( "functionUI_cr_txt" );
+  addString( "cr" );
+  
+  
+  
+ }
 void functionUserInput()
 {
   addLabel( "readkeyA"); 
@@ -1526,13 +1833,11 @@ void functionUserInput()
   a( "jr z, *" ); addOffset("readkeyA0");
   a("dec a" );
   a( "ld (**), a" ); addAddress( "text_buffer_length" );
-
-  //a("ld (text_buffer_length), a" );
   a("push af" );
   a( "ld a, (**)" ); addAddress( _CurCol );
   a("dec a" );
   a( "ld (**), a" ); addAddress( _CurCol );
-  a( "ld a, *"); addByte( ' ' );//a("ld a, ' '" );
+  a( "ld a, *"); addByte( ' ' );
   sysCall( "PutC" );
   a( "ld a, (**)" ); addAddress( _CurCol );
   a("dec a" );
@@ -1545,16 +1850,20 @@ void functionUserInput()
   a( "ld (**), hl"); addAddress( "text_buffer_ptr" );
   a("pop hl" );
 
+  
   a( "jr *"); addOffset( "readkeyA0" );
+
+
+  
   addLabel("create_equation" );
   a( "ld hl, **" ); addAddress( "equationName" );
   sysCall( "Mov9ToOP1" );
   sysCall( "FindSym" );
   a( "jr c, *" ); addOffset( "storeEqu" ); 
   sysCall( "DelVar" );
+
   addLabel("storeEqu" );
   a( "ld a, (**)" ); addAddress( "text_buffer_length" );
-
   a("ld h, *"); addByte( 0x00 );
   a("ld l, a" );
   sysCall( "CreateEqu" );
@@ -1562,15 +1871,18 @@ void functionUserInput()
   a("inc de" );
   a( "ld hl, **"); addAddress( "text_buffer" );
   a( "ld a, (**)" ); addAddress( "text_buffer_length" );
-
   a( "ld b, *"); addByte( 0x00 );
   a("ld c, a" );
   a("ldir" );
   a("ret" );
+
   addLabel("store9_hl");
   addWord( 0x0000 );
   addLabel("store9_de");
   addWord( 0x0000 );
+
+
+  
   addLabel("getuserinput");
   a("push hl" );
   a("push af" );
@@ -1596,11 +1908,11 @@ void functionUserInput()
   a( "jr *" ); addOffset( "readmore" );
   addLabel("buffer_filled" );
 
-  a( "ld a, (**)" ); addAddress( "text_buffer_length" );
 
   
+  // Convert an Equation to a FP
+  a( "ld a, (**)" ); addAddress( "text_buffer_length" );
   a("dec a" );
-
   a( "ld (**), a" ); addAddress( "text_buffer_length" );
 
   a("call **"); addAddress( "create_equation" );
@@ -1616,7 +1928,6 @@ void functionUserInput()
   a( "ld bc, **" ); addWord( 0x0009 );
   a("ldir" );
   a( "ld hl, **" ); addAddress( "equationName" );
-  //a("ld hl, equationName" );
   sysCall( "Mov9ToOP1" );
   sysCall( "FindSym" );
   sysCall( "DelVar" );
@@ -1625,27 +1936,84 @@ void functionUserInput()
   a("pop af" );
   a("pop hl" );
   a("ret" );
+
+
+  
   addFP("FP_bfr");
   addLabel("readkeyA_byte" );
   addByte(0x00);
   addLabel("readkeyA_byte");
   addByte( 0x00 );
+
   
   addLabel("equationName");
-  //.db EquObj, tVarEqu, tY3, 0x00;
   addByte( 0x00 ); addByte( 0x5E ); addByte( 0x12 ); addByte( 0x00 );
   addLabel("text_buffer_length" );
-  addByte( 0x00 );
-  
+  addByte( 0x00 );  
   addLabel("text_buffer_ptr" );
   addWord( 0x0000 );
   addLabel("text_buffer");
   for( int i=0; i<25; i++ ) addByte(0x00);
   
   addLabel("prompt_text");
-  addByte( '>' ); addByte( ' '); addByte( 0x00 );
-	 
-      
+  addString( "> " );
+}
+void functionCreateEquation()
+{
+
+  addLabel("create_equation" );
+  a( "ld hl, **" ); addAddress( "equationName" );
+  sysCall( "Mov9ToOP1" );
+  sysCall( "FindSym" );
+  a( "jr c, *" ); addOffset( "storeEqu" ); 
+  sysCall( "DelVar" );
+
+  addLabel("storeEqu" );
+  a("ld a, (**)" ); addAddress( "text_buffer_length" );
+  a("ld h, *"); addByte( 0x00 );
+  a("ld l, a" );
+  sysCall( "CreateEqu" );
+  a("inc de" );
+  a("inc de" );
+  a("ld hl, **"); addAddress( "text_buffer" );
+  a("ld a, (**)" ); addAddress( "text_buffer_length" );
+  a("ld b, *"); addByte( 0x00 );
+  a("ld c, a" );
+  a("ldir" );
+  a("ret" );
+
+  // Convert an Equation to a FP
+  a( "ld a, (**)" ); addAddress( "text_buffer_length" );
+  a("dec a" );
+  a( "ld (**), a" ); addAddress( "text_buffer_length" );
+
+  a("call **"); addAddress( "create_equation" );
+  a( "ld hl, **" ); addAddress( "equationName" );
+  a( "ld de, **" ); addWord( _OP1 );
+
+  a( "ld bc, **" ); addWord( 0x0004 );
+  a("ldir" );
+  sysCall( "ParseInp" );
+  a("ld hl, **" ); addWord( _OP1 );
+
+  a( "ld de, **" ); addAddress( "FP_bfr" );
+  a( "ld bc, **" ); addWord( 0x0009 );
+  a("ldir" );
+  a( "ld hl, **" ); addAddress( "equationName" );
+  sysCall( "Mov9ToOP1" );
+  sysCall( "FindSym" );
+  sysCall( "DelVar" );
+
+  
+  
+  addLabel("equationName");
+  addByte( 0x00 ); addByte( 0x5E ); addByte( 0x12 ); addByte( 0x00 );
+  addLabel("text_buffer_length" );
+  addByte( 0x00 );  
+  addLabel("text_buffer_ptr" );
+  addWord( 0x0000 );
+  addLabel("text_buffer");
+  for( int i=0; i<25; i++ ) addByte(0x00);
 
 }
 void functiondispOP1()
@@ -1674,7 +2042,6 @@ void functionStoreVariable()
   
   a("ld hl, **" ); addAddress( "variablename");
   sysCall( "Mov9ToOP1");
-  //a("rst 0x20"); // <<== This is Mov9ToOP1 same as: sysCall( "Mov9ToOP1");
   sysCall( "FindSym" );
   a("jr c, *"); addOffset("storeVAR");
   sysCall( "DelVar" );  
@@ -1751,54 +2118,68 @@ int main(int argc, char *argv[])
   
   // ================================================================================================================================================================================================
 
-  sysCall( "RunIndicOff" );
-  a( "ld hl, **" ); addAddress( "Label2" );
-  sysCall( "PutS" );
-  sysCall( "NewLine" );
   
-  a( "call **" ); addAddress( "getuserinput" );
+  addLabel( "top" );
+  sysCall( "ClrScrn" );
+  
+  functionUI();
 
-  a( "ld hl, **" ); addAddress( "FP_bfr" );
-  a( "ld de, **" ); addAddress( "FP_x1" );
-  sysCall( "Mov9B" );
-  sysCall( "NewLine" );
-
-  a( "call **" ); addAddress( "getuserinput" );
-
-  a( "ld hl, **" ); addAddress( "FP_bfr" );
-  a( "ld de, **" ); addAddress( "FP_x2" );
-  sysCall( "Mov9B" );
-  sysCall( "NewLine" );
-
-  a( "ld hl, **" ); addAddress( "FP_x2" );
-  sysCall( "Mov9ToOP1" );
-  sysCall( "OP1ToOP2" );
-
-  a( "ld hl, **" ); addAddress( "FP_x1" );
-  sysCall( "Mov9ToOP1" );
-
-  sysCall( "FPSub" );
-  sysCall( "FPSquare" );
-
-  a( "call **" ); addAddress( "dispOP1" );
-  a( "ld a, *" ); addByte( _tX ); // << tX
-  a( "ld (**), a"); addAddress( "variabletoken" );
-  a( "ld hl, **" ); addWord( _OP1 );
-  a( "call **" ); addAddress( "storevariable" );
-   
-  sysCall( "RunIndicOn" );
   a( "ret" );
   
-  addFP( "FP_x1" );
-  addFP( "FP_x2" );
-  addLabel( "Label1" );
-  addString( "Enter X's:" );
-  addLabel( "Label2" );
-  addByte( 0x41 ); addByte( 0x51 ); addByte( 0x62 ); addByte( 0x6D ); addByte( 0x00 );
   
-  functionStoreVariable();
-  functiondispOP1();
-  functionUserInput();
+
+  
+  //functionUI();
+
+  /*a( "call **" ); addAddress( "getuserinput" );
+  sysCall( "NewLine" );
+
+  a( "ld hl, **" ); addAddress( "FP_bfr" );
+  sysCall( "Mov9ToOP2" );
+
+  a( "ld hl, **" ); addAddress( "password" );
+  sysCall( "Mov9ToOP1" );
+  sysCall( "ClrScrn" );
+
+  sysCall( "CpOP1OP2" );
+  a( "jr nz, *" ); addOffset( "end" );
+
+  a( "ld hl, **" ); addAddress( "msg1" );
+  sysCall( "PutS" );
+  sysCall( "NewLine" );
+
+  a( "call **" ); addAddress( "getuserinput" );
+  sysCall( "NewLine" );
+
+  a( "ld hl, **" ); addAddress( "FP_bfr" );
+  sysCall( "Mov9ToOP1" );
+
+  sysCall( "OP2Set1" );
+
+  sysCall( "CpOP1OP2" );
+  a( "jr nz, *" ); addOffset( "end" );
+
+  // Graphs should be off
+  a( "ld b, *"); addByte( 0x00 );
+  sysCall( "SetAllPlots" );
+  a( "ret" );
+  addLabel( "end" );
+  a( "ld b, *"); addByte( 0x01 );
+  sysCall( "SetAllPlots" ); */
+  //a( "ret" );
+  // ********
+
+  /*addLabel( "msg1" );
+  addString( "(0) Off   (1) On" );
+  
+  addString( "You guessed it!" );
+  addLabel( "password" );
+  addByte( 0x00 ); addByte( 133 );addByte( 120 );addByte( 116 );addByte( 37 );addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );
+  */
+  //functionStoreVariable();
+  //functiondispOP1(); 
+  //functionUserInput();
+  //functionUI();
   // ================================================================================================================================================================================================
 
 

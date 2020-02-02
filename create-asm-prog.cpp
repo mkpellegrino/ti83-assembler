@@ -1458,6 +1458,7 @@ void functionUI()
   
   sysCall( "GetCSC" );
   
+  
   a( "cp *" ); addByte( 0x00 );
   a( "jr z, *" ); addOffset( "functionUI_getscan" );
 
@@ -1467,6 +1468,10 @@ void functionUI()
   a( "cp *" ); addByte( 0x09 ); // kEnter
   a( "jp z, **");addAddress( "functionUI_cr" );
 
+  a( "push af" );
+  a( "ld a, *" ); addByte( '*' );
+  sysCall( "PutC" );
+  a( "pop af" );
   // for debugging
   //a( "jr *"); addOffset( "functionUI_getscan" );
   // for debugging
@@ -1552,8 +1557,6 @@ void functionUI()
   a( "ld hl, **" ); addAddress( "functionUI_lookuptable" );
   a( "add hl, bc" );
 
-  
-  
   a( "ld a, (hl)" );
   a( "ld hl, (**)" );  addAddress( "functionUI_text_bfr_ptr" );
   a( "ld (hl), a" );
@@ -1564,9 +1567,6 @@ void functionUI()
   a( "jr *" ); addOffset( "functionUI_lookupNextByte" );
   
   addLabel("functionUI_no_more_bytes" );
-
-
-  
   
   // now hl points to the correct character
   a( "ld hl, **" ); addAddress("functionUI_text_bfr_start" );
@@ -1579,21 +1579,23 @@ void functionUI()
   addLabel( "functionUI_delete" );
  
   // if( count == 0 ) then go back to top of loop
-  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_size" );
-  a( "ld a, (hl)");
+  a( "ld a, (**)" ); addAddress( "functionUI_text_bfr_size" );
   a( "cp *" ); addByte( 0x00 );
   a( "jp z, **" ); addAddress("functionUI_top");
 
   // else delete one of the bytes and dec the size
-  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_ptr" );
-  a( "ld (hl), *" ); addByte( 0x00 ); // Store a in the buffer
+  a( "ld hl, (**)" ); addAddress( "functionUI_text_bfr_ptr" );
   
   a( "dec hl" ); // move back one element
+  a( "ld (hl), *" ); addByte( 0x00 ); // Store a in the buffer
+  a( "ld (**), hl" ); addAddress( "functionUI_text_bfr_ptr" );
+  
 
-  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_size" );
-  a( "dec (hl)" );
+  a( "ld a, (**)" ); addAddress( "functionUI_text_bfr_size" );
+  a( "dec a" );
+  a( "ld (**), a" ); addAddress( "functionUI_text_bfr_size" );
 
-  // todo erase the previously type character
+  // todo erase the previously typed character
 
   a( "jp **" ); addAddress( "functionUI_top" );
   
@@ -1608,15 +1610,6 @@ void functionUI()
   a( "cp b" );
   a( "jp c, **" ); addAddress( "functionUI_top");
 
-
-  // For Debugging Purposes
-  a( "push af" );
-  a( "push hl" );
-  a( "ld hl, **" ); addAddress( "functionUI_minus_txt" ); sysCall("PutS" );sysCall("NewLine");
-  a( "pop hl" );
-  a( "pop af" );
-
-  
   
   // if we're here then they entered a negative sign
   // put a negative sign in the buffer
@@ -1638,7 +1631,6 @@ void functionUI()
  
   //=====================================================================
   addLabel( "functionUI_digit" );
-  //a( "ld hl, **" ); addAddress( "functionUI_digit_txt" ); sysCall("PutS" );sysCall("NewLine");
 
   // if we're here then they entered a negative sign
   // put a negative sign in the buffer
@@ -1649,64 +1641,32 @@ void functionUI()
   a( "ld (**), hl" );addAddress( "functionUI_text_bfr_ptr" );
   a( "ld hl, **" ); addAddress( "functionUI_text_bfr_size" );
   a( "inc (hl)" );
-
-  
-  
-  a( "ld a, (**)" ); addAddress( "functionUI_key" );
-  sysCall( "PutC" );
-  
   a( "jp **" ); addAddress( "functionUI_top" );
 
   
-  // 
-  // if we're here then they entered a negative sign
-  // put a negative sign in the buffer
-  //
-  /*a( "ld hl, **" ); addAddress( "functionUI_text_bfr_ptr" );
-  a( "ld (hl), a" );
-  // increase the ptr and store it.
-  a( "inc hl" );
-  a( "ld (**), hl");addAddress( "functionUI_text_bfr_ptr" );
-
-  // increase the size of the entered text
-  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_size" );
-  a( "ld b, (hl)" );
-  a( "inc b" );
-  a( "ld (hl), b");
-
-  a( "ld a, *" ); addByte( '*' );
-  sysCall( "PutC" );
-
-  // go back to the top of the loop
-  a( "jp **"); addAddress( "functionUI_top" );*/
-
   //=====================================================================
   addLabel( "functionUI_cr" );
 
   
+  
   a( "jp **" ); addAddress( "functionUI_return" );  
   //=====================================================================
-  addLabel( "functionUI_text_bfr_size" );
-  addByte( 0x00 );
-  addLabel( "functionUI_text_bfr_ptr" );
-  addWord( 0x0000 );
+  addLabel( "functionUI_text_bfr_size" ); addByte( 0x00 );
+  addLabel( "functionUI_text_bfr_ptr" ); addWord( 0x0000 );
   addLabel( "functionUI_text_bfr_start" );
   for( int i=0; i< 11; i++ ) addByte( 0x00 );
-  addLabel( "functionUI_key" );
-  addByte( 0x00 );
+  addLabel( "functionUI_key" ); addByte( 0x00 );
 
-
-  addLabel( "functionUI_final_bfr" );
-  for( int i=0; i< 11; i++ ) addByte( 0x00 );
+  //addLabel( "functionUI_final_bfr" ); for( int i=0; i< 11; i++ ) addByte( 0x00 );
 
   addLabel( "functionUI_digit_txt" );
-  addString( "Digit" );
+  addString( "[N]" );
   addLabel( "functionUI_minus_txt" );
-  addString( "Minus" );
+  addString( "[-]" );
   addLabel( "functionUI_delete_txt" );
-  addString( "Delete" );
+  addString( "[del]" );
   addLabel( "functionUI_cr_txt" );
-  addString( "cr" );
+  addString( "[cr]" );
   
   
   
@@ -1906,6 +1866,7 @@ void functionUserInput()
   a("or a" );
   a( "jr z, *" ); addOffset( "buffer_filled" );
   a( "jr *" ); addOffset( "readmore" );
+  
   addLabel("buffer_filled" );
 
 

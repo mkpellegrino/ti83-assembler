@@ -51,6 +51,9 @@ int compilation_failed=0;
 int memorylocation;
 int start_counting=0;
 int program_index=0;
+int function_ui=0;
+int store_variable=0;
+int disp_op1=0;
 string name;
 
 class offset;
@@ -1419,11 +1422,19 @@ int relativeJump(int i)
 
 void functionUI()
 {
+  if( function_ui == 1 ) return;
+  function_ui=1;
   //=====================================================================
-  addLabel( "functionUI()" );
+  addLabel( "user_input" );
+  
+  a( "push af" );
+  a( "push bc" );
+  a( "push hl" );
+  a( "push de" );
+
   // set row and col
-  a( "ld hl, **" ); addWord( 0x0000 );
-  a( "ld (**), hl" ); addWord( _CurRow );
+  //a( "ld hl, **" ); addWord( 0x0000 );
+  //a( "ld (**), hl" ); addWord( _CurRow );
 
   // clear out the buffer
   a( "ld hl, **" ); addAddress( "functionUI_text_bfr_start" );  
@@ -1588,15 +1599,19 @@ void functionUI()
   sysCall( "Mov9ToOP1" );
 
 
-  sysCall( "NewLine" );
-  a( "call **" ); addAddress( "dispOP1" );
+  //sysCall( "NewLine" );
+  //a( "call **" ); addAddress( "disp_op1" );
 
   addLabel( "functionUI_return_dontstore" );
+
+  a( "pop de" );
+  a( "pop hl" );
+  a( "pop bc" );
+  a( "pop af" );
 
   a( "ret" );
 
   addLabel("equationName");
-  // 0x19 = equation 10
   // EquObj, tVarEqu, tY0, 0, 0
   addByte( 0x03 ); addByte( 0x5E ); addByte( 0x05 ); addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );
   
@@ -1743,7 +1758,10 @@ void functionUI()
  }
 void functiondispOP1()
 {
-  addLabel( "dispOP1" );
+  if( disp_op1 == 1) return;
+  disp_op1=1;
+  
+  addLabel( "disp_op1" );
   a( "ld a, *"); addByte( 0x09 );
   sysCall( "FormReal" );
   a( "ld hl, **" ); addWord( _OP3 );
@@ -1754,38 +1772,36 @@ void functiondispOP1()
 }
 void functionStoreVariable()
 {
-  addLabel( "storevariable" );
-
-  a("ld (**), a"); addAddress( "variabletoken"); 
+  if( store_variable == 1 ) return;
+  store_variable=1;
+  //
   
-  a("ld de, **");addAddress( "variabledata" );
+  addLabel( "store_variable" );
+  // todo push all registers
+
+  a("ld hl, **"); addWord( _OP1 );
+  a("ld de, **"); addAddress( "variabledata" );
   a("ld bc, **"); addWord(0x0009);
   a("ldir");
-  a("push hl");
-  a("push de");
-  a("push bc");
-  
+ 
   a("ld hl, **" ); addAddress( "variablename");
   sysCall( "Mov9ToOP1");
   sysCall( "FindSym" );
   a("jr c, *"); addOffset("storeVAR");
   sysCall( "DelVar" );  
   addLabel("storeVAR");
-  a( "ld hl, **" ); addWord( 0x0009 );
+  
+  sysCall( "FindSym" );
   sysCall( "CreateReal" );
   
   a("ld hl, **");addAddress("variabledata");
   a("ld bc, **");addWord( 0x0009 );
   a("ldir");
-  
-  a("xor a");
-  a("ld (**), a"); addAddress( "variabletoken");
-  
-  a("pop bc");
-  a("pop de");
-  a("pop hl");
+
+  // todo pop all registers
+
   a("ret");
-      
+
   addLabel("variablename");
   addByte( RealObj );
   addLabel("variabletoken");
@@ -1845,47 +1861,21 @@ int main(int argc, char *argv[])
 
   
   sysCall( "ClrScrn" );
+  sysCall( "RunIndicOff" );
 
-  //a( "ld b, *" ); addByte( 0xFF );
-  
-
-  //a( "ld h, *" ); addByte( 0x00 );
-  //a( "ld l, *" ); addByte( 0xFF );
   addLabel( "top" );
 
-
-  //a( "push hl" );
-  //a( "push af" );
-  //a( "push bc" );
+  a( "call **" ); addAddress( "user_input" );
   
-  //a( "ld a, l" ); sysCall ("PutC");
-
-  //a( "pop bc" );
-  //a( "pop af" );
-  //a( "pop hl" );
-
-  //sysCall( "GetKey" );
+  a( "ld a, *" ); addByte( 0x44 ); // tD
+  a( "ld (**), a" ); addAddress( "variabletoken" );
+  a( "call **" ); addAddress( "store_variable" );
   
-  //a( "djnz *" ); addOffset( "top" );
-
-  
-  //addLabel( "main_top" );
-  //sysCall( "GetKey" );
-
-  //a( "ld h, *" ); addByte( 0x00 );
-  //a( "ld l, a" );
-
-  //sysCall( "DispHL" );
-  //a( "ret" );
-  
-  functionUI();
-
   a( "ret" );
   
-  
-  //functionStoreVariable();
+  functionUI();
+  functionStoreVariable();
   functiondispOP1(); 
-  //functionUI();
   // ================================================================================================================================================================================================
 
 

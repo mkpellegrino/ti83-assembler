@@ -1458,24 +1458,16 @@ void functionUI()
   
   sysCall( "GetCSC" );
   
-  
+  // While there is no available input, loop back to getscan
   a( "cp *" ); addByte( 0x00 );
   a( "jr z, *" ); addOffset( "functionUI_getscan" );
 
-  // Store the entered key here
+  
+  // Store the entered key here temporarily
   a( "ld (**), a" ); addAddress( "functionUI_key" );
   
   a( "cp *" ); addByte( 0x09 ); // kEnter
   a( "jp z, **");addAddress( "functionUI_cr" );
-
-  a( "push af" );
-  a( "ld a, *" ); addByte( '*' );
-  sysCall( "PutC" );
-  a( "pop af" );
-  // for debugging
-  //a( "jr *"); addOffset( "functionUI_getscan" );
-  // for debugging
-
   a( "cp *" ); addByte( 0x38 ); // Del
   a( "jp z, **");addAddress( "functionUI_delete" );
   a( "cp *" ); addByte( 0x02 ); // kLeft
@@ -1508,8 +1500,6 @@ void functionUI()
   a( "jp z, **");addAddress( "functionUI_digit" );
   a( "cp *" ); addByte( 0x19 ); // DecPt
   a( "jp z, **");addAddress( "functionUI_digit" );
-
-  
   a( "jr *" ); addOffset("functionUI_getscan");
   
   //=====================================================================
@@ -1519,7 +1509,7 @@ void functionUI()
   addByte(0x33);
   addByte(0x36);
   addByte(0x39);
-  addByte('-');
+  addByte(0xB0); // negative
   addByte(0xFF);
   addByte(0xFF);
   addByte(0xFF);
@@ -1535,46 +1525,129 @@ void functionUI()
   addByte(0x31);
   addByte(0x34);
   addByte(0x37);
-  
+
+  // =========================================================
   addLabel( "functionUI_return" );
-  
-  // reset the ptr here
-  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_start" );
-  a( "ld (**), hl" ); addAddress( "functionUI_text_bfr_ptr" );
-  
 
-  addLabel("functionUI_lookupNextByte" );
-  a( "ld c, *" ); addByte( 0x12 );
-  a( "ld hl, (**)" ); addAddress("functionUI_text_bfr_ptr");// functionUI_lookuptable
-  a( "ld a, (hl)" );
+  // if the user didn't enter anything, then don't convert anything into anything!
+  a( "ld a, (**)" ); addAddress( "functionUI_text_bfr_size" );
   a( "cp *" ); addByte( 0x00 );
-  a( "jr z, *" ); addOffset( "functionUI_no_more_bytes" );
+  a( "jr z, *" ); addOffset( "functionUI_return_dontstore" );
+
+  // now turn it into an equation
+  a( "ld hl, **" ); addAddress( "equationName" );
+  sysCall( "Mov9ToOP1" );
+  sysCall( "FindSym" );
+  a( "jr c, *" ); addOffset( "storeEqu" ); 
+  sysCall( "DelVar" );
+
+  addLabel("storeEqu" );
+  a( "ld a, (**)" ); addAddress( "functionUI_text_bfr_size" );
+  a("ld h, *"); addByte( 0x00 );
+  a("ld l, a" );
+
+  // for debugging 
+  //a( "ld hl, **" ); addWord( 0x0050 );
+
+
+  sysCall( "CreateEqu" );
+
+  // NOW COPY THE DATA INTO THE VAT
+  a("inc de" );
+  a("inc de" );
+  a( "ld hl, **"); addAddress( "functionUI_text_bfr_start" );
+  a( "ld a, (**)" ); addAddress( "functionUI_text_bfr_size" );
+  a( "ld b, *"); addByte( 0x00 );
+  a("ld c, a" );
+  a("ldir" );
 
   
+
+  // Then turn the equation into OP1 and store it in memory as a floating point value
+  a( "ld hl, **" ); addAddress( "equationName" );
+  a( "ld de, **" ); addWord( _OP1 );
+  a( "ld bc, **" ); addWord( 0x0004 ); // copy only 4 bytes
+  a("ldir" );
+  sysCall( "ParseInp" );
+
+
+  // Copy OP1 to FP_input_value
+  a("ld hl, **" ); addWord( _OP1 );
+  a( "ld de, **" ); addAddress( "FP_input_value" );
+  a( "ld bc, **" ); addWord( 0x0009 );
+  a("ldir" );
+
+  // Now delete the Variable from memory
+  a( "ld hl, **" ); addAddress( "equationName" );
+  sysCall( "Mov9ToOP1" );
+  sysCall( "FindSym" );
+  sysCall( "DelVar" );
+
+
+  a( "ld hl, **" ); addAddress( "FP_input_value" );
+  sysCall( "Mov9ToOP1" );
+
+
+  sysCall( "NewLine" );
+  a( "call **" ); addAddress( "dispOP1" );
+
+  addLabel( "functionUI_return_dontstore" );
+
+  a( "ret" );
+
+  addLabel("equationName");
+  // 0x19 = equation 10
+  // EquObj, tVarEqu, tY0, 0, 0
+  addByte( 0x03 ); addByte( 0x5E ); addByte( 0x05 ); addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );
+  
+  addFP( "FP_input_value" );
+  
+  // =========================================================
+  addLabel( "functionUI_storeanddisplay" );
+  a( "push af" );
+  a( "push bc" );
+  a( "push hl" );
+  
+  a( "ld a, (**)" ); addAddress( "functionUI_key" );// store the key that was pressed into "a"
+  a( "ld c, *" ); addByte( 0x12 );
   a( "sub c" );
   a( "ld c, a" );
   a( "ld b, *" ); addByte( 0x00 );  
   a( "ld hl, **" ); addAddress( "functionUI_lookuptable" );
   a( "add hl, bc" );
-
+  
   a( "ld a, (hl)" );
   a( "ld hl, (**)" );  addAddress( "functionUI_text_bfr_ptr" );
   a( "ld (hl), a" );
 
+  // check for the negative sign token
+  a( "cp *" ); addByte( 0xB0 );
+  a( "jr c, *" ); addOffset( "functionUI_storeanddisplay_skip1" );
+  a( "ld a, *" ); addByte( '-' );
+  a( "jr *" ); addOffset( "functionUI_storeanddisplay_putc" );
+  // check for the decimal point token
+  addLabel( "functionUI_storeanddisplay_skip1" );
+  a( "cp *" ); addByte( 0x3A );
+  a( "jr c, *" ); addOffset( "functionUI_storeanddisplay_putc" );
+  a( "ld a, *" ); addByte( '.' );
+  addLabel( "functionUI_storeanddisplay_putc" );
+  sysCall( "PutC" );
+
   // increase the ptr
   a( "ld hl, **" ); addAddress("functionUI_text_bfr_ptr");
-  a( "inc (hl)" );
-  a( "jr *" ); addOffset( "functionUI_lookupNextByte" );
+  a( "inc (hl)" ); 
+
+  // increase the size
+  a( "ld hl, **"); addAddress("functionUI_text_bfr_size");
+  a( "ld a, (hl)" );
+  a( "inc a" );
+  a( "ld (hl), a");
   
-  addLabel("functionUI_no_more_bytes" );
-  
-  // now hl points to the correct character
-  a( "ld hl, **" ); addAddress("functionUI_text_bfr_start" );
-  sysCall( "PutS" );
-  sysCall( "NewLine" );
+  a( "pop hl" );
+  a( "pop bc" );
+  a( "pop af" );
   
   a( "ret" );
-
   //=====================================================================
   addLabel( "functionUI_delete" );
  
@@ -1590,12 +1663,24 @@ void functionUI()
   a( "ld (hl), *" ); addByte( 0x00 ); // Store a in the buffer
   a( "ld (**), hl" ); addAddress( "functionUI_text_bfr_ptr" );
   
-
+  // update the length of the entered string
   a( "ld a, (**)" ); addAddress( "functionUI_text_bfr_size" );
   a( "dec a" );
   a( "ld (**), a" ); addAddress( "functionUI_text_bfr_size" );
 
-  // todo erase the previously typed character
+  
+  // todo erase the previously typed character on the screen
+  a( "ld hl, (**)" ); addWord( _CurCol );
+  a( "dec hl" );
+  a( "ld (**), hl" ); addWord( _CurCol );
+  a( "ld a, *" ); addByte( ' ' );
+  sysCall( "PutC" );
+  a( "ld hl, (**)" ); addWord( _CurCol );
+  a( "dec hl" );
+  a( "ld (**), hl" ); addWord( _CurCol );
+  
+
+  //sysCall( "DispHL" );
 
   a( "jp **" ); addAddress( "functionUI_top" );
   
@@ -1610,17 +1695,10 @@ void functionUI()
   a( "cp b" );
   a( "jp c, **" ); addAddress( "functionUI_top");
 
-  
-  // if we're here then they entered a negative sign
-  // put a negative sign in the buffer
   a( "ld a, *" ); addByte( 0x15 );
-  a( "ld hl, (**)" ); addAddress( "functionUI_text_bfr_ptr" );  
-  a( "ld (hl), a" );
-  a( "inc hl" );  
-  a( "ld (**), hl" );addAddress( "functionUI_text_bfr_ptr" );
-  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_size" );
-  a( "inc (hl)" );
+  a( "ld (**), a" ); addAddress( "functionUI_key" );
 
+  a( "call **" ); addAddress( "functionUI_storeanddisplay" );
   // todo: move the cursor
   //a( "ld a, *" ); addByte( '*' );
   //sysCall( "PutC" );
@@ -1632,15 +1710,8 @@ void functionUI()
   //=====================================================================
   addLabel( "functionUI_digit" );
 
-  // if we're here then they entered a negative sign
-  // put a negative sign in the buffer
-  a( "ld a, (**)" ); addAddress( "functionUI_key" );
-  a( "ld hl, (**)" ); addAddress( "functionUI_text_bfr_ptr" );  
-  a( "ld (hl), a" );
-  a( "inc hl" );  
-  a( "ld (**), hl" );addAddress( "functionUI_text_bfr_ptr" );
-  a( "ld hl, **" ); addAddress( "functionUI_text_bfr_size" );
-  a( "inc (hl)" );
+  a( "call **" ); addAddress( "functionUI_storeanddisplay" );
+
   a( "jp **" ); addAddress( "functionUI_top" );
 
   
@@ -1657,7 +1728,6 @@ void functionUI()
   for( int i=0; i< 11; i++ ) addByte( 0x00 );
   addLabel( "functionUI_key" ); addByte( 0x00 );
 
-  //addLabel( "functionUI_final_bfr" ); for( int i=0; i< 11; i++ ) addByte( 0x00 );
 
   addLabel( "functionUI_digit_txt" );
   addString( "[N]" );
@@ -1671,312 +1741,6 @@ void functionUI()
   
   
  }
-void functionUserInput()
-{
-  addLabel( "readkeyA"); 
-  a("push af");
-  a("push hl");
-  addLabel("readkeyA0");
-  sysCall( "GetCSC" );
-  a("or a" );
-  a("jr z, *" ); addOffset( "readkeyA0" );
-  a("cp *" ); addByte( 0x21 ); // sk0
-  a( "jr z, *" ); addOffset( "readkeyA_zero" );
-  a("cp *" ); addByte( 0x14 ); // sk9
-  
-  a("jr z, *"); addOffset("readkeyA_nine" );
-  a("cp *" ); addByte( 0x1C ); // sk8 
-
-  a("jr z, *"); addOffset("readkeyA_eight" );
-  a("cp *" ); addByte( 0x24 ); // sk7
-  a("jr z, *"); addOffset("readkeyA_seven" );
-  a("cp *" ); addByte( 0x13 ); // sk6
-  a("jr z, *"); addOffset ("readkeyA_six" );
-  a("cp *" ); addByte( 0x1B ); // sk5
-  a("jr z, *"); addOffset ("readkeyA_five" );
-  a("cp *" ); addByte( 0x23 ); // sk4
-  a("jr z, *"); addOffset ("readkeyA_four" );
-  a("cp *" ); addByte( 0x12 ); // sk3
-  a("jr z, *"); addOffset ("readkeyA_three" );
-  a("cp *" ); addByte( 0x1A ); // sk2
-  a("jr z, *"); addOffset("readkeyA_two" );
-  a("cp *" ); addByte( 0x22 ); // sk1
-  
-  a("jr z, *"); addOffset("readkeyA_one" );
-  a("cp *" ); addByte( 0x09 ); // skEnter
-  a("jr z, *"); addOffset("readkeyA_cr" );
-  a("cp *" ); addByte( 0x19 ); // skDecPnt
-  a("jr z, *"); addOffset ("readkeyA_decpt" );
-  a("cp *" ); addByte( 0x0B ); // skSub
-  a("jr z, *"); addOffset ("readkeyA_negative" );
-  a("cp *" ); addByte( 0x11 ); // skChs
-  a("jr z, *"); addOffset("readkeyA_negative" );
-  a("cp *" );addByte( 0x02 ); // skLeft
-  a("jr z, *"); addOffset("readkeyA_backspace" );
-  a("cp *" );addByte( 0x38 ); // skDel
-  a("jr z, *"); addOffset("readkeyA_backspace" );
-  a("jr *" ); addOffset("readkeyA0" );
-
-  
-  addLabel("readkeyA1");
-
-  sysCall( "PutC" );
-
-  addLabel("readkeyA2");
-
-  a("ld (**), a" ); addAddress( "readkeyA_byte" );
-
-  a( "ld hl, (**)"); addAddress("text_buffer_ptr");
-  a("ld (hl), a" );
-  a("inc hl" );
-  a( "ld (**), hl"); addAddress("text_buffer_ptr");
-  a( "ld a, (**)" ); addAddress( "text_buffer_length" );
-  a("inc a" );
-  a( "ld (**), a"); addAddress(  "text_buffer_length" );
-  a("pop hl" );
-  a("pop af" );
-  a("ret" );
-  addLabel("readkeyA_zero" );
-  a( "ld a, *"); addByte( 0x30 );
-  a( "jr *" ); addOffset( "readkeyA1" );
-  addLabel("readkeyA_nine" );
-  a( "ld a, *" ); addByte( 0x39 );
-  a( "jr *" ); addOffset( "readkeyA1" );
-  addLabel("readkeyA_eight" );
-  a( "ld a, *"); addByte( 0x38 );
-  a( "jr *"); addOffset( "readkeyA1" ); //a("jp readkeyA1" );
-  addLabel("readkeyA_seven" );
-  a( "ld a, *"); addByte( 0x37 );//  a("ld a, $37" );
-  a( "jr *"); addOffset( "readkeyA1" );
-  addLabel("readkeyA_six" );
-  a( "ld a, *"); addByte( 0x36 );//a("ld a, $36" );
-  a( "jr *"); addOffset( "readkeyA1" );
-  addLabel("readkeyA_five" );
-  a( "ld a, *"); addByte( 0x35 );// a("ld a, $35" );
-  a( "jr *"); addOffset( "readkeyA1" );
-  addLabel("readkeyA_four" );
-  a( "ld a, *"); addByte( 0x34 );// a("ld a, $34" );
-  a( "jr *"); addOffset( "readkeyA1" );
-  addLabel("readkeyA_three" );
-  a( "ld a, *"); addByte( 0x33 );//a("ld a, $33" );
-  a( "jr *"); addOffset( "readkeyA1" );
-  addLabel("readkeyA_two" );
-  a( "ld a, *"); addByte( 0x32 );//a("ld a, $32" );
-  a( "jr *"); addOffset( "readkeyA1" );
-  addLabel("readkeyA_one" );
-  a( "ld a, *"); addByte( 0x31 );//a("ld a, $31" );
-  a( "jr *"); addOffset( "readkeyA1" );
-  addLabel("readkeyA_cr" );
-  a("ld a, (**)"); addAddress( "text_buffer_length" );
-  a("or a" );
-
-  a( "jr z, *" ); addOffset("readkeyA0");
-
-  a( "ld a, *"); addByte( 0x00 );//a("ld a, $00" );
-  a( "jr *" ); addOffset( "readkeyA2" );
-  addLabel("readkeyA_decpt" );
-  a( "ld a, *"); addByte( '.' );
-  sysCall( "PutC" );
-
-  a( "ld a, *" ); addByte( 0x3A ); // tDecPt
-  a( "jr *" ); addOffset( "readkeyA2" );
-  addLabel("readkeyA_negative" );
-  a( "ld a, *"); addByte( '-' );//a("ld a, '-'" );
-  sysCall( "PutC" );
-
-  a( "ld a, *" ); addByte( 0xB0 ); // tChs
-  a( "jr *" ); addOffset( "readkeyA2" );
-  addLabel("readkeyA_backspace" );
-  a( "ld a, (**)" ); addAddress( "text_buffer_length" );
-
-  a("or a" );
-  a( "jr z, *" ); addOffset("readkeyA0");
-  a("dec a" );
-  a( "ld (**), a" ); addAddress( "text_buffer_length" );
-  a("push af" );
-  a( "ld a, (**)" ); addAddress( _CurCol );
-  a("dec a" );
-  a( "ld (**), a" ); addAddress( _CurCol );
-  a( "ld a, *"); addByte( ' ' );
-  sysCall( "PutC" );
-  a( "ld a, (**)" ); addAddress( _CurCol );
-  a("dec a" );
-  a( "ld (**), a" ); addAddress( _CurCol );
-
-  a("pop af" );
-  a("push hl" );
-  a( "ld hl, (**)" );addAddress( "text_buffer_ptr" );
-  a("dec hl" );
-  a( "ld (**), hl"); addAddress( "text_buffer_ptr" );
-  a("pop hl" );
-
-  
-  a( "jr *"); addOffset( "readkeyA0" );
-
-
-  
-  addLabel("create_equation" );
-  a( "ld hl, **" ); addAddress( "equationName" );
-  sysCall( "Mov9ToOP1" );
-  sysCall( "FindSym" );
-  a( "jr c, *" ); addOffset( "storeEqu" ); 
-  sysCall( "DelVar" );
-
-  addLabel("storeEqu" );
-  a( "ld a, (**)" ); addAddress( "text_buffer_length" );
-  a("ld h, *"); addByte( 0x00 );
-  a("ld l, a" );
-  sysCall( "CreateEqu" );
-  a("inc de" );
-  a("inc de" );
-  a( "ld hl, **"); addAddress( "text_buffer" );
-  a( "ld a, (**)" ); addAddress( "text_buffer_length" );
-  a( "ld b, *"); addByte( 0x00 );
-  a("ld c, a" );
-  a("ldir" );
-  a("ret" );
-
-  addLabel("store9_hl");
-  addWord( 0x0000 );
-  addLabel("store9_de");
-  addWord( 0x0000 );
-
-
-  
-  addLabel("getuserinput");
-  a("push hl" );
-  a("push af" );
-  a("push bc" );
-  a("push de" );
-  a("xor a" );
-  a( "ld (**), a" ); addAddress( "text_buffer_length" );
-  a( "ld hl, **"); addAddress( "text_buffer" );
-  a( "ld (**), hl"); addAddress( "text_buffer_ptr" );
-  a( "ld hl, **"); addAddress( "prompt_text" );
-  sysCall( "PutS" );
-  addLabel("readmore" );
-  a( "call **" ); addAddress( "readkeyA" );
-
-  a( "ld a, (**)" ); addAddress( "text_buffer_length" );
-
-  a( "cp *" ); addByte( 0x18 );
-  a( "jr z, *" ); addOffset( "buffer_filled" );
-
-  a( "ld a, (**)"); addAddress( "readkeyA_byte" );
-  a("or a" );
-  a( "jr z, *" ); addOffset( "buffer_filled" );
-  a( "jr *" ); addOffset( "readmore" );
-  
-  addLabel("buffer_filled" );
-
-
-  
-  // Convert an Equation to a FP
-  a( "ld a, (**)" ); addAddress( "text_buffer_length" );
-  a("dec a" );
-  a( "ld (**), a" ); addAddress( "text_buffer_length" );
-
-  a("call **"); addAddress( "create_equation" );
-  a( "ld hl, **" ); addAddress( "equationName" );
-  a( "ld de, **" ); addWord( _OP1 );
-
-  a( "ld bc, **" ); addWord( 0x0004 );
-  a("ldir" );
-  sysCall( "ParseInp" );
-  a("ld hl, **" ); addWord( _OP1 );
-
-  a( "ld de, **" ); addAddress( "FP_bfr" );
-  a( "ld bc, **" ); addWord( 0x0009 );
-  a("ldir" );
-  a( "ld hl, **" ); addAddress( "equationName" );
-  sysCall( "Mov9ToOP1" );
-  sysCall( "FindSym" );
-  sysCall( "DelVar" );
-  a("pop de" );
-  a("pop bc" );
-  a("pop af" );
-  a("pop hl" );
-  a("ret" );
-
-
-  
-  addFP("FP_bfr");
-  addLabel("readkeyA_byte" );
-  addByte(0x00);
-  addLabel("readkeyA_byte");
-  addByte( 0x00 );
-
-  
-  addLabel("equationName");
-  addByte( 0x00 ); addByte( 0x5E ); addByte( 0x12 ); addByte( 0x00 );
-  addLabel("text_buffer_length" );
-  addByte( 0x00 );  
-  addLabel("text_buffer_ptr" );
-  addWord( 0x0000 );
-  addLabel("text_buffer");
-  for( int i=0; i<25; i++ ) addByte(0x00);
-  
-  addLabel("prompt_text");
-  addString( "> " );
-}
-void functionCreateEquation()
-{
-
-  addLabel("create_equation" );
-  a( "ld hl, **" ); addAddress( "equationName" );
-  sysCall( "Mov9ToOP1" );
-  sysCall( "FindSym" );
-  a( "jr c, *" ); addOffset( "storeEqu" ); 
-  sysCall( "DelVar" );
-
-  addLabel("storeEqu" );
-  a("ld a, (**)" ); addAddress( "text_buffer_length" );
-  a("ld h, *"); addByte( 0x00 );
-  a("ld l, a" );
-  sysCall( "CreateEqu" );
-  a("inc de" );
-  a("inc de" );
-  a("ld hl, **"); addAddress( "text_buffer" );
-  a("ld a, (**)" ); addAddress( "text_buffer_length" );
-  a("ld b, *"); addByte( 0x00 );
-  a("ld c, a" );
-  a("ldir" );
-  a("ret" );
-
-  // Convert an Equation to a FP
-  a( "ld a, (**)" ); addAddress( "text_buffer_length" );
-  a("dec a" );
-  a( "ld (**), a" ); addAddress( "text_buffer_length" );
-
-  a("call **"); addAddress( "create_equation" );
-  a( "ld hl, **" ); addAddress( "equationName" );
-  a( "ld de, **" ); addWord( _OP1 );
-
-  a( "ld bc, **" ); addWord( 0x0004 );
-  a("ldir" );
-  sysCall( "ParseInp" );
-  a("ld hl, **" ); addWord( _OP1 );
-
-  a( "ld de, **" ); addAddress( "FP_bfr" );
-  a( "ld bc, **" ); addWord( 0x0009 );
-  a("ldir" );
-  a( "ld hl, **" ); addAddress( "equationName" );
-  sysCall( "Mov9ToOP1" );
-  sysCall( "FindSym" );
-  sysCall( "DelVar" );
-
-  
-  
-  addLabel("equationName");
-  addByte( 0x00 ); addByte( 0x5E ); addByte( 0x12 ); addByte( 0x00 );
-  addLabel("text_buffer_length" );
-  addByte( 0x00 );  
-  addLabel("text_buffer_ptr" );
-  addWord( 0x0000 );
-  addLabel("text_buffer");
-  for( int i=0; i<25; i++ ) addByte(0x00);
-
-}
 void functiondispOP1()
 {
   addLabel( "dispOP1" );
@@ -2080,66 +1844,47 @@ int main(int argc, char *argv[])
   // ================================================================================================================================================================================================
 
   
-  addLabel( "top" );
   sysCall( "ClrScrn" );
+
+  //a( "ld b, *" ); addByte( 0xFF );
+  
+
+  //a( "ld h, *" ); addByte( 0x00 );
+  //a( "ld l, *" ); addByte( 0xFF );
+  addLabel( "top" );
+
+
+  //a( "push hl" );
+  //a( "push af" );
+  //a( "push bc" );
+  
+  //a( "ld a, l" ); sysCall ("PutC");
+
+  //a( "pop bc" );
+  //a( "pop af" );
+  //a( "pop hl" );
+
+  //sysCall( "GetKey" );
+  
+  //a( "djnz *" ); addOffset( "top" );
+
+  
+  //addLabel( "main_top" );
+  //sysCall( "GetKey" );
+
+  //a( "ld h, *" ); addByte( 0x00 );
+  //a( "ld l, a" );
+
+  //sysCall( "DispHL" );
+  //a( "ret" );
   
   functionUI();
 
   a( "ret" );
   
   
-
-  
-  //functionUI();
-
-  /*a( "call **" ); addAddress( "getuserinput" );
-  sysCall( "NewLine" );
-
-  a( "ld hl, **" ); addAddress( "FP_bfr" );
-  sysCall( "Mov9ToOP2" );
-
-  a( "ld hl, **" ); addAddress( "password" );
-  sysCall( "Mov9ToOP1" );
-  sysCall( "ClrScrn" );
-
-  sysCall( "CpOP1OP2" );
-  a( "jr nz, *" ); addOffset( "end" );
-
-  a( "ld hl, **" ); addAddress( "msg1" );
-  sysCall( "PutS" );
-  sysCall( "NewLine" );
-
-  a( "call **" ); addAddress( "getuserinput" );
-  sysCall( "NewLine" );
-
-  a( "ld hl, **" ); addAddress( "FP_bfr" );
-  sysCall( "Mov9ToOP1" );
-
-  sysCall( "OP2Set1" );
-
-  sysCall( "CpOP1OP2" );
-  a( "jr nz, *" ); addOffset( "end" );
-
-  // Graphs should be off
-  a( "ld b, *"); addByte( 0x00 );
-  sysCall( "SetAllPlots" );
-  a( "ret" );
-  addLabel( "end" );
-  a( "ld b, *"); addByte( 0x01 );
-  sysCall( "SetAllPlots" ); */
-  //a( "ret" );
-  // ********
-
-  /*addLabel( "msg1" );
-  addString( "(0) Off   (1) On" );
-  
-  addString( "You guessed it!" );
-  addLabel( "password" );
-  addByte( 0x00 ); addByte( 133 );addByte( 120 );addByte( 116 );addByte( 37 );addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );
-  */
   //functionStoreVariable();
-  //functiondispOP1(); 
-  //functionUserInput();
+  functiondispOP1(); 
   //functionUI();
   // ================================================================================================================================================================================================
 

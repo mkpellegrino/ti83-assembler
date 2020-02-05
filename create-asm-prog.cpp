@@ -58,7 +58,7 @@ int memorylocation;
 int start_counting=0;
 int program_index=0;
 int function_ui=0;
-int store_variable=0;
+int store_op1=0;
 int disp_op1=0;
 string name;
 int line_number=0;
@@ -80,18 +80,29 @@ vector<offset> offset_vector;
 class label
 {
 public:
+  label( string s, int a )
+  {
+    index=program_index;
+    memory_location=a;
+    label_number=-1;
+    name=s;
+    line_num=line_number;
+    
+  }
   label( string s )
   {
     index=program_index;
     memory_location=memorylocation;
     label_number=-1;
     name=s;
+    line_num=line_number;
   }
   label()
   {
     index=program_index;
     memory_location=memorylocation;
     label_number=-1;
+    line_num=line_number;
     name="";
   };
   label(int l)
@@ -99,6 +110,7 @@ public:
     index=program_index;
     memory_location=memorylocation;
     label_number=l;
+    line_num=line_number;
     name="";
   };
   ~label(){};
@@ -124,6 +136,8 @@ public:
 	  {
 	    // Label wasn't found
 	    cerr << endl << "*** label wasn't found [" << name << "] - compilation failed ***" << endl;
+	    cerr << "    line number: " << line_number << endl;
+
 	    cerr << "    program index: 0x" << hex << uppercase << program_index << " (" << dec << program_index << " decimal)" << endl << endl;
 	    compilation_failed=1;
 	    error_count++;
@@ -135,7 +149,7 @@ public:
 	  unsigned char c = byte_vector[index-1];
 	  if(  ((c==0xC3)||(c==0xC2)||(c==0xD2)||(c==0xE2)||(c==0xF2)||(c==0xCA)||(c==0xDA)||(c==0xEA)||(c==0xFA)||(c==0xE9)) && (abs(ml-memory_location)<126) )
 	    {
-	      cerr << "*** jump [" << index-1 << "] could be made relative...  distance is: " << dec << abs( ml-memory_location )<< " [" << name << "]" << endl;
+	      cerr << "*** jump [" << index-1 << "] could be made relative...  distance is: " << dec << abs( ml-memory_location )<< " [" << name << "]\nLine Number: " << dec << line_num << endl;
 	    }
 
 	}
@@ -157,6 +171,7 @@ private:
   int index;
   int memory_location;
   int label_number;
+  int line_num;
   string name;
 };
 
@@ -171,8 +186,9 @@ public:
     from=program_index-1;
     offset_name=s;
     label_number=-1;
+    line_num=line_number;;
 #ifdef DEBUG
-    cerr << "creating an offset to label: " << s << " from prog index " << program_index << endl;
+    cerr << "creating an offset to label: " << s << " from prog index " << program_index << " (Line Number: " << line_num << ")" << endl;
 #endif
   };
   
@@ -180,8 +196,9 @@ public:
   {
     from=program_index-1;
     label_number=i;
+    line_num=line_number;
 #ifdef DEBUG
-    cerr << "creating an offset to label #" << i << " from prog index " << program_index << endl;
+    cerr << "creating an offset to label: " << label_number << " from prog index " << program_index << " (Line Number: " << line_num << ")" << endl;
 #endif
   };
   ~offset(){};
@@ -210,6 +227,7 @@ public:
     if( (diff>126) || (diff<-126) )
       {
 	cerr << endl << "*** relative jump is too far - compilation failed ***" << endl;
+	cerr << "    line number: " << line_number << endl;
 	cerr << "    program index: 0x" << hex << uppercase << from << " (" << dec << from << " decimal)" << " to [" << offset_name << "]" << endl << endl;
 	compilation_failed=1;
 	error_count++;
@@ -226,6 +244,7 @@ private:
   int label_number;// Which label number i am pointing to
   int from;// Where this is in the code.
   int to;//Where are we going?
+  int line_num;
   signed int diff;//How far is it to there?
 };
 
@@ -235,6 +254,17 @@ void startCounting()
   memorylocation=40341;
 }
 
+void addLabel( string s, int addr )
+{
+#ifdef DEBUG
+  cerr <<  "[" << hex << program_index << "] creating label at [" << hex << memorylocation << "] called [" << s << "]" << endl;
+#endif
+  label l=label(s);
+  // *******
+
+  label_cr_vector.push_back( l );
+  
+}
 void addLabel( string s )
 {
 #ifdef DEBUG
@@ -1070,6 +1100,7 @@ void sysCall( string s )
   else
     {
       cerr << endl << "*** unknown system call [" << s << "] - compilation failed ***" << endl;
+      cerr << "    line number: " << line_number << endl;
       cerr << "    program index: 0x" << hex << uppercase << program_index << " (" << dec << program_index << " decimal)" << endl << endl;
       compilation_failed=1;
       error_count++;
@@ -1078,6 +1109,21 @@ void sysCall( string s )
     
 }
 
+void pushall()
+{
+  a("push af");
+  a("push bc");
+  a("push de");
+  a("push hl");
+}
+void popall()
+{
+  a("push hl");
+  a("push de");
+  a("push bc");
+  a("push af");
+
+}
 void a( string s )
 {
   if( s == "ret" ){  addByte( 0xC9 );}
@@ -1321,6 +1367,8 @@ void a( string s )
       //addByte(0xCB);
       error_count++;
       cerr << endl << "*** instruction not implemented yet [" << s << "] - compilation failed ***" << endl;
+      cerr << "    line number: " << line_number << endl;
+
       cerr << "    program index: 0x" << hex << uppercase << program_index << " (" << dec << program_index << " decimal)" << endl << endl;
       compilation_failed=1;
 
@@ -1349,6 +1397,8 @@ void a( string s )
       //addByte(0xDD);
       error_count++;
       cerr << endl << "*** instruction not implemented yet [" << s << "] - compilation failed ***" << endl;
+      cerr << "    line number: " << line_number << endl;
+
       cerr << "    program index: 0x" << hex << uppercase << program_index << " (" << dec << program_index << " decimal)" << endl << endl;
       compilation_failed=1;
     }
@@ -1371,6 +1421,8 @@ void a( string s )
     {
       error_count++;
       cerr << endl << "*** instruction not implemented yet [" << s << "] - compilation failed ***" << endl;
+      cerr << "    line number: " << line_number << endl;
+
       cerr << "    program index: 0x" << hex << uppercase << program_index << " (" << dec << program_index << " decimal)" << endl << endl;
       compilation_failed=1;
       //addByte(0xED);
@@ -1396,6 +1448,8 @@ void a( string s )
     {
       error_count++;
       cerr << endl << "*** instruction not implemented yet [" << s << "] - compilation failed ***" << endl;
+      cerr << "    line number: " << line_number << endl;
+
       cerr << "    program index: 0x" << hex << uppercase << program_index << " (" << dec << program_index << " decimal)" << endl << endl;
       compilation_failed=1;
       //addByte(0xFD);
@@ -1405,6 +1459,7 @@ void a( string s )
   else
     {
       cerr << endl << "*** unknown instruction [" << s << "] - compilation failed ***" << endl;
+      cerr << "    line number: " << line_number << endl;
       cerr << "    program index: 0x" << hex << uppercase << program_index << " (" << dec << program_index << " decimal)" << endl << endl;
       compilation_failed=1;
       error_count++;
@@ -1456,11 +1511,8 @@ void function_user_input()
   function_ui=1;
   //=====================================================================
   addLabel( "user_input" );
-  
-  a( "push af" );
-  a( "push bc" );
-  a( "push hl" );
-  a( "push de" );
+
+  //pushall();
 
   // clear out the buffer
   a( "ld hl, **" ); addAddress( "functionUI_text_bfr_start" );  
@@ -1489,7 +1541,8 @@ void function_user_input()
   // if buffer is full then return out of the function
   a( "ld a, (**)" );addAddress("functionUI_text_bfr_size");
   a( "cp *" ); addByte( 0x0A );  
-  a( "jp nc, **" ); addAddress( "functionUI_return" );
+  //a( "jp nc, **" ); addAddress( "functionUI_return" );
+  a( "jr nc, *" ); addOffset( "functionUI_return" );
 
   addLabel( "functionUI_getscan" );
   
@@ -1583,10 +1636,6 @@ void function_user_input()
   a("ld h, *"); addByte( 0x00 );
   a("ld l, a" );
 
-  // for debugging 
-  //a( "ld hl, **" ); addWord( 0x0050 );
-
-
   sysCall( "CreateEqu" );
 
   // NOW COPY THE DATA INTO THE VAT
@@ -1598,15 +1647,12 @@ void function_user_input()
   a("ld c, a" );
   a("ldir" );
 
-  
-
   // Then turn the equation into OP1 and store it in memory as a floating point value
   a( "ld hl, **" ); addAddress( "equationName" );
   a( "ld de, **" ); addWord( _OP1 );
   a( "ld bc, **" ); addWord( 0x0004 ); // copy only 4 bytes
   a("ldir" );
   sysCall( "ParseInp" );
-
 
   // Copy OP1 to FP_user_input
   a("ld hl, **" ); addWord( _OP1 );
@@ -1620,20 +1666,16 @@ void function_user_input()
   sysCall( "FindSym" );
   sysCall( "DelVar" );
 
-
   a( "ld hl, **" ); addAddress( "FP_user_input" );
   sysCall( "Mov9ToOP1" );
 
-
-  //sysCall( "NewLine" );
-  //a( "call **" ); addAddress( "disp_op1" );
+  add_disp_op1=1;
+  sysCall( "NewLine" );
+  a( "call **" ); addAddress( "disp_op1" );
 
   addLabel( "functionUI_return_dontstore" );
 
-  a( "pop de" );
-  a( "pop hl" );
-  a( "pop bc" );
-  a( "pop af" );
+  //popall();
 
   a( "ret" );
 
@@ -1770,16 +1812,6 @@ void function_user_input()
   addLabel( "functionUI_key" ); addByte( 0x00 );
 
 
-  //addLabel( "functionUI_digit_txt" );
-  //addString( "[N]" );
-  //addLabel( "functionUI_minus_txt" );
-  //addString( "[-]" );
-  //addLabel( "functionUI_delete_txt" );
-  //addString( "[del]" );
-  //addLabel( "functionUI_cr_txt" );
-  //addString( "[cr]" );
-  
-  
   
 }
 void function_disp_op1()
@@ -1798,12 +1830,13 @@ void function_disp_op1()
 }
 void function_store_op1()
 {
-  if( store_variable == 1 ) return;
-  store_variable=1;
+  if( store_op1 == 1 ) return;
+  store_op1=1;
   //
   
   addLabel( "store_op1" );
   // todo push all registers
+  //pushall();
 
   a("ld hl, **"); addWord( _OP1 );
   a("ld de, **"); addAddress( "variabledata" );
@@ -1825,7 +1858,7 @@ void function_store_op1()
   a("ldir");
 
   // todo pop all registers
-
+  //popall();
   a("ret");
 
   addLabel("variablename");
@@ -1897,7 +1930,6 @@ int stringToHexValue( string s )
 	  break;
 	}
       retVal+=intg*pow(16,e);
-      cout << "e: " << e << endl;
       e++;
     }
   return retVal;
@@ -1942,6 +1974,12 @@ string removeUnwanted( string s )
 
 int main(int argc, char *argv[])
 {
+  addLabel( "OP1", 0x8478 );
+  addLabel( "OP2", 0x8483 );
+  addLabel( "OP3", 0x848E );
+  addLabel( "OP4", 0x8499 );
+  addLabel( "OP5", 0x84A4 );
+  addLabel( "OP6", 0x84AF );
 #ifdef DEBUG
   cerr << "Compiling " << argv[1] << " into " << argv[2] <<endl;
 #endif
@@ -1998,13 +2036,13 @@ int main(int argc, char *argv[])
     {
       while (getline(file, line))
 	{
+	  
 	  line_number++;
-	  // remove tabs
+	  // remove tabs and other unwanted characters
 	  line=removeUnwanted(line);
-	  //line.erase( remove(line.begin(),line.end(),'\t'),line.end());
 	    
 	  // 
-	  if( line=="" ){}
+	  if( line=="" || line[0]==';' ){}
 	  else if( line.substr(0,5) == ".name" )
 	    {
 	      for( int i=0; i<8; i++ )
@@ -2021,7 +2059,9 @@ int main(int argc, char *argv[])
 	    }
 	  else if( line[0] == '.' )
 	    {
-	      cout << "directive: [" << line << "]" << endl;
+#ifdef DEBUG
+	      cerr << "directive: [" << line << "]" << endl;
+#endif	     
 	      // Then we have a directive
 	      if( line.substr(0,3)==".db" || line.substr(0,3)==".dw" )
 		{
@@ -2029,10 +2069,32 @@ int main(int argc, char *argv[])
 		  // .db 0x03 -> addByte( 0x03 );
 		  // .db 0x03, 0x04, 0x05 -> addByte(0x03);addByte(0x04);addByte(0x05);
 		  string tmp = removeUnwanted(line.substr(4, line.length() ));
+#ifdef DEBUG
 		  cerr << "[data: " << tmp << "]" << endl;
+#endif	      
 		  if( getType(tmp) == 4 ) addByte( stringToHexValue(tmp) );
 		  else if( getType(tmp) == 2) addWord( stringToHexValue(tmp) );
 		  else if( getType(tmp) == 8) addByte( (int) tmp[1]);
+		}
+	      if( line.substr(0,4) ==".str" )
+		{
+		  string tmp = removeUnwanted(line.substr(5, line.length() ));		  
+#ifdef DEBUG
+		  cerr << "[string: " << tmp << "]" << endl;
+#endif	      
+		  // remove quotes
+		  tmp.erase( remove(tmp.begin(),tmp.end(),'\"'),tmp.end());
+
+		  addString( tmp );
+		}
+	      
+	       if( line.substr(0,3) ==".fp" )
+		{
+		  string tmp = removeUnwanted(line.substr(4, line.length() ));		  
+#ifdef DEBUG
+		  cerr << "[float: " << tmp << "]" << endl;
+#endif	      
+		  addFP( tmp );
 		}
 	    }
 	  else if( line.substr(0,5) == "bCall" )
@@ -2040,8 +2102,30 @@ int main(int argc, char *argv[])
 	      string addr=line.substr( 6, line.length() );
 	      sysCall( getBetween(line) );
 	    }
+	  else if( line == "call(user_input)" )
+	    {
+	      add_input=1;
+	      a( "call **" ); addAddress( "user_input" );
+
+	    }
+	  else if( line == "call(store_op1)" )
+	    {
+	      add_store_op1=1;
+	      a( "call **" ); addAddress( "store_op1" );
+
+	    }
+	  else if( line == "call(disp_op1)" )
+	    {
+	      add_disp_op1=1;
+	      a( "call **" ); addAddress( "disp_op1" );
+
+	    }
+
+	      
 	  else
 	    {
+	      int processed=0;
+
 	      // & Address Label
 	      // % Address Offset
 	      // # Word
@@ -2057,47 +2141,81 @@ int main(int argc, char *argv[])
 	      // a direct value, an offset, or an address.
 	      size_t found;
 	      found = line.find('&');
-
 	      // EXTRACT ADDRESS LABEL ================
 	      if (found!=string::npos)
 		{
-		  int k=-1;
-		  cout << "& found at: " << found << endl;
-		  string s = line.substr(found+1,line.length());
-		  for( int i=0; i<s.length();i++ )
-		    {
-		      if( s[i]==' ' || s[i]==')' || s[i]==',')
-			{
-			  k=i;
-			  i=s.length()+1;
-			}
-		    }
-		  if( k!=-1 )
-		    {
-		      s=s.substr(0,k);    
-		    }
+		  int k=-1; string s = line.substr(found,line.length());
+		  for( int i=0; i<s.length();i++ ){if( s[i]==' ' || s[i]==')' || s[i]==','){k=i;i=s.length();}}
+		  if( k!=-1 ) s=s.substr(0,k);    
+		  // Now replace the text with ** replace(9,5,str2);
+		  line.replace( found, s.length(), string("**") );
+#ifdef DEBUG
+		  cerr << "line of code: " << line << "\taddress: " << s << endl;
+#endif
+		  a( line ); processed=1;	  
+		  addAddress( s.substr(1,s.length()) );
 		  
-		  cout << "label: " << s << endl;
 		}
 
 	      found = line.find('%');
-	      if (found!=string::npos) cout << "% found at: " << found << endl;
+	      if (found!=string::npos)
+		{
+		  int k=-1; string s = line.substr(found,line.length());
+		  for( int i=0; i<s.length();i++ ){if( s[i]==' ' || s[i]==')' || s[i]==','){k=i;i=s.length();}}
+		  if( k!=-1 ) s=s.substr(0,k);    
+		  // Now replace the text with ** replace(9,5,str2);
+		  line.replace( found, s.length(), string("*") );
+#ifdef DEBUG
+		  cerr << "line of code: " << line << "\toffset: " << s << endl;
+#endif
+		  a( line );  processed=1;	  
+		  addOffset( s.substr(1,s.length() ));
+		}
 	      found = line.find('#');
-	      if (found!=string::npos) cout << "# found at: " << found << endl;
+	      if (found!=string::npos)
+		{
+		  int k=-1; string s = line.substr(found,line.length());
+		  for( int i=0; i<s.length();i++ ){if( s[i]==' ' || s[i]==')' || s[i]==','){k=i;i=s.length();}}
+		  if( k!=-1 ) s=s.substr(0,k);    
+		  // Now replace the text with ** replace(9,5,str2);
+		  line.replace( found, s.length(), string("**") );
+#ifdef DEBUG
+		  cerr << "line of code: " << line << "\tWord: " << s << endl;
+#endif
+		  a( line );  processed=1;
+
+		  
+		  addWord( stringToHexValue(s.substr(1,s.length())) );
+		}
+
 	      found = line.find('@');
-	      if (found!=string::npos) cout << "@ found at: " << found << endl;
+	      if (found!=string::npos)
+		{
+		  int k=-1; string s = line.substr(found,line.length());
+		  for( int i=0; i<s.length();i++ ){if( s[i]==' ' || s[i]==')' || s[i]==','){k=i;i=s.length();}}
+		  if( k!=-1 ) s=s.substr(0,k);    
+		  // Now replace the text with ** replace(9,5,str2);
+		  line.replace( found, s.length(), string("*") );
+#ifdef DEBUG
+		  cerr << "line of code: " << line << "\tByte: " << s << endl;
+#endif
+		  a( line );  processed=1; 
+		  addByte( (int) s.substr(1,s.length())[0] );
+		}
+
+	      if( !processed ) a( line );
 	      
-	      a( line );
 	    }
 	  
 	}
+
       file.close();
     }
 
-  if( add_input ) function_user_input();
-  if( add_store_op1 ) function_store_op1();
-  if( add_disp_op1 ) function_disp_op1();
   // ================================================================================================================================================================================================
+      if( add_input ) function_user_input();
+      if( add_store_op1 ) function_store_op1();
+      if( add_disp_op1 ) function_disp_op1();
 
 
 

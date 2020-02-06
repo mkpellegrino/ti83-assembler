@@ -16,10 +16,7 @@ disassemble: disassemble.cpp
 	strip -no_uuid -A -u -S -X -N -x disassemble
 
 test: test.asm
-	tias test.asm test.8xp
-	disassemble test.8xp a
-	disassemble test.8xp
-
+	./tias test.asm test.8xp
 clean:
 	rm -f ./disassemble
 	rm -f ./tias

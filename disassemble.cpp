@@ -1,9 +1,15 @@
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
+#include <string>
 using namespace std;
 int main(int argc, char *argv[])
 {
+  int just_asm=1;
+  if( argc==3 )
+    {
+      if( string(argv[2]) == string("a") ) just_asm=0;
+    }
   FILE *binary = fopen(argv[1], "rb");
   unsigned char buffer;
   unsigned char b1;
@@ -17,14 +23,16 @@ int main(int argc, char *argv[])
   int e=0;
 
   int memory_start=40341;
-
   int post=0;
   
   unsigned char x1,x2;
-  cout << "idx\tmem\top\tdec\tmneumonic" << endl;
+  if( just_asm ) cout << "idx\tmem\top\tdec\tmneumonic" << endl;
   while( fread(&buffer, sizeof(unsigned char), sizeof(buffer), binary) )
     {
-      
+      // if( i<76 )
+      //{
+      //  cout << dec << i << " 0x" << hex << (int) buffer << endl;
+      //}
       if( i== 57) lb = buffer;
       if( i== 59) hb = buffer;
       if( i== 60) e=lb+hb*16*16;
@@ -984,10 +992,13 @@ int main(int argc, char *argv[])
 	    case 0xEC:
 	      instruction="call pe, **";
 	      post=2;
+	     
 	      break;
 	    case 0xED:
-	      instruction="**** ";
-	      post=2;
+	      {
+		// These are extended op codes
+		post=1;
+	      }
 	      break;
 	    case 0xEE:
 	      instruction="xor *";
@@ -995,6 +1006,7 @@ int main(int argc, char *argv[])
 	      break;
 	    case 0xEF:
 	      instruction="rst 0x28";
+	      
 	      post=2;
 	      break;
 	    case 0xF0:
@@ -1050,7 +1062,7 @@ int main(int argc, char *argv[])
 	      post=2;
 	      break;
 	    case 0xFD:
-	      instruction="**** ";
+	      instruction="****";
 	      post=2;
 	      break;
 	    case 0xFE:
@@ -1065,35 +1077,57 @@ int main(int argc, char *argv[])
 	     
 	    }
 	  b1=0; b2=0;
-	    if( post>0 )
-	      {
-		fread(&b1, sizeof(unsigned char), sizeof(b1), binary);
-		//instruction+=b1;
-		i++;
-	      }
-	    if( post==2 )
-	      {
-		fread(&b2, sizeof(unsigned char), sizeof(b2), binary);
-		//instruction+=b2;
-		i++;
-	      }
+	  if( post==1 )
+	    {
+	      fread(&b1, sizeof(unsigned char), sizeof(b1), binary);
+	    }
 	    
-	  cout << dec << i << "\t" <<  hex << memory_start++ << "\t";
-	  if( buffer < 0x10 ) cout << "0";
-	  cout << (int) buffer  << "\t" << dec << (int) buffer /* << "\t" << (char) buffer*/ << "\t" << instruction << " ";
-
-	  if( post==1 ) cout << "0x";
 	  if( post==2 )
 	    {
-	      if( b2< 16) cout << 0;
-	      cout << hex << (int)b2;
+	      fread(&b1, sizeof(unsigned char), sizeof(b1), binary);
+	      fread(&b2, sizeof(unsigned char), sizeof(b2), binary);
 	    }
 
+	  if( buffer==0xED )
+	    {
+	      switch(b1)
+		{
+		case 0xB0:
+		  instruction="ldir";
+		  //post=1;
+		  break;
+		default:
+		  instruction="** unknown **";
+		}
+	    }
+
+	  if( just_asm ) cout << dec << i << "\t" <<  hex << memory_start << "\t";
+	  if( just_asm )
+	    {
+	      if( buffer < 0x10 ) cout << "0";
+	    }
+	  if( just_asm ) cout << (int) buffer  << "\t" << dec << (int) buffer /* << "\t" << (char) buffer*/ << "\t";
+	  cout << instruction << " ";
+	  if( post==1 )
+	    {
+	      cout << "0x";
+	      memory_start++;
+	    }
 	  if( post>0 )
 	    {
 	      if( b1< 16) cout << 0;
 	      cout << hex << (int)b1;
 	    }
+	  if( post==2 )
+	    {
+	      if( b2< 16)
+		{
+		  cout << 0;
+		}
+	      cout << hex << (int)b2;
+	      memory_start+=2;
+	    }
+	  memory_start++;
 	  cout << endl;
 	}
       i++;
@@ -1102,34 +1136,34 @@ int main(int argc, char *argv[])
     }
   cs-=x1;
   cs-=x2;
-  cout << "Size: " << lb+16*hb << endl << "Sum: " << dec << cs << endl << "Checksum: "  << hex <<  (cs & 0xFF00)/0xFF  <<  " " <<   (cs & 0xFF)  <<  endl;
+  if( just_asm ) cout << "Size: " << lb+16*hb << endl << "Sum: " << dec << cs << endl << "Checksum: "  << hex <<  (cs & 0xFF00)/0xFF  <<  " " <<   (cs & 0xFF)  <<  endl;
   return 0;
 }
 
 
 /* 
 
-Offset(hex)
+   Offset(hex)
 
-0x00 - 0x07: "**TI83F*"
-0x08 - 0x0B: 0x1A, 0x0A, 0x00
-0x0C - 0x34: Comment
-0x35 - 0x36: File length - $39 = Size of all data in the .8xx file from byte $37 to last byte before checksum
-Variable Header
+   0x00 - 0x07: "**TI83F*"
+   0x08 - 0x0B: 0x1A, 0x0A, 0x00
+   0x0C - 0x34: Comment
+   0x35 - 0x36: File length - $39 = Size of all data in the .8xx file from byte $37 to last byte before checksum
+   Variable Header
 
-0x37 - 0x38: Variable header length = 0B 00
-0x39 - 0x41: Variable Header
+   0x37 - 0x38: Variable header length = 0B 00
+   0x39 - 0x41: Variable Header
 
-    0x39 - 0x3A: Length of data (word)
-    0x3B : Program Type - 5=Unprotected, 6= Protected
-    0x3C - 0x43: Program Name (0-filled)
+   0x39 - 0x3A: Length of data (word)
+   0x3B : Program Type - 5=Unprotected, 6= Protected
+   0x3C - 0x43: Program Name (0-filled)
 
-Data
+   Data
 
-0x44 - 0x45: Length of data
-0x46 - 0x47: Length of program
-0x50 - 0x??: Program Data
-0x?? - EOF: Checksum (word)
+   0x44 - 0x45: Length of data
+   0x46 - 0x47: Length of program
+   0x50 - 0x??: Program Data
+   0x?? - EOF: Checksum (word)
 
 */
 

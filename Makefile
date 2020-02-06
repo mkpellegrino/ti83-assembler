@@ -4,30 +4,26 @@ DEBUG=-g -DDEBUG
 OPT=-O2
 OPT_SIZE=-O3 -Os -fno-threadsafe-statics -fno-exceptions -ffunction-sections -fdata-sections -fno-rtti -flto -fvisibility-inlines-hidden
 
-all: clean ticc create debug disect
+all: clean tias disassemble test
 
-ticc: ticc.cpp
-	g++ ticc.cpp $(CPPFLAGS) $(OPT_SIZE) -o ticc
-	strip -no_uuid -A -u -S -X -N -x ticc
-
-create: create-asm-prog.cpp
-	g++ create-asm-prog.cpp $(CPPFLAGS) $(OPT_SIZE) -o create-asm-prog
-	g++ create-asm-prog.cpp $(DEBUG) $(CPPFLAGS) -o create-asm-prog-debug
-	strip -no_uuid -A -u -S -X -N -x create-asm-prog
+tias: tias.cpp
+	g++ tias.cpp $(CPPFLAGS) $(OPT_SIZE) -o tias
+	g++ tias.cpp $(DEBUG) $(CPPFLAGS) -o tias-debug
+	strip -no_uuid -A -u -S -X -N -x tias
 
 disassemble: disassemble.cpp
 	g++ disassemble.cpp $(CPPFLAGS) $(OPT_SIZE) -o disassemble
 	strip -no_uuid -A -u -S -X -N -x disassemble
 
-debug: ticc.cpp
-	g++ ticc.cpp $(DEBUG) $(CPPFLAGS) -o ticc-debug
+test: test.asm
+	tias test.asm test.8xp
+	disassemble test.8xp a
+	disassemble test.8xp
 
 clean:
-	rm -f ./disect
-	rm -f ./ticc
-	rm -f ./ticc-debug
-	rm -f ./create-asm-program
-	rm -f ./create-asm-program-debug
-
+	rm -f ./disassemble
+	rm -f ./tias
+	rm -f ./tias-debug
+	rm -f ./test.8xp
 
 

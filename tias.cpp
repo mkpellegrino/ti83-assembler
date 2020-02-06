@@ -8,9 +8,8 @@
 // This is a work in progress and a few important notes follow.
 // (more like todo's rather than notes actually)
 //
-// *) Not all of the z80 instruction set is in here yet-- it's pretty
-// trivial to do it - I just haven't gotten around to it yet.
-// This is also true for the disassembler
+// *) Not all of the z80 instruction set is in here yet for the
+// disassembler
 //
 // *) the instruction: ld a, @P may not work as intended
 //
@@ -1450,17 +1449,1026 @@ void a( string s )
   else if( s == "jp pe, **" ){addByte(0xEA);}
   else if( s == "ex de, hl" ){addByte(0xEB);}
   else if( s == "call pe, **" ){addByte(0xEC);}
-  else if( s == "EXTD" )
-    {
-      error_count++;
-      cerr << endl << "*** instruction not implemented yet [" << s << "] - compilation failed ***" << endl;
-      cerr << "    line number: " << dec << line_number << endl;
+  else if( s == "in b, (c)" ){addByte(0xED);addByte(0x40);}
+  else if( s == "out (c), b" ){addByte(0xED);addByte(0x41);}
+  else if( s == "sbc hl,bc" ){addByte(0xED);addByte(0x42);}
+  else if( s == "ld (**),bc" ){addByte(0xED);addByte(0x43);}
+  else if( s == "neg" ){addByte(0xED);addByte(0x44);}
+  else if( s == "retn" ){addByte(0xED);addByte(0x45);}
+  else if( s == "im 0" ){addByte(0xED);addByte(0x46);}
+  else if( s == "ld i,a" ){addByte(0xED);addByte(0x47);}
+  else if( s == "in c,(c)" ){addByte(0xED);addByte(0x48);}
+  else if( s == "out (c),c" ){addByte(0xED);addByte(0x49);}
+  else if( s == "adc hl,bc" ){addByte(0xED);addByte(0x4A);}
+  else if( s == "ld bc,(**)" ){addByte(0xED);addByte(0x4B);}
+  else if( s == "neg"){addByte(0xED);addByte(0x4C);}
+  else if( s == "reti"){addByte(0xED);addByte(0x4D);}
+  else if( s == "im 0/1"){addByte(0xED);addByte(0x4E);}
+  else if( s == "ld r,a" ){addByte(0xED);addByte(0x4F);}
+  else if( s == "in d,(c)"){addByte(0xED);addByte(0x50);}
+  else if( s == "out (c),d"){addByte(0xED);addByte(0x51);}
+  else if( s == "sbc hl,de"){addByte(0xED);addByte(0x52);}
+  else if( s == "ld (**),de"){addByte(0xED);addByte(0x53);}
+  else if( s == "neg"){addByte(0xED);addByte(0x54);}
+  else if( s == "retn"){addByte(0xED);addByte(0x55);}
+  else if( s == "im 1"){addByte(0xED);addByte(0x56);}
+  else if( s == "ld a,i"){addByte(0xED);addByte(0x57);}
+  else if( s == "in e,(c)"){addByte(0xED);addByte(0x58);}
+  else if( s == "out (c),e"){addByte(0xED);addByte(0x59);}
+  else if( s == "adc hl,de"){addByte(0xED);addByte(0x5A);}
+  else if( s == "ld de,(**)"){addByte(0xED);addByte(0x5B);}
+  else if( s == "neg"){addByte(0xED);addByte(0x5C);}
+  else if( s == "retn"){addByte(0xED);addByte(0x5D);}
+  else if( s == "im 2"){addByte(0xED);addByte(0x5E);}
+  else if( s == "ld a,r" ){addByte(0xED);addByte(0x5F);}
+  else if( s == "in h,(c)"){addByte(0xED);addByte(0x60);}
+  else if( s == "out (c),h"){addByte(0xED);addByte(0x61);}
+  else if( s == "sbc hl,hl"){addByte(0xED);addByte(0x62);}
+  else if( s == "ld (**),hl"){addByte(0xED);addByte(0x63);}
+  else if( s == "neg"){addByte(0xED);addByte(0x64);}
+  else if( s == "retn"){addByte(0xED);addByte(0x65);}
+  else if( s == "im 0"){addByte(0xED);addByte(0x66);}
+  else if( s == "rrd"){addByte(0xED);addByte(0x67);}
+  else if( s == "in l,(c)"){addByte(0xED);addByte(0x68);}
+  else if( s == "out (c),l"){addByte(0xED);addByte(0x69);}
+  else if( s == "adc hl,hl"){addByte(0xED);addByte(0x6A);}
+  else if( s == "ld hl,(**)"){addByte(0xED);addByte(0x6B);}
+  else if( s == "neg"){addByte(0xED);addByte(0x6C);}
+  else if( s == "retn"){addByte(0xED);addByte(0x6D);}
+  else if( s == "im 0/1"){addByte(0xED);addByte(0x6E);}
+  else if( s == "rld" ){addByte(0xED);addByte(0x6F);}
+  else if( s == "in (c)"){addByte(0xED);addByte(0x70);}
+  else if( s == "out (c),0"){addByte(0xED);addByte(0x71);}
+  else if( s == "sbc hl,sp"){addByte(0xED);addByte(0x72);}
+  else if( s == "ld (**),sp"){addByte(0xED);addByte(0x73);}
+  else if( s == "neg"){addByte(0xED);addByte(0x74);}
+  else if( s == "retn"){addByte(0xED);addByte(0x75);}
+  else if( s == "im 1"){addByte(0xED);addByte(0x76);}
+  else if( s == "" ){addByte(0xED);addByte(0x77);}
+  else if( s == "in a,(c)"){addByte(0xED);addByte(0x78);}
+  else if( s == "out (c),a"){addByte(0xED);addByte(0x79);}
+  else if( s == "adc hl,sp"){addByte(0xED);addByte(0x7A);}
+  else if( s == "ld sp,(**)"){addByte(0xED);addByte(0x7B);}
+  else if( s == "neg"){addByte(0xED);addByte(0x7C);}
+  else if( s == "retn"){addByte(0xED);addByte(0x7D);}
+  else if( s == "im 2"){addByte(0xED);addByte(0x7E);}
+  else if( s == "ldi"){addByte(0xED);addByte(0xA0);}
+  else if( s == "cpi"){addByte(0xED);addByte(0xA1);}
+  else if( s == "ini"){addByte(0xED);addByte(0xA2);}
+  else if( s == "outi"){addByte(0xED);addByte(0xA3);}
+  else if( s == "ldd"){addByte(0xED);addByte(0xA8);}
+  else if( s == "cpd"){addByte(0xED);addByte(0xA9);}
+  else if( s == "ind"){addByte(0xED);addByte(0xAA);}
+  else if( s == "outd"){addByte(0xED);addByte(0xAB);}
+  else if( s == "ldir"){addByte(0xED);addByte(0xB0);}
+  else if( s == "cpir"){addByte(0xED);addByte(0xB1);}
+  else if( s == "inir"){addByte(0xED);addByte(0xB2);}
+  else if( s == "otir"){addByte(0xED);addByte(0xB3);}
+  else if( s == "lddr"){addByte(0xED);addByte(0xB8);}
+  else if( s == "cpdr"){addByte(0xED);addByte(0xB9);}
+  else if( s == "indr"){addByte(0xED);addByte(0xBA);}
+  else if( s == "otdr" ){addByte(0xED);addByte(0xBB);}
+  else if( s == "rlc b"){addByte(0xCB);addByte(0x0);}
+  else if( s == "rlc c"){addByte(0xCB);addByte(0x1);}
+  else if( s == "rlc d"){addByte(0xCB);addByte(0x2);}
+  else if( s == "rlc e"){addByte(0xCB);addByte(0x3);}
+  else if( s == "rlc h"){addByte(0xCB);addByte(0x4);}
+  else if( s == "rlc l"){addByte(0xCB);addByte(0x5);}
+  else if( s == "rlc (hl)"){addByte(0xCB);addByte(0x6);}
+  else if( s == "rlc a"){addByte(0xCB);addByte(0x7);}
+  else if( s == "rrc b"){addByte(0xCB);addByte(0x8);}
+  else if( s == "rrc c"){addByte(0xCB);addByte(0x9);}
+  else if( s == "rrc d"){addByte(0xCB);addByte(0xA);}
+  else if( s == "rrc e"){addByte(0xCB);addByte(0xB);}
+  else if( s == "rrc h"){addByte(0xCB);addByte(0xC);}
+  else if( s == "rrc l"){addByte(0xCB);addByte(0xD);}
+  else if( s == "rrc (hl)"){addByte(0xCB);addByte(0xE);}
+  else if( s == "rrc a" ){addByte(0xCB);addByte(0xF);}
+  else if( s == "rl b"){addByte(0xCB);addByte(0x10);}
+  else if( s == "rl c"){addByte(0xCB);addByte(0x11);}
+  else if( s == "rl d"){addByte(0xCB);addByte(0x12);}
+  else if( s == "rl e"){addByte(0xCB);addByte(0x13);}
+  else if( s == "rl h"){addByte(0xCB);addByte(0x14);}
+  else if( s == "rl l"){addByte(0xCB);addByte(0x15);}
+  else if( s == "rl (hl)"){addByte(0xCB);addByte(0x16);}
+  else if( s == "rl a"){addByte(0xCB);addByte(0x17);}
+  else if( s == "rr b"){addByte(0xCB);addByte(0x18);}
+  else if( s == "rr c"){addByte(0xCB);addByte(0x19);}
+  else if( s == "rr d"){addByte(0xCB);addByte(0x1A);}
+  else if( s == "rr e"){addByte(0xCB);addByte(0x1B);}
+  else if( s == "rr h"){addByte(0xCB);addByte(0x1C);}
+  else if( s == "rr l"){addByte(0xCB);addByte(0x1D);}
+  else if( s == "rr (hl)"){addByte(0xCB);addByte(0x1E);}
+  else if( s == "rr a" ){addByte(0xCB);addByte(0x1F);}
+  else if( s == "sla b"){addByte(0xCB);addByte(0x20);}
+  else if( s == "sla c"){addByte(0xCB);addByte(0x21);}
+  else if( s == "sla d"){addByte(0xCB);addByte(0x22);}
+  else if( s == "sla e"){addByte(0xCB);addByte(0x23);}
+  else if( s == "sla h"){addByte(0xCB);addByte(0x24);}
+  else if( s == "sla l"){addByte(0xCB);addByte(0x25);}
+  else if( s == "sla (hl)"){addByte(0xCB);addByte(0x26);}
+  else if( s == "sla a"){addByte(0xCB);addByte(0x27);}
+  else if( s == "sra b"){addByte(0xCB);addByte(0x28);}
+  else if( s == "sra c"){addByte(0xCB);addByte(0x29);}
+  else if( s == "sra d"){addByte(0xCB);addByte(0x2A);}
+  else if( s == "sra e"){addByte(0xCB);addByte(0x2B);}
+  else if( s == "sra h"){addByte(0xCB);addByte(0x2C);}
+  else if( s == "sra l"){addByte(0xCB);addByte(0x2D);}
+  else if( s == "sra (hl)"){addByte(0xCB);addByte(0x2E);}
+  else if( s == "sra a" ){addByte(0xCB);addByte(0x2F);}
+  else if( s == "sll b"){addByte(0xCB);addByte(0x30);}
+  else if( s == "sll c"){addByte(0xCB);addByte(0x31);}
+  else if( s == "sll d"){addByte(0xCB);addByte(0x32);}
+  else if( s == "sll e"){addByte(0xCB);addByte(0x33);}
+  else if( s == "sll h"){addByte(0xCB);addByte(0x34);}
+  else if( s == "sll l"){addByte(0xCB);addByte(0x35);}
+  else if( s == "sll (hl)"){addByte(0xCB);addByte(0x36);}
+  else if( s == "sll a"){addByte(0xCB);addByte(0x37);}
+  else if( s == "srl b"){addByte(0xCB);addByte(0x38);}
+  else if( s == "srl c"){addByte(0xCB);addByte(0x39);}
+  else if( s == "srl d"){addByte(0xCB);addByte(0x3A);}
+  else if( s == "srl e"){addByte(0xCB);addByte(0x3B);}
+  else if( s == "srl h"){addByte(0xCB);addByte(0x3C);}
+  else if( s == "srl l"){addByte(0xCB);addByte(0x3D);}
+  else if( s == "srl (hl)"){addByte(0xCB);addByte(0x3E);}
+  else if( s == "srl a" ){addByte(0xCB);addByte(0x3F);}
+  else if( s == "bit 0,b"){addByte(0xCB);addByte(0x40);}
+  else if( s == "bit 0,c"){addByte(0xCB);addByte(0x41);}
+  else if( s == "bit 0,d"){addByte(0xCB);addByte(0x42);}
+  else if( s == "bit 0,e"){addByte(0xCB);addByte(0x43);}
+  else if( s == "bit 0,h"){addByte(0xCB);addByte(0x44);}
+  else if( s == "bit 0,l"){addByte(0xCB);addByte(0x45);}
+  else if( s == "bit 0,(hl)"){addByte(0xCB);addByte(0x46);}
+  else if( s == "bit 0,a"){addByte(0xCB);addByte(0x47);}
+  else if( s == "bit 1,b"){addByte(0xCB);addByte(0x48);}
+  else if( s == "bit 1,c"){addByte(0xCB);addByte(0x49);}
+  else if( s == "bit 1,d"){addByte(0xCB);addByte(0x4A);}
+  else if( s == "bit 1,e"){addByte(0xCB);addByte(0x4B);}
+  else if( s == "bit 1,h"){addByte(0xCB);addByte(0x4C);}
+  else if( s == "bit 1,l"){addByte(0xCB);addByte(0x4D);}
+  else if( s == "bit 1,(hl)"){addByte(0xCB);addByte(0x4E);}
+  else if( s == "bit 1,a" ){addByte(0xCB);addByte(0x4F);}
+  else if( s == "bit 2,b"){addByte(0xCB);addByte(0x50);}
+  else if( s == "bit 2,c"){addByte(0xCB);addByte(0x51);}
+  else if( s == "bit 2,d"){addByte(0xCB);addByte(0x52);}
+  else if( s == "bit 2,e"){addByte(0xCB);addByte(0x53);}
+  else if( s == "bit 2,h"){addByte(0xCB);addByte(0x54);}
+  else if( s == "bit 2,l"){addByte(0xCB);addByte(0x55);}
+  else if( s == "bit 2,(hl)"){addByte(0xCB);addByte(0x56);}
+  else if( s == "bit 2,a"){addByte(0xCB);addByte(0x57);}
+  else if( s == "bit 3,b"){addByte(0xCB);addByte(0x58);}
+  else if( s == "bit 3,c"){addByte(0xCB);addByte(0x59);}
+  else if( s == "bit 3,d"){addByte(0xCB);addByte(0x5A);}
+  else if( s == "bit 3,e"){addByte(0xCB);addByte(0x5B);}
+  else if( s == "bit 3,h"){addByte(0xCB);addByte(0x5C);}
+  else if( s == "bit 3,l"){addByte(0xCB);addByte(0x5D);}
+  else if( s == "bit 3,(hl)"){addByte(0xCB);addByte(0x5E);}
+  else if( s == "bit 3,a" ){addByte(0xCB);addByte(0x5F);}
+  else if( s == "bit 4,b"){addByte(0xCB);addByte(0x60);}
+  else if( s == "bit 4,c"){addByte(0xCB);addByte(0x61);}
+  else if( s == "bit 4,d"){addByte(0xCB);addByte(0x62);}
+  else if( s == "bit 4,e"){addByte(0xCB);addByte(0x63);}
+  else if( s == "bit 4,h"){addByte(0xCB);addByte(0x64);}
+  else if( s == "bit 4,l"){addByte(0xCB);addByte(0x65);}
+  else if( s == "bit 4,(hl)"){addByte(0xCB);addByte(0x66);}
+  else if( s == "bit 4,a"){addByte(0xCB);addByte(0x67);}
+  else if( s == "bit 5,b"){addByte(0xCB);addByte(0x68);}
+  else if( s == "bit 5,c"){addByte(0xCB);addByte(0x69);}
+  else if( s == "bit 5,d"){addByte(0xCB);addByte(0x6A);}
+  else if( s == "bit 5,e"){addByte(0xCB);addByte(0x6B);}
+  else if( s == "bit 5,h"){addByte(0xCB);addByte(0x6C);}
+  else if( s == "bit 5,l"){addByte(0xCB);addByte(0x6D);}
+  else if( s == "bit 5,(hl)"){addByte(0xCB);addByte(0x6E);}
+  else if( s == "bit 5,a" ){addByte(0xCB);addByte(0x6F);}
+  else if( s == "bit 6,b"){addByte(0xCB);addByte(0x70);}
+  else if( s == "bit 6,c"){addByte(0xCB);addByte(0x71);}
+  else if( s == "bit 6,d"){addByte(0xCB);addByte(0x72);}
+  else if( s == "bit 6,e"){addByte(0xCB);addByte(0x73);}
+  else if( s == "bit 6,h"){addByte(0xCB);addByte(0x74);}
+  else if( s == "bit 6,l"){addByte(0xCB);addByte(0x75);}
+  else if( s == "bit 6,(hl)"){addByte(0xCB);addByte(0x76);}
+  else if( s == "bit 6,a"){addByte(0xCB);addByte(0x77);}
+  else if( s == "bit 7,b"){addByte(0xCB);addByte(0x78);}
+  else if( s == "bit 7,c"){addByte(0xCB);addByte(0x79);}
+  else if( s == "bit 7,d"){addByte(0xCB);addByte(0x7A);}
+  else if( s == "bit 7,e"){addByte(0xCB);addByte(0x7B);}
+  else if( s == "bit 7,h"){addByte(0xCB);addByte(0x7C);}
+  else if( s == "bit 7,l"){addByte(0xCB);addByte(0x7D);}
+  else if( s == "bit 7,(hl)"){addByte(0xCB);addByte(0x7E);}
+  else if( s == "bit 7,a" ){addByte(0xCB);addByte(0x7F);}
+  else if( s == "res 0,b"){addByte(0xCB);addByte(0x80);}
+  else if( s == "res 0,c"){addByte(0xCB);addByte(0x81);}
+  else if( s == "res 0,d"){addByte(0xCB);addByte(0x82);}
+  else if( s == "res 0,e"){addByte(0xCB);addByte(0x83);}
+  else if( s == "res 0,h"){addByte(0xCB);addByte(0x84);}
+  else if( s == "res 0,l"){addByte(0xCB);addByte(0x85);}
+  else if( s == "res 0,(hl)"){addByte(0xCB);addByte(0x86);}
+  else if( s == "res 0,a"){addByte(0xCB);addByte(0x87);}
+  else if( s == "res 1,b"){addByte(0xCB);addByte(0x88);}
+  else if( s == "res 1,c"){addByte(0xCB);addByte(0x89);}
+  else if( s == "res 1,d"){addByte(0xCB);addByte(0x8A);}
+  else if( s == "res 1,e"){addByte(0xCB);addByte(0x8B);}
+  else if( s == "res 1,h"){addByte(0xCB);addByte(0x8C);}
+  else if( s == "res 1,l"){addByte(0xCB);addByte(0x8D);}
+  else if( s == "res 1,(hl)"){addByte(0xCB);addByte(0x8E);}
+  else if( s == "res 1,a" ){addByte(0xCB);addByte(0x8F);}
+  else if( s == "res 2,b"){addByte(0xCB);addByte(0x90);}
+  else if( s == "res 2,c"){addByte(0xCB);addByte(0x91);}
+  else if( s == "res 2,d"){addByte(0xCB);addByte(0x92);}
+  else if( s == "res 2,e"){addByte(0xCB);addByte(0x93);}
+  else if( s == "res 2,h"){addByte(0xCB);addByte(0x94);}
+  else if( s == "res 2,l"){addByte(0xCB);addByte(0x95);}
+  else if( s == "res 2,(hl)"){addByte(0xCB);addByte(0x96);}
+  else if( s == "res 2,a"){addByte(0xCB);addByte(0x97);}
+  else if( s == "res 3,b"){addByte(0xCB);addByte(0x98);}
+  else if( s == "res 3,c"){addByte(0xCB);addByte(0x99);}
+  else if( s == "res 3,d"){addByte(0xCB);addByte(0x9A);}
+  else if( s == "res 3,e"){addByte(0xCB);addByte(0x9B);}
+  else if( s == "res 3,h"){addByte(0xCB);addByte(0x9C);}
+  else if( s == "res 3,l"){addByte(0xCB);addByte(0x9D);}
+  else if( s == "res 3,(hl)"){addByte(0xCB);addByte(0x9E);}
+  else if( s == "res 3,a" ){addByte(0xCB);addByte(0x9F);}
+  else if( s == "res 4,b"){addByte(0xCB);addByte(0xA0);}
+  else if( s == "res 4,c"){addByte(0xCB);addByte(0xA1);}
+  else if( s == "res 4,d"){addByte(0xCB);addByte(0xA2);}
+  else if( s == "res 4,e"){addByte(0xCB);addByte(0xA3);}
+  else if( s == "res 4,h"){addByte(0xCB);addByte(0xA4);}
+  else if( s == "res 4,l"){addByte(0xCB);addByte(0xA5);}
+  else if( s == "res 4,(hl)"){addByte(0xCB);addByte(0xA6);}
+  else if( s == "res 4,a"){addByte(0xCB);addByte(0xA7);}
+  else if( s == "res 5,b"){addByte(0xCB);addByte(0xA8);}
+  else if( s == "res 5,c"){addByte(0xCB);addByte(0xA9);}
+  else if( s == "res 5,d"){addByte(0xCB);addByte(0xAA);}
+  else if( s == "res 5,e"){addByte(0xCB);addByte(0xAB);}
+  else if( s == "res 5,h"){addByte(0xCB);addByte(0xAC);}
+  else if( s == "res 5,l"){addByte(0xCB);addByte(0xAD);}
+  else if( s == "res 5,(hl)"){addByte(0xCB);addByte(0xAE);}
+  else if( s == "res 5,a" ){addByte(0xCB);addByte(0xAF);}
+  else if( s == "res 6,b"){addByte(0xCB);addByte(0xB0);}
+  else if( s == "res 6,c"){addByte(0xCB);addByte(0xB1);}
+  else if( s == "res 6,d"){addByte(0xCB);addByte(0xB2);}
+  else if( s == "res 6,e"){addByte(0xCB);addByte(0xB3);}
+  else if( s == "res 6,h"){addByte(0xCB);addByte(0xB4);}
+  else if( s == "res 6,l"){addByte(0xCB);addByte(0xB5);}
+  else if( s == "res 6,(hl)"){addByte(0xCB);addByte(0xB6);}
+  else if( s == "res 6,a"){addByte(0xCB);addByte(0xB7);}
+  else if( s == "res 7,b"){addByte(0xCB);addByte(0xB8);}
+  else if( s == "res 7,c"){addByte(0xCB);addByte(0xB9);}
+  else if( s == "res 7,d"){addByte(0xCB);addByte(0xBA);}
+  else if( s == "res 7,e"){addByte(0xCB);addByte(0xBB);}
+  else if( s == "res 7,h"){addByte(0xCB);addByte(0xBC);}
+  else if( s == "res 7,l"){addByte(0xCB);addByte(0xBD);}
+  else if( s == "res 7,(hl)"){addByte(0xCB);addByte(0xBE);}
+  else if( s == "res 7,a" ){addByte(0xCB);addByte(0xBF);}
+  else if( s == "set 0,b"){addByte(0xCB);addByte(0xC0);}
+  else if( s == "set 0,c"){addByte(0xCB);addByte(0xC1);}
+  else if( s == "set 0,d"){addByte(0xCB);addByte(0xC2);}
+  else if( s == "set 0,e"){addByte(0xCB);addByte(0xC3);}
+  else if( s == "set 0,h"){addByte(0xCB);addByte(0xC4);}
+  else if( s == "set 0,l"){addByte(0xCB);addByte(0xC5);}
+  else if( s == "set 0,(hl)"){addByte(0xCB);addByte(0xC6);}
+  else if( s == "set 0,a"){addByte(0xCB);addByte(0xC7);}
+  else if( s == "set 1,b"){addByte(0xCB);addByte(0xC8);}
+  else if( s == "set 1,c"){addByte(0xCB);addByte(0xC9);}
+  else if( s == "set 1,d"){addByte(0xCB);addByte(0xCA);}
+  else if( s == "set 1,e"){addByte(0xCB);addByte(0xCB);}
+  else if( s == "set 1,h"){addByte(0xCB);addByte(0xCC);}
+  else if( s == "set 1,l"){addByte(0xCB);addByte(0xCD);}
+  else if( s == "set 1,(hl)"){addByte(0xCB);addByte(0xCE);}
+  else if( s == "set 1,a" ){addByte(0xCB);addByte(0xCF);}
+  else if( s == "set 2,b"){addByte(0xCB);addByte(0xD0);}
+  else if( s == "set 2,c"){addByte(0xCB);addByte(0xD1);}
+  else if( s == "set 2,d"){addByte(0xCB);addByte(0xD2);}
+  else if( s == "set 2,e"){addByte(0xCB);addByte(0xD3);}
+  else if( s == "set 2,h"){addByte(0xCB);addByte(0xD4);}
+  else if( s == "set 2,l"){addByte(0xCB);addByte(0xD5);}
+  else if( s == "set 2,(hl)"){addByte(0xCB);addByte(0xD6);}
+  else if( s == "set 2,a"){addByte(0xCB);addByte(0xD7);}
+  else if( s == "set 3,b"){addByte(0xCB);addByte(0xD8);}
+  else if( s == "set 3,c"){addByte(0xCB);addByte(0xD9);}
+  else if( s == "set 3,d"){addByte(0xCB);addByte(0xDA);}
+  else if( s == "set 3,e"){addByte(0xCB);addByte(0xDB);}
+  else if( s == "set 3,h"){addByte(0xCB);addByte(0xDC);}
+  else if( s == "set 3,l"){addByte(0xCB);addByte(0xDD);}
+  else if( s == "set 3,(hl)"){addByte(0xCB);addByte(0xDE);}
+  else if( s == "set 3,a" ){addByte(0xCB);addByte(0xDF);}
+  else if( s == "set 4,b"){addByte(0xCB);addByte(0xE0);}
+  else if( s == "set 4,c"){addByte(0xCB);addByte(0xE1);}
+  else if( s == "set 4,d"){addByte(0xCB);addByte(0xE2);}
+  else if( s == "set 4,e"){addByte(0xCB);addByte(0xE3);}
+  else if( s == "set 4,h"){addByte(0xCB);addByte(0xE4);}
+  else if( s == "set 4,l"){addByte(0xCB);addByte(0xE5);}
+  else if( s == "set 4,(hl)"){addByte(0xCB);addByte(0xE6);}
+  else if( s == "set 4,a"){addByte(0xCB);addByte(0xE7);}
+  else if( s == "set 5,b"){addByte(0xCB);addByte(0xE8);}
+  else if( s == "set 5,c"){addByte(0xCB);addByte(0xE9);}
+  else if( s == "set 5,d"){addByte(0xCB);addByte(0xEA);}
+  else if( s == "set 5,e"){addByte(0xCB);addByte(0xEB);}
+  else if( s == "set 5,h"){addByte(0xCB);addByte(0xEC);}
+  else if( s == "set 5,l"){addByte(0xCB);addByte(0xED);}
+  else if( s == "set 5,(hl)"){addByte(0xCB);addByte(0xEE);}
+  else if( s == "set 5,a" ){addByte(0xCB);addByte(0xEF);}
+  else if( s == "set 6,b"){addByte(0xCB);addByte(0xF0);}
+  else if( s == "set 6,c"){addByte(0xCB);addByte(0xF1);}
+  else if( s == "set 6,d"){addByte(0xCB);addByte(0xF2);}
+  else if( s == "set 6,e"){addByte(0xCB);addByte(0xF3);}
+  else if( s == "set 6,h"){addByte(0xCB);addByte(0xF4);}
+  else if( s == "set 6,l"){addByte(0xCB);addByte(0xF5);}
+  else if( s == "set 6,(hl)"){addByte(0xCB);addByte(0xF6);}
+  else if( s == "set 6,a"){addByte(0xCB);addByte(0xF7);}
+  else if( s == "set 7,b"){addByte(0xCB);addByte(0xF8);}
+  else if( s == "set 7,c"){addByte(0xCB);addByte(0xF9);}
+  else if( s == "set 7,d"){addByte(0xCB);addByte(0xFA);}
+  else if( s == "set 7,e"){addByte(0xCB);addByte(0xFB);}
+  else if( s == "set 7,h"){addByte(0xCB);addByte(0xFC);}
+  else if( s == "set 7,l"){addByte(0xCB);addByte(0xFD);}
+  else if( s == "set 7,(hl)"){addByte(0xCB);addByte(0xFE);}
+  else if( s == "set 7,a" ){addByte(0xCB);addByte(0xFF);}
+  
+  else if( s == "rlc (ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0x0);}
+  else if( s == "rlc (ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0x1);}
+  else if( s == "rlc (ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0x2);}
+  else if( s == "rlc (ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0x3);}
+  else if( s == "rlc (ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0x4);}
+  else if( s == "rlc (ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0x5);}
+  else if( s == "rlc (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x6);}
+  else if( s == "rlc (ix+*),a"){addByte(0xDD);addByte(0xCB);addByte(0x7);}
+  else if( s == "rrc (ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0x8);}
+  else if( s == "rrc (ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0x9);}
+  else if( s == "rrc (ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0xA);}
+  else if( s == "rrc (ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0xB);}
+  else if( s == "rrc (ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0xC);}
+  else if( s == "rrc (ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0xD);}
+  else if( s == "rrc (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xE);}
+  else if( s == "rrc (ix+*),a" ){addByte(0xDD);addByte(0xCB);addByte(0xF);}
+  else if( s == "rl (ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0x10);}
+  else if( s == "rl (ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0x11);}
+  else if( s == "rl (ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0x12);}
+  else if( s == "rl (ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0x13);}
+  else if( s == "rl (ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0x14);}
+  else if( s == "rl (ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0x15);}
+  else if( s == "rl (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x16);}
+  else if( s == "rl (ix+*),a"){addByte(0xDD);addByte(0xCB);addByte(0x17);}
+  else if( s == "rr (ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0x18);}
+  else if( s == "rr (ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0x19);}
+  else if( s == "rr (ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0x1A);}
+  else if( s == "rr (ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0x1B);}
+  else if( s == "rr (ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0x1C);}
+  else if( s == "rr (ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0x1D);}
+  else if( s == "rr (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x1E);}
+  else if( s == "rr (ix+*),a" ){addByte(0xDD);addByte(0xCB);addByte(0x1F);}
+  else if( s == "sla (ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0x20);}
+  else if( s == "sla (ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0x21);}
+  else if( s == "sla (ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0x22);}
+  else if( s == "sla (ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0x23);}
+  else if( s == "sla (ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0x24);}
+  else if( s == "sla (ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0x25);}
+  else if( s == "sla (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x26);}
+  else if( s == "sla (ix+*),a"){addByte(0xDD);addByte(0xCB);addByte(0x27);}
+  else if( s == "sra (ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0x28);}
+  else if( s == "sra (ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0x29);}
+  else if( s == "sra (ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0x2A);}
+  else if( s == "sra (ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0x2B);}
+  else if( s == "sra (ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0x2C);}
+  else if( s == "sra (ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0x2D);}
+  else if( s == "sra (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x2E);}
+  else if( s == "sra (ix+*),a" ){addByte(0xDD);addByte(0xCB);addByte(0x2F);}
+  else if( s == "sll (ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0x30);}
+  else if( s == "sll (ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0x31);}
+  else if( s == "sll (ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0x32);}
+  else if( s == "sll (ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0x33);}
+  else if( s == "sll (ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0x34);}
+  else if( s == "sll (ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0x35);}
+  else if( s == "sll (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x36);}
+  else if( s == "sll (ix+*),a"){addByte(0xDD);addByte(0xCB);addByte(0x37);}
+  else if( s == "srl (ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0x38);}
+  else if( s == "srl (ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0x39);}
+  else if( s == "srl (ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0x3A);}
+  else if( s == "srl (ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0x3B);}
+  else if( s == "srl (ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0x3C);}
+  else if( s == "srl (ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0x3D);}
+  else if( s == "srl (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x3E);}
+  else if( s == "srl (ix+*),a" ){addByte(0xDD);addByte(0xCB);addByte(0x3F);}
+  else if( s == "bit 0,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x40);}
+  else if( s == "bit 0,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x41);}
+  else if( s == "bit 0,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x42);}
+  else if( s == "bit 0,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x43);}
+  else if( s == "bit 0,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x44);}
+  else if( s == "bit 0,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x45);}
+  else if( s == "bit 0,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x46);}
+  else if( s == "bit 0,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x47);}
+  else if( s == "bit 1,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x48);}
+  else if( s == "bit 1,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x49);}
+  else if( s == "bit 1,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x4A);}
+  else if( s == "bit 1,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x4B);}
+  else if( s == "bit 1,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x4C);}
+  else if( s == "bit 1,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x4D);}
+  else if( s == "bit 1,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x4E);}
+  else if( s == "bit 1,(ix+*)" ){addByte(0xDD);addByte(0xCB);addByte(0x4F);}
+  else if( s == "bit 2,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x50);}
+  else if( s == "bit 2,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x51);}
+  else if( s == "bit 2,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x52);}
+  else if( s == "bit 2,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x53);}
+  else if( s == "bit 2,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x54);}
+  else if( s == "bit 2,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x55);}
+  else if( s == "bit 2,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x56);}
+  else if( s == "bit 2,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x57);}
+  else if( s == "bit 3,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x58);}
+  else if( s == "bit 3,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x59);}
+  else if( s == "bit 3,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x5A);}
+  else if( s == "bit 3,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x5B);}
+  else if( s == "bit 3,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x5C);}
+  else if( s == "bit 3,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x5D);}
+  else if( s == "bit 3,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x5E);}
+  else if( s == "bit 3,(ix+*)" ){addByte(0xDD);addByte(0xCB);addByte(0x5F);}
+  else if( s == "bit 4,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x60);}
+  else if( s == "bit 4,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x61);}
+  else if( s == "bit 4,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x62);}
+  else if( s == "bit 4,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x63);}
+  else if( s == "bit 4,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x64);}
+  else if( s == "bit 4,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x65);}
+  else if( s == "bit 4,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x66);}
+  else if( s == "bit 4,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x67);}
+  else if( s == "bit 5,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x68);}
+  else if( s == "bit 5,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x69);}
+  else if( s == "bit 5,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x6A);}
+  else if( s == "bit 5,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x6B);}
+  else if( s == "bit 5,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x6C);}
+  else if( s == "bit 5,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x6D);}
+  else if( s == "bit 5,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x6E);}
+  else if( s == "bit 5,(ix+*)" ){addByte(0xDD);addByte(0xCB);addByte(0x6F);}
+  else if( s == "bit 6,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x70);}
+  else if( s == "bit 6,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x71);}
+  else if( s == "bit 6,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x72);}
+  else if( s == "bit 6,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x73);}
+  else if( s == "bit 6,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x74);}
+  else if( s == "bit 6,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x75);}
+  else if( s == "bit 6,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x76);}
+  else if( s == "bit 6,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x77);}
+  else if( s == "bit 7,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x78);}
+  else if( s == "bit 7,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x79);}
+  else if( s == "bit 7,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x7A);}
+  else if( s == "bit 7,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x7B);}
+  else if( s == "bit 7,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x7C);}
+  else if( s == "bit 7,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x7D);}
+  else if( s == "bit 7,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x7E);}
+  else if( s == "bit 7,(ix+*)" ){addByte(0xDD);addByte(0xCB);addByte(0x7F);}
+  else if( s == "res 0,(ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0x80);}
+  else if( s == "res 0,(ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0x81);}
+  else if( s == "res 0,(ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0x82);}
+  else if( s == "res 0,(ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0x83);}
+  else if( s == "res 0,(ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0x84);}
+  else if( s == "res 0,(ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0x85);}
+  else if( s == "res 0,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x86);}
+  else if( s == "res 0,(ix+*),a"){addByte(0xDD);addByte(0xCB);addByte(0x87);}
+  else if( s == "res 1,(ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0x88);}
+  else if( s == "res 1,(ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0x89);}
+  else if( s == "res 1,(ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0x8A);}
+  else if( s == "res 1,(ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0x8B);}
+  else if( s == "res 1,(ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0x8C);}
+  else if( s == "res 1,(ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0x8D);}
+  else if( s == "res 1,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x8E);}
+  else if( s == "res 1,(ix+*),a" ){addByte(0xDD);addByte(0xCB);addByte(0x8F);}
+  else if( s == "res 2,(ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0x90);}
+  else if( s == "res 2,(ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0x91);}
+  else if( s == "res 2,(ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0x92);}
+  else if( s == "res 2,(ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0x93);}
+  else if( s == "res 2,(ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0x94);}
+  else if( s == "res 2,(ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0x95);}
+  else if( s == "res 2,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x96);}
+  else if( s == "res 2,(ix+*),a"){addByte(0xDD);addByte(0xCB);addByte(0x97);}
+  else if( s == "res 3,(ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0x98);}
+  else if( s == "res 3,(ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0x99);}
+  else if( s == "res 3,(ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0x9A);}
+  else if( s == "res 3,(ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0x9B);}
+  else if( s == "res 3,(ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0x9C);}
+  else if( s == "res 3,(ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0x9D);}
+  else if( s == "res 3,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x9E);}
+  else if( s == "res 3,(ix+*),a" ){addByte(0xDD);addByte(0xCB);addByte(0x9F);}
+  else if( s == "res 4,(ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0xA0);}
+  else if( s == "res 4,(ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0xA1);}
+  else if( s == "res 4,(ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0xA2);}
+  else if( s == "res 4,(ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0xA3);}
+  else if( s == "res 4,(ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0xA4);}
+  else if( s == "res 4,(ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0xA5);}
+  else if( s == "res 4,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xA6);}
+  else if( s == "res 4,(ix+*),a"){addByte(0xDD);addByte(0xCB);addByte(0xA7);}
+  else if( s == "res 5,(ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0xA8);}
+  else if( s == "res 5,(ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0xA9);}
+  else if( s == "res 5,(ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0xAA);}
+  else if( s == "res 5,(ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0xAB);}
+  else if( s == "res 5,(ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0xAC);}
+  else if( s == "res 5,(ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0xAD);}
+  else if( s == "res 5,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xAE);}
+  else if( s == "res 5,(ix+*),a" ){addByte(0xDD);addByte(0xCB);addByte(0xAF);}
+  else if( s == "res 6,(ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0xB0);}
+  else if( s == "res 6,(ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0xB1);}
+  else if( s == "res 6,(ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0xB2);}
+  else if( s == "res 6,(ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0xB3);}
+  else if( s == "res 6,(ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0xB4);}
+  else if( s == "res 6,(ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0xB5);}
+  else if( s == "res 6,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xB6);}
+  else if( s == "res 6,(ix+*),a"){addByte(0xDD);addByte(0xCB);addByte(0xB7);}
+  else if( s == "res 7,(ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0xB8);}
+  else if( s == "res 7,(ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0xB9);}
+  else if( s == "res 7,(ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0xBA);}
+  else if( s == "res 7,(ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0xBB);}
+  else if( s == "res 7,(ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0xBC);}
+  else if( s == "res 7,(ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0xBD);}
+  else if( s == "res 7,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xBE);}
+  else if( s == "res 7,(ix+*),a" ){addByte(0xDD);addByte(0xCB);addByte(0xBF);}
+  else if( s == "set 0,(ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0xC0);}
+  else if( s == "set 0,(ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0xC1);}
+  else if( s == "set 0,(ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0xC2);}
+  else if( s == "set 0,(ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0xC3);}
+  else if( s == "set 0,(ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0xC4);}
+  else if( s == "set 0,(ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0xC5);}
+  else if( s == "set 0,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xC6);}
+  else if( s == "set 0,(ix+*),a"){addByte(0xDD);addByte(0xCB);addByte(0xC7);}
+  else if( s == "set 1,(ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0xC8);}
+  else if( s == "set 1,(ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0xC9);}
+  else if( s == "set 1,(ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0xCA);}
+  else if( s == "set 1,(ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0xCB);}
+  else if( s == "set 1,(ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0xCC);}
+  else if( s == "set 1,(ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0xCD);}
+  else if( s == "set 1,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xCE);}
+  else if( s == "set 1,(ix+*),a" ){addByte(0xDD);addByte(0xCB);addByte(0xCF);}
+  else if( s == "set 2,(ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0xD0);}
+  else if( s == "set 2,(ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0xD1);}
+  else if( s == "set 2,(ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0xD2);}
+  else if( s == "set 2,(ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0xD3);}
+  else if( s == "set 2,(ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0xD4);}
+  else if( s == "set 2,(ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0xD5);}
+  else if( s == "set 2,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xD6);}
+  else if( s == "set 2,(ix+*),a"){addByte(0xDD);addByte(0xCB);addByte(0xD7);}
+  else if( s == "set 3,(ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0xD8);}
+  else if( s == "set 3,(ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0xD9);}
+  else if( s == "set 3,(ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0xDA);}
+  else if( s == "set 3,(ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0xDB);}
+  else if( s == "set 3,(ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0xDC);}
+  else if( s == "set 3,(ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0xDD);}
+  else if( s == "set 3,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xDE);}
+  else if( s == "set 3,(ix+*),a" ){addByte(0xDD);addByte(0xCB);addByte(0xDF);}
+  else if( s == "set 4,(ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0xE0);}
+  else if( s == "set 4,(ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0xE1);}
+  else if( s == "set 4,(ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0xE2);}
+  else if( s == "set 4,(ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0xE3);}
+  else if( s == "set 4,(ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0xE4);}
+  else if( s == "set 4,(ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0xE5);}
+  else if( s == "set 4,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xE6);}
+  else if( s == "set 4,(ix+*),a"){addByte(0xDD);addByte(0xCB);addByte(0xE7);}
+  else if( s == "set 5,(ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0xE8);}
+  else if( s == "set 5,(ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0xE9);}
+  else if( s == "set 5,(ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0xEA);}
+  else if( s == "set 5,(ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0xEB);}
+  else if( s == "set 5,(ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0xEC);}
+  else if( s == "set 5,(ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0xED);}
+  else if( s == "set 5,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xEE);}
+  else if( s == "set 5,(ix+*),a" ){addByte(0xDD);addByte(0xCB);addByte(0xEF);}
+  else if( s == "set 6,(ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0xF0);}
+  else if( s == "set 6,(ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0xF1);}
+  else if( s == "set 6,(ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0xF2);}
+  else if( s == "set 6,(ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0xF3);}
+  else if( s == "set 6,(ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0xF4);}
+  else if( s == "set 6,(ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0xF5);}
+  else if( s == "set 6,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xF6);}
+  else if( s == "set 6,(ix+*),a"){addByte(0xDD);addByte(0xCB);addByte(0xF7);}
+  else if( s == "set 7,(ix+*),b"){addByte(0xDD);addByte(0xCB);addByte(0xF8);}
+  else if( s == "set 7,(ix+*),c"){addByte(0xDD);addByte(0xCB);addByte(0xF9);}
+  else if( s == "set 7,(ix+*),d"){addByte(0xDD);addByte(0xCB);addByte(0xFA);}
+  else if( s == "set 7,(ix+*),e"){addByte(0xDD);addByte(0xCB);addByte(0xFB);}
+  else if( s == "set 7,(ix+*),h"){addByte(0xDD);addByte(0xCB);addByte(0xFC);}
+  else if( s == "set 7,(ix+*),l"){addByte(0xDD);addByte(0xCB);addByte(0xFD);}
+  else if( s == "set 7,(ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xFE);}
+  else if( s == "set 7,(ix+*),a" ){addByte(0xDD);addByte(0xCB);addByte(0xFF);}
+  else if( s == "rlc (iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0x0);}
+  else if( s == "rlc (iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0x1);}
+  else if( s == "rlc (iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0x2);}
+  else if( s == "rlc (iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0x3);}
+  else if( s == "rlc (iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0x4);}
+  else if( s == "rlc (iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0x5);}
+  else if( s == "rlc (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x6);}
+  else if( s == "rlc (iy+*),a"){addByte(0xFD);addByte(0xCB);addByte(0x7);}
+  else if( s == "rrc (iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0x8);}
+  else if( s == "rrc (iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0x9);}
+  else if( s == "rrc (iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0xA);}
+  else if( s == "rrc (iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0xB);}
+  else if( s == "rrc (iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0xC);}
+  else if( s == "rrc (iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0xD);}
+  else if( s == "rrc (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xE);}
+  else if( s == "rrc (iy+*),a" ){addByte(0xFD);addByte(0xCB);addByte(0xF);}
+  else if( s == "rl (iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0x10);}
+  else if( s == "rl (iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0x11);}
+  else if( s == "rl (iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0x12);}
+  else if( s == "rl (iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0x13);}
+  else if( s == "rl (iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0x14);}
+  else if( s == "rl (iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0x15);}
+  else if( s == "rl (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x16);}
+  else if( s == "rl (iy+*),a"){addByte(0xFD);addByte(0xCB);addByte(0x17);}
+  else if( s == "rr (iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0x18);}
+  else if( s == "rr (iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0x19);}
+  else if( s == "rr (iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0x1A);}
+  else if( s == "rr (iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0x1B);}
+  else if( s == "rr (iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0x1C);}
+  else if( s == "rr (iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0x1D);}
+  else if( s == "rr (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x1E);}
+  else if( s == "rr (iy+*),a" ){addByte(0xFD);addByte(0xCB);addByte(0x1F);}
+  else if( s == "sla (iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0x20);}
+  else if( s == "sla (iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0x21);}
+  else if( s == "sla (iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0x22);}
+  else if( s == "sla (iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0x23);}
+  else if( s == "sla (iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0x24);}
+  else if( s == "sla (iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0x25);}
+  else if( s == "sla (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x26);}
+  else if( s == "sla (iy+*),a"){addByte(0xFD);addByte(0xCB);addByte(0x27);}
+  else if( s == "sra (iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0x28);}
+  else if( s == "sra (iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0x29);}
+  else if( s == "sra (iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0x2A);}
+  else if( s == "sra (iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0x2B);}
+  else if( s == "sra (iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0x2C);}
+  else if( s == "sra (iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0x2D);}
+  else if( s == "sra (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x2E);}
+  else if( s == "sra (iy+*),a" ){addByte(0xFD);addByte(0xCB);addByte(0x2F);}
+  else if( s == "sll (iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0x30);}
+  else if( s == "sll (iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0x31);}
+  else if( s == "sll (iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0x32);}
+  else if( s == "sll (iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0x33);}
+  else if( s == "sll (iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0x34);}
+  else if( s == "sll (iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0x35);}
+  else if( s == "sll (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x36);}
+  else if( s == "sll (iy+*),a"){addByte(0xFD);addByte(0xCB);addByte(0x37);}
+  else if( s == "srl (iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0x38);}
+  else if( s == "srl (iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0x39);}
+  else if( s == "srl (iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0x3A);}
+  else if( s == "srl (iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0x3B);}
+  else if( s == "srl (iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0x3C);}
+  else if( s == "srl (iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0x3D);}
+  else if( s == "srl (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x3E);}
+  else if( s == "srl (iy+*),a" ){addByte(0xFD);addByte(0xCB);addByte(0x3F);}
+  else if( s == "bit 0,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x40);}
+  else if( s == "bit 0,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x41);}
+  else if( s == "bit 0,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x42);}
+  else if( s == "bit 0,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x43);}
+  else if( s == "bit 0,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x44);}
+  else if( s == "bit 0,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x45);}
+  else if( s == "bit 0,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x46);}
+  else if( s == "bit 0,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x47);}
+  else if( s == "bit 1,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x48);}
+  else if( s == "bit 1,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x49);}
+  else if( s == "bit 1,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x4A);}
+  else if( s == "bit 1,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x4B);}
+  else if( s == "bit 1,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x4C);}
+  else if( s == "bit 1,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x4D);}
+  else if( s == "bit 1,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x4E);}
+  else if( s == "bit 1,(iy+*)" ){addByte(0xFD);addByte(0xCB);addByte(0x4F);}
+  else if( s == "bit 2,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x50);}
+  else if( s == "bit 2,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x51);}
+  else if( s == "bit 2,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x52);}
+  else if( s == "bit 2,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x53);}
+  else if( s == "bit 2,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x54);}
+  else if( s == "bit 2,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x55);}
+  else if( s == "bit 2,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x56);}
+  else if( s == "bit 2,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x57);}
+  else if( s == "bit 3,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x58);}
+  else if( s == "bit 3,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x59);}
+  else if( s == "bit 3,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x5A);}
+  else if( s == "bit 3,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x5B);}
+  else if( s == "bit 3,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x5C);}
+  else if( s == "bit 3,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x5D);}
+  else if( s == "bit 3,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x5E);}
+  else if( s == "bit 3,(iy+*)" ){addByte(0xFD);addByte(0xCB);addByte(0x5F);}
+  else if( s == "bit 4,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x60);}
+  else if( s == "bit 4,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x61);}
+  else if( s == "bit 4,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x62);}
+  else if( s == "bit 4,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x63);}
+  else if( s == "bit 4,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x64);}
+  else if( s == "bit 4,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x65);}
+  else if( s == "bit 4,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x66);}
+  else if( s == "bit 4,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x67);}
+  else if( s == "bit 5,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x68);}
+  else if( s == "bit 5,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x69);}
+  else if( s == "bit 5,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x6A);}
+  else if( s == "bit 5,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x6B);}
+  else if( s == "bit 5,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x6C);}
+  else if( s == "bit 5,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x6D);}
+  else if( s == "bit 5,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x6E);}
+  else if( s == "bit 5,(iy+*)" ){addByte(0xFD);addByte(0xCB);addByte(0x6F);}
+  else if( s == "bit 6,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x70);}
+  else if( s == "bit 6,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x71);}
+  else if( s == "bit 6,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x72);}
+  else if( s == "bit 6,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x73);}
+  else if( s == "bit 6,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x74);}
+  else if( s == "bit 6,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x75);}
+  else if( s == "bit 6,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x76);}
+  else if( s == "bit 6,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x77);}
+  else if( s == "bit 7,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x78);}
+  else if( s == "bit 7,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x79);}
+  else if( s == "bit 7,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x7A);}
+  else if( s == "bit 7,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x7B);}
+  else if( s == "bit 7,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x7C);}
+  else if( s == "bit 7,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x7D);}
+  else if( s == "bit 7,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x7E);}
+  else if( s == "bit 7,(iy+*)" ){addByte(0xFD);addByte(0xCB);addByte(0x7F);}
+  else if( s == "res 0,(iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0x80);}
+  else if( s == "res 0,(iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0x81);}
+  else if( s == "res 0,(iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0x82);}
+  else if( s == "res 0,(iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0x83);}
+  else if( s == "res 0,(iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0x84);}
+  else if( s == "res 0,(iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0x85);}
+  else if( s == "res 0,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x86);}
+  else if( s == "res 0,(iy+*),a"){addByte(0xFD);addByte(0xCB);addByte(0x87);}
+  else if( s == "res 1,(iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0x88);}
+  else if( s == "res 1,(iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0x89);}
+  else if( s == "res 1,(iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0x8A);}
+  else if( s == "res 1,(iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0x8B);}
+  else if( s == "res 1,(iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0x8C);}
+  else if( s == "res 1,(iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0x8D);}
+  else if( s == "res 1,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x8E);}
+  else if( s == "res 1,(iy+*),a" ){addByte(0xFD);addByte(0xCB);addByte(0x8F);}
+  else if( s == "res 2,(iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0x90);}
+  else if( s == "res 2,(iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0x91);}
+  else if( s == "res 2,(iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0x92);}
+  else if( s == "res 2,(iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0x93);}
+  else if( s == "res 2,(iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0x94);}
+  else if( s == "res 2,(iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0x95);}
+  else if( s == "res 2,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x96);}
+  else if( s == "res 2,(iy+*),a"){addByte(0xFD);addByte(0xCB);addByte(0x97);}
+  else if( s == "res 3,(iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0x98);}
+  else if( s == "res 3,(iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0x99);}
+  else if( s == "res 3,(iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0x9A);}
+  else if( s == "res 3,(iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0x9B);}
+  else if( s == "res 3,(iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0x9C);}
+  else if( s == "res 3,(iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0x9D);}
+  else if( s == "res 3,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x9E);}
+  else if( s == "res 3,(iy+*),a" ){addByte(0xFD);addByte(0xCB);addByte(0x9F);}
+  else if( s == "res 4,(iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0xA0);}
+  else if( s == "res 4,(iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0xA1);}
+  else if( s == "res 4,(iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0xA2);}
+  else if( s == "res 4,(iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0xA3);}
+  else if( s == "res 4,(iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0xA4);}
+  else if( s == "res 4,(iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0xA5);}
+  else if( s == "res 4,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xA6);}
+  else if( s == "res 4,(iy+*),a"){addByte(0xFD);addByte(0xCB);addByte(0xA7);}
+  else if( s == "res 5,(iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0xA8);}
+  else if( s == "res 5,(iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0xA9);}
+  else if( s == "res 5,(iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0xAA);}
+  else if( s == "res 5,(iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0xAB);}
+  else if( s == "res 5,(iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0xAC);}
+  else if( s == "res 5,(iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0xAD);}
+  else if( s == "res 5,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xAE);}
+  else if( s == "res 5,(iy+*),a" ){addByte(0xFD);addByte(0xCB);addByte(0xAF);}
+  else if( s == "res 6,(iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0xB0);}
+  else if( s == "res 6,(iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0xB1);}
+  else if( s == "res 6,(iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0xB2);}
+  else if( s == "res 6,(iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0xB3);}
+  else if( s == "res 6,(iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0xB4);}
+  else if( s == "res 6,(iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0xB5);}
+  else if( s == "res 6,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xB6);}
+  else if( s == "res 6,(iy+*),a"){addByte(0xFD);addByte(0xCB);addByte(0xB7);}
+  else if( s == "res 7,(iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0xB8);}
+  else if( s == "res 7,(iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0xB9);}
+  else if( s == "res 7,(iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0xBA);}
+  else if( s == "res 7,(iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0xBB);}
+  else if( s == "res 7,(iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0xBC);}
+  else if( s == "res 7,(iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0xBD);}
+  else if( s == "res 7,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xBE);}
+  else if( s == "res 7,(iy+*),a" ){addByte(0xFD);addByte(0xCB);addByte(0xBF);}
+  else if( s == "set 0,(iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0xC0);}
+  else if( s == "set 0,(iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0xC1);}
+  else if( s == "set 0,(iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0xC2);}
+  else if( s == "set 0,(iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0xC3);}
+  else if( s == "set 0,(iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0xC4);}
+  else if( s == "set 0,(iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0xC5);}
+  else if( s == "set 0,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xC6);}
+  else if( s == "set 0,(iy+*),a"){addByte(0xFD);addByte(0xCB);addByte(0xC7);}
+  else if( s == "set 1,(iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0xC8);}
+  else if( s == "set 1,(iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0xC9);}
+  else if( s == "set 1,(iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0xCA);}
+  else if( s == "set 1,(iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0xCB);}
+  else if( s == "set 1,(iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0xCC);}
+  else if( s == "set 1,(iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0xCD);}
+  else if( s == "set 1,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xCE);}
+  else if( s == "set 1,(iy+*),a" ){addByte(0xFD);addByte(0xCB);addByte(0xCF);}
+  else if( s == "set 2,(iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0xD0);}
+  else if( s == "set 2,(iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0xD1);}
+  else if( s == "set 2,(iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0xD2);}
+  else if( s == "set 2,(iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0xD3);}
+  else if( s == "set 2,(iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0xD4);}
+  else if( s == "set 2,(iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0xD5);}
+  else if( s == "set 2,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xD6);}
+  else if( s == "set 2,(iy+*),a"){addByte(0xFD);addByte(0xCB);addByte(0xD7);}
+  else if( s == "set 3,(iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0xD8);}
+  else if( s == "set 3,(iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0xD9);}
+  else if( s == "set 3,(iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0xDA);}
+  else if( s == "set 3,(iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0xDB);}
+  else if( s == "set 3,(iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0xDC);}
+  else if( s == "set 3,(iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0xDD);}
+  else if( s == "set 3,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xDE);}
+  else if( s == "set 3,(iy+*),a" ){addByte(0xFD);addByte(0xCB);addByte(0xDF);}
+  else if( s == "set 4,(iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0xE0);}
+  else if( s == "set 4,(iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0xE1);}
+  else if( s == "set 4,(iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0xE2);}
+  else if( s == "set 4,(iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0xE3);}
+  else if( s == "set 4,(iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0xE4);}
+  else if( s == "set 4,(iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0xE5);}
+  else if( s == "set 4,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xE6);}
+  else if( s == "set 4,(iy+*),a"){addByte(0xFD);addByte(0xCB);addByte(0xE7);}
+  else if( s == "set 5,(iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0xE8);}
+  else if( s == "set 5,(iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0xE9);}
+  else if( s == "set 5,(iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0xEA);}
+  else if( s == "set 5,(iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0xEB);}
+  else if( s == "set 5,(iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0xEC);}
+  else if( s == "set 5,(iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0xED);}
+  else if( s == "set 5,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xEE);}
+  else if( s == "set 5,(iy+*),a" ){addByte(0xFD);addByte(0xCB);addByte(0xEF);}
+  else if( s == "set 6,(iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0xF0);}
+  else if( s == "set 6,(iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0xF1);}
+  else if( s == "set 6,(iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0xF2);}
+  else if( s == "set 6,(iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0xF3);}
+  else if( s == "set 6,(iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0xF4);}
+  else if( s == "set 6,(iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0xF5);}
+  else if( s == "set 6,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xF6);}
+  else if( s == "set 6,(iy+*),a"){addByte(0xFD);addByte(0xCB);addByte(0xF7);}
+  else if( s == "set 7,(iy+*),b"){addByte(0xFD);addByte(0xCB);addByte(0xF8);}
+  else if( s == "set 7,(iy+*),c"){addByte(0xFD);addByte(0xCB);addByte(0xF9);}
+  else if( s == "set 7,(iy+*),d"){addByte(0xFD);addByte(0xCB);addByte(0xFA);}
+  else if( s == "set 7,(iy+*),e"){addByte(0xFD);addByte(0xCB);addByte(0xFB);}
+  else if( s == "set 7,(iy+*),h"){addByte(0xFD);addByte(0xCB);addByte(0xFC);}
+  else if( s == "set 7,(iy+*),l"){addByte(0xFD);addByte(0xCB);addByte(0xFD);}
+  else if( s == "set 7,(iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xFE);}
+  else if( s == "set 7,(iy+*),a" ){addByte(0xFD);addByte(0xCB);addByte(0xFF);}
 
-      cerr << "    program index: 0x" << hex << uppercase << program_index << " (" << dec << program_index << " decimal)" << endl << endl;
-      compilation_failed=1;
-      //addByte(0xED);
-    }
-  else if( s == "ldir" ){addByte(0xED);addByte(0xB0);}
+  else if( s == "add ix,bc"){addByte(0xDD);addByte(0x9);}
+  else if( s == "add ix,de"){addByte(0xDD);addByte(0x19);}
+  else if( s == "ld ix,**"){addByte(0xDD);addByte(0x21);}
+  else if( s == "ld (**),ix"){addByte(0xDD);addByte(0x22);}
+  else if( s == "inc ix"){addByte(0xDD);addByte(0x23);}
+  else if( s == "inc ixh"){addByte(0xDD);addByte(0x24);}
+  else if( s == "dec ixh"){addByte(0xDD);addByte(0x25);}
+  else if( s == "ld ixh,*"){addByte(0xDD);addByte(0x26);}
+  else if( s == "add ix,ix"){addByte(0xDD);addByte(0x29);}
+  else if( s == "ld ix,(**)"){addByte(0xDD);addByte(0x2A);}
+  else if( s == "dec ix"){addByte(0xDD);addByte(0x2B);}
+  else if( s == "inc ixl"){addByte(0xDD);addByte(0x2C);}
+  else if( s == "dec ixl"){addByte(0xDD);addByte(0x2D);}
+  else if( s == "ld ixl,*"){addByte(0xDD);addByte(0x2E);}
+  else if( s == "inc (ix+*)"){addByte(0xDD);addByte(0x34);}
+  else if( s == "dec (ix+*)"){addByte(0xDD);addByte(0x35);}
+  else if( s == "ld (ix+*),*"){addByte(0xDD);addByte(0x36);}
+  else if( s == "add ix,sp"){addByte(0xDD);addByte(0x39);}
+  else if( s == "ld b,ixh"){addByte(0xDD);addByte(0x44);}
+  else if( s == "ld b,ixl"){addByte(0xDD);addByte(0x45);}
+  else if( s == "ld b,(ix+*)"){addByte(0xDD);addByte(0x46);}
+  else if( s == "ld c,ixh"){addByte(0xDD);addByte(0x4C);}
+  else if( s == "ld c,ixl"){addByte(0xDD);addByte(0x4D);}
+  else if( s == "ld c,(ix+*)"){addByte(0xDD);addByte(0x4E);}
+  else if( s == "ld d,ixh"){addByte(0xDD);addByte(0x54);}
+  else if( s == "ld d,ixl"){addByte(0xDD);addByte(0x55);}
+  else if( s == "ld d,(ix+*)"){addByte(0xDD);addByte(0x56);}
+  else if( s == "ld e,ixh"){addByte(0xDD);addByte(0x5C);}
+  else if( s == "ld e,ixl"){addByte(0xDD);addByte(0x5D);}
+  else if( s == "ld e,(ix+*)"){addByte(0xDD);addByte(0x5E);}
+  else if( s == "ld ixh,b"){addByte(0xDD);addByte(0x60);}
+  else if( s == "ld ixh,c"){addByte(0xDD);addByte(0x61);}
+  else if( s == "ld ixh,d"){addByte(0xDD);addByte(0x62);}
+  else if( s == "ld ixh,e"){addByte(0xDD);addByte(0x63);}
+  else if( s == "ld ixh,ixh"){addByte(0xDD);addByte(0x64);}
+  else if( s == "ld ixh,ixl"){addByte(0xDD);addByte(0x65);}
+  else if( s == "ld h,(ix+*)"){addByte(0xDD);addByte(0x66);}
+  else if( s == "ld ixh,a"){addByte(0xDD);addByte(0x67);}
+  else if( s == "ld ixl,b"){addByte(0xDD);addByte(0x68);}
+  else if( s == "ld ixl,c"){addByte(0xDD);addByte(0x69);}
+  else if( s == "ld ixl,d"){addByte(0xDD);addByte(0x6A);}
+  else if( s == "ld ixl,e"){addByte(0xDD);addByte(0x6B);}
+  else if( s == "ld ixl,ixh"){addByte(0xDD);addByte(0x6C);}
+  else if( s == "ld ixl,ixl"){addByte(0xDD);addByte(0x6D);}
+  else if( s == "ld l,(ix+*)"){addByte(0xDD);addByte(0x6E);}
+  else if( s == "ld ixl,a" ){addByte(0xDD);addByte(0x6F);}
+  else if( s == "ld (ix+*),b"){addByte(0xDD);addByte(0x70);}
+  else if( s == "ld (ix+*),c"){addByte(0xDD);addByte(0x71);}
+  else if( s == "ld (ix+*),d"){addByte(0xDD);addByte(0x72);}
+  else if( s == "ld (ix+*),e"){addByte(0xDD);addByte(0x73);}
+  else if( s == "ld (ix+*),h"){addByte(0xDD);addByte(0x74);}
+  else if( s == "ld (ix+*),l"){addByte(0xDD);addByte(0x75);}
+  else if( s == "ld (ix+*),a"){addByte(0xDD);addByte(0x77);}
+  else if( s == "ld a,ixh"){addByte(0xDD);addByte(0x7C);}
+  else if( s == "ld a,ixl"){addByte(0xDD);addByte(0x7D);}
+  else if( s == "ld a,(ix+*)"){addByte(0xDD);addByte(0x7E);}
+  else if( s == "add a,ixh"){addByte(0xDD);addByte(0x84);}
+  else if( s == "add a,ixl"){addByte(0xDD);addByte(0x85);}
+  else if( s == "add a,(ix+*)"){addByte(0xDD);addByte(0x86);}
+  else if( s == "adc a,ixh"){addByte(0xDD);addByte(0x8C);}
+  else if( s == "adc a,ixl"){addByte(0xDD);addByte(0x8D);}
+  else if( s == "adc a,(ix+*)"){addByte(0xDD);addByte(0x8E);}
+  else if( s == "sub ixh"){addByte(0xDD);addByte(0x94);}
+  else if( s == "sub ixl"){addByte(0xDD);addByte(0x95);}
+  else if( s == "sub (ix+*)"){addByte(0xDD);addByte(0x96);}
+  else if( s == "sbc a,ixh"){addByte(0xDD);addByte(0x9C);}
+  else if( s == "sbc a,ixl"){addByte(0xDD);addByte(0x9D);}
+  else if( s == "sbc a,(ix+*)"){addByte(0xDD);addByte(0x9E);}
+  else if( s == "and ixh"){addByte(0xDD);addByte(0xA4);}
+  else if( s == "and ixl"){addByte(0xDD);addByte(0xA5);}
+  else if( s == "and (ix+*)"){addByte(0xDD);addByte(0xA6);}
+  else if( s == "xor ixh"){addByte(0xDD);addByte(0xAC);}
+  else if( s == "xor ixl"){addByte(0xDD);addByte(0xAD);}
+  else if( s == "xor (ix+*)"){addByte(0xDD);addByte(0xAE);}
+  else if( s == "or ixh"){addByte(0xDD);addByte(0xB4);}
+  else if( s == "or ixl"){addByte(0xDD);addByte(0xB5);}
+  else if( s == "or (ix+*)"){addByte(0xDD);addByte(0xB6);}
+  else if( s == "cp ixh"){addByte(0xDD);addByte(0xBC);}
+  else if( s == "cp ixl"){addByte(0xDD);addByte(0xBD);}
+  else if( s == "cp (ix+*)"){addByte(0xDD);addByte(0xBE);}
+  else if( s == "pop ix"){addByte(0xDD);addByte(0xE1);}
+  else if( s == "ex (sp),ix"){addByte(0xDD);addByte(0xE3);}
+  else if( s == "push ix"){addByte(0xDD);addByte(0xE5);}
+  else if( s == "jp (ix)"){addByte(0xDD);addByte(0xE9);}
+  else if( s == "ld sp,ix"){addByte(0xDD);addByte(0xF9);}
+else if( s == "add iy,bc"){addByte(0xFD);addByte(0x9);}
+else if( s == "add iy, de"){addByte(0xFD);addByte(0x19);}
+else if( s == "ld iy, **"){addByte(0xFD);addByte(0x21);}
+else if( s == "ld (**), iy"){addByte(0xFD);addByte(0x22);}
+else if( s == "inc iy"){addByte(0xFD);addByte(0x23);}
+else if( s == "inc iyh"){addByte(0xFD);addByte(0x24);}
+else if( s == "dec iyh"){addByte(0xFD);addByte(0x25);}
+else if( s == "ld iyh,*"){addByte(0xFD);addByte(0x26);}
+else if( s == "add iy,iy"){addByte(0xFD);addByte(0x29);}
+else if( s == "ld iy,(**)"){addByte(0xFD);addByte(0x2A);}
+else if( s == "dec iy"){addByte(0xFD);addByte(0x2B);}
+else if( s == "inc iyl"){addByte(0xFD);addByte(0x2C);}
+else if( s == "dec iyl"){addByte(0xFD);addByte(0x2D);}
+else if( s == "ld iyl,*"){addByte(0xFD);addByte(0x2E);}
+else if( s == "inc (iy+*)"){addByte(0xFD);addByte(0x34);}
+else if( s == "dec (iy+*)"){addByte(0xFD);addByte(0x35);}
+else if( s == "ld (iy+*),*"){addByte(0xFD);addByte(0x36);}
+else if( s == "add iy,sp"){addByte(0xFD);addByte(0x39);}
+else if( s == "ld b,iyh"){addByte(0xFD);addByte(0x44);}
+else if( s == "ld b,iyl"){addByte(0xFD);addByte(0x45);}
+else if( s == "ld b,(iy+*)"){addByte(0xFD);addByte(0x46);}
+else if( s == "ld c,iyh"){addByte(0xFD);addByte(0x4C);}
+else if( s == "ld c,iyl"){addByte(0xFD);addByte(0x4D);}
+else if( s == "ld c,(iy+*)"){addByte(0xFD);addByte(0x4E);}
+else if( s == "ld d,iyh"){addByte(0xFD);addByte(0x54);}
+else if( s == "ld d,iyl"){addByte(0xFD);addByte(0x55);}
+else if( s == "ld d,(iy+*)"){addByte(0xFD);addByte(0x56);}
+else if( s == "ld e,iyh"){addByte(0xFD);addByte(0x5C);}
+else if( s == "ld e,iyl"){addByte(0xFD);addByte(0x5D);}
+else if( s == "ld e,(iy+*)"){addByte(0xFD);addByte(0x5E);}
+else if( s == "ld iyh,b"){addByte(0xFD);addByte(0x60);}
+else if( s == "ld iyh,c"){addByte(0xFD);addByte(0x61);}
+else if( s == "ld iyh,d"){addByte(0xFD);addByte(0x62);}
+else if( s == "ld iyh,e"){addByte(0xFD);addByte(0x63);}
+else if( s == "ld iyh,iyh"){addByte(0xFD);addByte(0x64);}
+else if( s == "ld iyh,iyl"){addByte(0xFD);addByte(0x65);}
+else if( s == "ld h,(iy+*)"){addByte(0xFD);addByte(0x66);}
+else if( s == "ld iyh,a"){addByte(0xFD);addByte(0x67);}
+else if( s == "ld iyl,b"){addByte(0xFD);addByte(0x68);}
+else if( s == "ld iyl,c"){addByte(0xFD);addByte(0x69);}
+else if( s == "ld iyl,d"){addByte(0xFD);addByte(0x6A);}
+else if( s == "ld iyl,e"){addByte(0xFD);addByte(0x6B);}
+else if( s == "ld iyl,iyh"){addByte(0xFD);addByte(0x6C);}
+else if( s == "ld iyl,iyl"){addByte(0xFD);addByte(0x6D);}
+else if( s == "ld l,(iy+*)"){addByte(0xFD);addByte(0x6E);}
+else if( s == "ld iyl,a" ){addByte(0xFD);addByte(0x6F);}
+else if( s == "ld (iy+*),b"){addByte(0xFD);addByte(0x70);}
+else if( s == "ld (iy+*),c"){addByte(0xFD);addByte(0x71);}
+else if( s == "ld (iy+*),d"){addByte(0xFD);addByte(0x72);}
+else if( s == "ld (iy+*),e"){addByte(0xFD);addByte(0x73);}
+else if( s == "ld (iy+*),h"){addByte(0xFD);addByte(0x74);}
+else if( s == "ld (iy+*),l"){addByte(0xFD);addByte(0x75);}
+else if( s == "ld (iy+*),a"){addByte(0xFD);addByte(0x77);}
+else if( s == "ld a,iyh"){addByte(0xFD);addByte(0x7C);}
+else if( s == "ld a,iyl"){addByte(0xFD);addByte(0x7D);}
+else if( s == "ld a,(iy+*)"){addByte(0xFD);addByte(0x7E);}
+else if( s == "add a,iyh"){addByte(0xFD);addByte(0x84);}
+else if( s == "add a,iyl"){addByte(0xFD);addByte(0x85);}
+else if( s == "add a,(iy+*)"){addByte(0xFD);addByte(0x86);}
+else if( s == "adc a,iyh"){addByte(0xFD);addByte(0x8C);}
+else if( s == "adc a,iyl"){addByte(0xFD);addByte(0x8D);}
+else if( s == "adc a,(iy+*)"){addByte(0xFD);addByte(0x8E);}
+else if( s == "sub iyh"){addByte(0xFD);addByte(0x94);}
+else if( s == "sub iyl"){addByte(0xFD);addByte(0x95);}
+else if( s == "sub (iy+*)"){addByte(0xFD);addByte(0x96);}
+else if( s == "sbc a,iyh"){addByte(0xFD);addByte(0x9C);}
+else if( s == "sbc a,iyl"){addByte(0xFD);addByte(0x9D);}
+else if( s == "sbc a,(iy+*)"){addByte(0xFD);addByte(0x9E);}
+else if( s == "and iyh"){addByte(0xFD);addByte(0xA4);}
+else if( s == "and iyl"){addByte(0xFD);addByte(0xA5);}
+else if( s == "and (iy+*)"){addByte(0xFD);addByte(0xA6);}
+else if( s == "xor iyh"){addByte(0xFD);addByte(0xAC);}
+else if( s == "xor iyl"){addByte(0xFD);addByte(0xAD);}
+else if( s == "xor (iy+*)"){addByte(0xFD);addByte(0xAE);}
+else if( s == "or iyh"){addByte(0xFD);addByte(0xB4);}
+else if( s == "or iyl"){addByte(0xFD);addByte(0xB5);}
+else if( s == "or (iy+*)"){addByte(0xFD);addByte(0xB6);}
+else if( s == "cp iyh"){addByte(0xFD);addByte(0xBC);}
+else if( s == "cp iyl"){addByte(0xFD);addByte(0xBD);}
+else if( s == "cp (iy+*)"){addByte(0xFD);addByte(0xBE);}
+else if( s == "pop iy"){addByte(0xFD);addByte(0xE1);}
+else if( s == "ex (sp),iy"){addByte(0xFD);addByte(0xE3);}
+else if( s == "push iy"){addByte(0xFD);addByte(0xE5);}
+else if( s == "jp (iy)"){addByte(0xFD);addByte(0xE9);}
+else if( s == "ld sp,iy"){addByte(0xFD);addByte(0xF9);}
+
   
   else if( s == "xor *" ){addByte(0xEE);}
   //else if( s == "rst 0x28" ){addByte(0xEF);}
@@ -1703,9 +2711,9 @@ void function_user_input()
   a( "ld hl, **" ); addAddress( "FP_user_input" );
   sysCall( "Mov9ToOP1" );
 
-  add_disp_op1=1;
+  //add_disp_op1=1;
   sysCall( "NewLine" );
-  a( "call **" ); addAddress( "disp_op1" );
+  //a( "call **" ); addAddress( "disp_op1" );
 
   addLabel( "functionUI_return_dontstore" );
 
@@ -2036,8 +3044,8 @@ int main(int argc, char *argv[])
   addByte( 0x1A );
   addByte( 0x0A );
   addByte( 0x00 );
-  setComment( "http://mkpelleg.freeshell.org" );
-    addByte( 0xFF ); // PROGRAM LENGTH - 57 (L)  (53) (This will get overwritten)
+  setComment( "(C)2020 m pellegrino mkpelleg.freshell.org" );
+  addByte( 0xFF ); // PROGRAM LENGTH - 57 (L)  (53) (This will get overwritten)
   addByte( 0xFF ); // PROGRAM LENGTH - 57 (H)  (54) (This will get overwritten)
   addByte( 0x0D ); 
   addByte( 0x00 );

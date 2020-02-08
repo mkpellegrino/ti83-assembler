@@ -17,6 +17,21 @@ disassemble: disassemble.cpp
 
 test: test.asm
 	./tias test.asm test.8xp
+	./tias loop-test.asm loop-test.8xp
+	./tias input-test.asm input-test.8xp
+	./tias repeat-test.asm repeat-test.8xp
+
+z80ctest: z80c-test.asm
+	./tias z80c-test.asm z80c-test.8xp
+
+z80c: z80c.c
+	sdcc -mz80 -c --no-std-crt0 --code-loc 0x9D95 z80c.c
+	rm -f z80c.hex
+	rm -f z80c.sym
+	rm -f z80c.rel
+
+z80a: z80c.asm
+	./tias z80c-test.asm z80c-test.8xp
 
 distance: distance.asm
 	./tias distance.asm distance.8xp
@@ -26,6 +41,19 @@ clean:
 	rm -f ./tias
 	rm -f ./tias-debug
 	rm -f ./test.8xp
+	rm -f ./loop-test.8xp
+	rm -f ./input-test.8xp
 	rm -f ./distance.8xp
-
+	rm -f *.*~
+	rm -f *~
+	rm -f *.ihx
+	rm -f *.map
+	rm -f *.mem
+	rm -f *.rst
+	rm -f *.hxs
+	rm -f *.lk
+	rm -f *.noi
+	rm -f *.rei
+	rm -f *.rel
+	rm -f *.sym
 

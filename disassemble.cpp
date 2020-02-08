@@ -6,9 +6,11 @@ using namespace std;
 int main(int argc, char *argv[])
 {
   int just_asm=1;
+  int raw=0;
   if( argc==3 )
     {
       if( string(argv[2]) == string("a") ) just_asm=0;
+      if( string(argv[2]) == string("h") ) raw=1;
     }
   FILE *binary = fopen(argv[1], "rb");
   unsigned char buffer;
@@ -37,7 +39,7 @@ int main(int argc, char *argv[])
       if( i== 59) hb = buffer;
       if( i== 60) e=lb+hb*16*16;
       if( i>=55 ) cs+=buffer;
-      if( i>=76 )
+      if( i>=76 || raw==1)
 	{
 	  switch( buffer )
 	    {

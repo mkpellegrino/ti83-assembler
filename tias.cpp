@@ -2583,8 +2583,8 @@ void function_user_input()
   // if buffer is full then return out of the function
   a( "ld a, (**)" );addAddress("functionUI_text_bfr_size");
   a( "cp *" ); addByte( 0x0A );  
-  //a( "jp nc, **" ); addAddress( "functionUI_return" );
-  a( "jr nc, *" ); addOffset( "functionUI_return" );
+  a( "jp nc, **" ); addAddress( "functionUI_return" );
+  //a( "jr nc, *" ); addOffset( "functionUI_return" );
 
   addLabel( "functionUI_getscan" );
   
@@ -2606,8 +2606,10 @@ void function_user_input()
   a( "jp z, **");addAddress( "functionUI_delete" );
 
   a( "cp *" ); addByte( 0x11 ); // Negative
+  addLabel( "neg_check_plus_1" );
   a( "jp z, **");addAddress( "functionUI_sign" );
   a( "cp *" ); addByte( 0x0B ); // Minus
+  addLabel( "min_check_plus_1" );
   a( "jp z, **");addAddress( "functionUI_sign" );
 
   a( "cp *" ); addByte( 0x21 ); // k0
@@ -2631,9 +2633,57 @@ void function_user_input()
   a( "cp *" ); addByte( 0x14 ); // k9
   a( "jp z, **");addAddress( "functionUI_digit" );
   a( "cp *" ); addByte( 0x19 ); // DecPt
+  addLabel( "dec_check_plus_1" );
+  
   a( "jp z, **");addAddress( "functionUI_digit" );
   a( "jr *" ); addOffset("functionUI_getscan");
+
+  //===========================
+  // Flags to check for - and .
+  addLabel( "check_for_decimal_points" );
+  pushall();
+  a( "ld a, *" ); addByte( 0x19 );
+  a( "ld hl, **" ); addAddress( "dec_check_plus_1" );
+  a( "dec hl" );
+  a( "ld (hl), a" );
+  popall();
+  a( "ret" );
+  addLabel( "dont_check_for_decimal_points" );
+  pushall();
+  a( "xor a" ); addByte( 0x00 );
+  a( "ld hl, **" ); addAddress( "dec_check_plus_1" );
+  a( "dec hl" );
+  a( "ld (hl), a" );
+  popall();
+  a( "ret" );
+  addLabel( "check_for_negatives" );
+  pushall();
+  a( "ld a, *" ); addByte( 0x0B );
+  a( "ld hl, **" ); addAddress( "min_check_plus_1" );
+  a( "dec hl" );
+  a( "ld (hl), a" );
+
+  a( "ld a, *" ); addByte( 0x11 );
+  a( "ld hl, **" ); addAddress( "neg_check_plus_1" );
+  a( "dec hl" );
+  a( "ld (hl), a" );
+  popall();
+  a( "ret" );
   
+  addLabel( "dont_check_for_negatives" );
+  pushall();
+  a( "ld a, *" ); addByte( 0x00 );
+  a( "ld hl, **" ); addAddress( "min_check_plus_1" );
+  a( "dec hl" );
+  a( "ld (hl), a" );
+
+  a( "ld a, *" ); addByte( 0x00 );
+  a( "ld hl, **" ); addAddress( "neg_check_plus_1" );
+  a( "dec hl" );
+  a( "ld (hl), a" );
+  popall();
+  a( "ret" );
+
   //=====================================================================
 
   // A Table to help convert from scan codes to t values

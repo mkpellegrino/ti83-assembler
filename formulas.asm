@@ -6,14 +6,10 @@
 	;if valid choice, call function
 	;for the specific formula
 	
-	bCall(CursorOn)
 	bCall(RunIndicOff)
 start:
-	xor a
-	ld (&CurRow), a
-	ld (&CurCol), a
-	bCall(ClrScrnFull)
-	bCall(ClrLCDFull)
+	call &fully_clear_screen
+	
 	ld hl, &title_text
 	bCall(PutS)
 	ld hl, &menu_text
@@ -35,8 +31,28 @@ start:
 	jp z, &exit
 	jr %start
 	ret
+	
+fully_clear_screen:
+	push af
+	push bc
+	push de
+	push hl
+	xor a
+	ld (&CurRow), a
+	ld (&CurCol), a
+	bCall(ClrScrnFull)
+	bCall(ClrLCDFull)
+	bCall(ClrTxtShd)
 
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
+	
 dec_to_hex:
+	call &fully_clear_screen
+
 	ld hl, &dec_to_hex_title
 	bCall(PutS)
 	bCall(NewLine)
@@ -45,12 +61,10 @@ dec_to_hex:
 	bCall(PutS)
 	call &dont_check_for_negatives
 	call &dont_check_for_decimal_points
+	bCall(CursorOn)
 	call &user_input
-	call &check_for_negatives
-	call &check_for_decimal_points
-
-	bCall(ClrTxtShd)
-	
+	bCall(CursorOff)
+		
 	ld hl, &FP_user_input
 	bCall(Mov9ToOP1)
 	bCall(ConvOP1)
@@ -97,7 +111,8 @@ dec_to_hex_loop0:
 	bCall(NewLine)
 	bCall(GetKey)
 
-	; re-enable decimal point if possible
+	call &check_for_negatives
+	call &check_for_decimal_points
 	
 	jp &start
 	
@@ -133,7 +148,8 @@ hi:
 .db 0x00
 lo:
 .db 0x00
-	
+
+	; Convert a HEXADECIMAL digit to ASCII character
 convert_byte:
 	push hl
 	push de
@@ -164,16 +180,18 @@ byte_in:
 	
 char_out:
 .db 0x00
-	
-
-.fp FP_dec
-	
+		
 float:
+	call &fully_clear_screen
+
 	ld hl, &float_title
 	bCall(PutS)
 	ld hl, &prompt
 	bCall(PutS)
+	bCall(CursorOn)
 	call &user_input
+	bCall(CursorOff)
+	
 	ld b, @0x09
 	ld de, &FP_user_input
 float_loop_top:
@@ -185,7 +203,6 @@ float_loop_top:
 	; save pointer
 	push de
 
-	
 	; display that byte
 	ld l, a
 	ld h, @0x00
@@ -230,43 +247,75 @@ float_loop_done:
 
 	
 getkey:
+	call &fully_clear_screen
+
 	ld hl, &getkey_title
 	bCall(PutS)
-	;ld hl, &pak_text
-	;bCall(PutS)
+
+	ld hl, &prompt
+	bCall(PutS)
+	bCall(CursorOn)
+
 	bCall(GetKey)
+	bCall(CursorOff)
 	bCall(NewLine)
+
+	ld hl, &a_equals
+	bCall(PutS)
+
+	ld l, a
+	ld h, @0x00
+	bCall(DispHL)
+	bCall(NewLine)
+	
+	ld hl, &pak_text
+	bCall(PutS)
+	bCall(GetKey)
+
+	jp &start
+getcsc:
+	call &fully_clear_screen
+	
+	ld hl, &getcsc_title
+	bCall(PutS)
+
+	ld hl, &prompt
+	bCall(PutS)
+
+	bCall(CursorOn)
+
+getcsc_get_byte:
+	bCall(GetCSC)
+	bCall(CursorOff)
+	
+	cp @0x00
+	jr z, %getcsc_get_byte
+
+	ld hl, &a_equals
+	bCall(PutS)
 
 	ld l, a
 	ld h, @0x00
 	bCall(DispHL)
 	bCall(NewLine)
 
-	
-	ld hl, &pak_text
-	bCall(PutS)
-	bCall(GetKey)
-
-
-	jp &start
-getcsc:
-	ld hl, &getcsc_title
-	bCall(PutS)
-
-	
 	ld hl, &pak_text
 	bCall(PutS)	
 	bCall(GetKey)
 	jp &start
 exit:
-	bCall(ClrLCDFull)
+	call &fully_clear_screen
+	
 	ret
 
 dec_to_hex_string:
 	.str "0x0000"
+
+a_equals:
+.str "a="
 	
 dec_to_hex_title:
-;     123456789012345-123456789012345-123456789012345- 
+;     123456789012345-123456789012345-123456789012345-	
 .str "    Dec->Hex    ----------------"
 float_title:
 .str " Float -> Bytes ----------------"

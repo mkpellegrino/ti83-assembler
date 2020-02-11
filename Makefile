@@ -15,6 +15,9 @@ disassemble: disassemble.cpp
 	g++ disassemble.cpp $(CPPFLAGS) $(OPT_SIZE) -o disassemble
 	strip -no_uuid -A -u -S -X -N -x disassemble
 
+formulas: formulas.asm
+	./tias formulas.asm formulas.8xp
+
 test: test.asm
 	./tias test.asm test.8xp
 	./tias loop-test.asm loop-test.8xp

@@ -104,6 +104,7 @@ int function_ui=0;
 int store_op1=0;
 int disp_op1=0;
 int convop1b=0;
+int fully_clear_screen=0;
 string name;
 int line_number=0;
 
@@ -111,6 +112,7 @@ int add_input=0;
 int add_store_op1=0;
 int add_disp_op1=0;
 int add_convop1b=0;
+int add_fully_clear_screen=0;
 class offset;
 class label;
 void a(string s);
@@ -2925,6 +2927,22 @@ void function_disp_op1()
 
 }
 
+void function_fully_clear_screen()
+{
+  if( fully_clear_screen == 1 ) return;
+  fully_clear_screen=1;
+  addLabel("fully_clear_screen");
+  pushall();
+  a( "xor a");
+  a("ld (**), a"); addAddress("CurRow");
+  a("ld (**), a"); addAddress("CurCol");
+  sysCall("ClrScrnFull");
+  sysCall("ClrLCDFull");
+  sysCall("ClrTxtShd");
+  popall();
+  a("ret");
+}
+
 void function_convop1b()
 {
   if( convop1b == 1 ) return;
@@ -2947,9 +2965,10 @@ void function_convop1b()
   a("ld h, d");
   a("ld l, e");
   // not needed if we're just going to return DE
-  a("ld **, hl");addAddress("convop1_output");
+  a("ld (**), hl");addAddress("convop1_output");
   // 
-  a("ld de, hl");
+  a("ld d, h");
+  a("ld e, l");
   a("jr *"); addOffset("convop1b_end");
   addLabel("convop1b_too_big");
 
@@ -2984,12 +3003,14 @@ void function_convop1b()
   a("pop hl");
   a("add hl, de");
   a("ld (**), hl"); addAddress("convop1_output");
-  a("ld de, hl");
+  a("ld d, h");
+  a("ld e, l");
   a("jr *"); addOffset("convop1b_end");
   addLabel("convop1b_really_too_big");
   a("ld hl, **"); addWord(0x0000);
   a("ld (**), hl"); addAddress("convop1_output");
-  a("ld de, hl");
+  a("ld d, h");
+  a("ld e, l");
   addLabel("convop1b_end");
   a("pop hl");
   // a("pop de");
@@ -3313,6 +3334,11 @@ int main(int argc, char *argv[])
 	      add_convop1b=1;
 	      a( "call **" ); addAddress( "convop1b" );
 	    }
+	  else if( line == "call &fully_clear_screen" )
+	    {
+	      add_fully_clear_screen=1;
+	      a( "call **" ); addAddress( "fully_clear_screen" );
+	    }
 
 	      
 	  else
@@ -3421,6 +3447,7 @@ int main(int argc, char *argv[])
       if( add_store_op1==1 ) function_store_op1();
       if( add_disp_op1==1 ) function_disp_op1();
       if( add_convop1b==1 ) function_convop1b();
+      if( add_fully_clear_screen==1 ) function_fully_clear_screen();
       
 
 

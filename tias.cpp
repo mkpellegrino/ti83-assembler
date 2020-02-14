@@ -110,7 +110,7 @@ int line_number=0;
 int add_input=0;
 int add_store_op1=0;
 int add_disp_op1=0;
-
+int add_convop1b=0;
 class offset;
 class label;
 void a(string s);
@@ -3308,6 +3308,11 @@ int main(int argc, char *argv[])
 	      add_disp_op1=1;
 	      a( "call **" ); addAddress( "disp_op1" );
 	    }
+	  else if( line == "call &convop1b" )
+	    {
+	      add_convop1b=1;
+	      a( "call **" ); addAddress( "convop1b" );
+	    }
 
 	      
 	  else
@@ -3415,7 +3420,8 @@ int main(int argc, char *argv[])
       if( add_input==1 ) function_user_input();
       if( add_store_op1==1 ) function_store_op1();
       if( add_disp_op1==1 ) function_disp_op1();
-
+      if( add_convop1b==1 ) function_convop1b();
+      
 
 
   

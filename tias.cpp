@@ -26,6 +26,8 @@
 // *) I think there's a problem with the ldir instruction (probably because
 // it's one of the extended opcodes)
 //
+// *) Add the ability to input text too
+//
 // *) like this program, this to-do/notes list is a work-in-progress
 // and may grow or shrink from time-to-time
 //
@@ -101,6 +103,7 @@ int program_index=0;
 int function_ui=0;
 int store_op1=0;
 int disp_op1=0;
+int convop1b=0;
 string name;
 int line_number=0;
 
@@ -2920,6 +2923,85 @@ void function_disp_op1()
   popall();
   a( "ret" );
 
+}
+
+void function_convop1b()
+{
+  if( convop1b == 1 ) return;
+  convop1b=1;
+  addLabel("convop1b");
+  a("push af");
+  a("push bc");
+  a("push hl");
+  // Don't need to do this because input will already be in OP1
+  //a("ld hl, **"); addAddress("FP_convop1_input");
+  //sysCall(Mov9ToOP1);
+  a("ld hl, **"); addAddress("OP1");
+  a("ld de, **"); addAddress("FP_convop1_input");
+  sysCall("Mov9B");
+  a("ld hl, **"); addAddress("convop1b_max_float");
+  sysCall("Mov9ToOP2");
+  sysCall("CpOP1OP2");
+  a("jr nc, *");addOffset("convop1b_too_big");
+  sysCall("ConvOP1");
+  a("ld h, d");
+  a("ld l, e");
+  // not needed if we're just going to return DE
+  a("ld **, hl");addAddress("convop1_output");
+  // 
+  a("ld de, hl");
+  a("jr *"); addOffset("convop1b_end");
+  addLabel("convop1b_too_big");
+
+  a("ld hl, **"); addAddress("convop1b_max_any");
+  
+  sysCall("Mov9ToOP2");
+  sysCall("CpOP1OP2");
+  a("jr nc, *"); addOffset("convop1b_really_too_big");
+  a("ld hl, **"); addAddress( "convop1b_max_float");
+  sysCall("Mov9ToOP2");
+  sysCall("FPDiv");
+  sysCall("Intgr");
+  sysCall("ConvOP1");
+  a( "inc e");
+  a( "ld b, e");
+  a( "ld c, *"); addByte(0x00);
+
+  a( "ld hl, **"); addAddress("FP_convop1_input");
+  sysCall("Mov9ToOP1");
+  a( "ld hl, **"); addWord(0x0000);
+  a( "ld de, **"); addWord(0x270F);
+  addLabel("convop1b_too_big_loop");
+  a( "add hl, de");
+  pushall();
+  a( "ld hl, **"); addAddress("convop1b_max_float");
+  sysCall("Mov9ToOP2");
+  sysCall("FPSub");
+  popall();
+  a("djnz *"); addOffset("convop1b_too_big_loop");
+  a("push hl");
+  sysCall("ConvOP1");
+  a("pop hl");
+  a("add hl, de");
+  a("ld (**), hl"); addAddress("convop1_output");
+  a("ld de, hl");
+  a("jr *"); addOffset("convop1b_end");
+  addLabel("convop1b_really_too_big");
+  a("ld hl, **"); addWord(0x0000);
+  a("ld (**), hl"); addAddress("convop1_output");
+  a("ld de, hl");
+  addLabel("convop1b_end");
+  a("pop hl");
+  // a("pop de");
+  a("pop bc");
+  a("pop af");
+  a("ret");
+  addLabel("convop1b_max_float");
+  addByte( 0x00 );  addByte( 0x83 );  addByte( 0x99 );  addByte( 0x99 );  addByte( 0x00 );  addByte( 0x00 );  addByte( 0x00 );  addByte( 0x00 );  addByte( 0x00 );
+  addLabel("convop1b_max_any");
+  addByte( 0x00 );  addByte( 0x84 );  addByte( 0x65 );  addByte( 0x53 );  addByte( 0x60 );  addByte( 0x00 );  addByte( 0x00 );  addByte( 0x00 );  addByte( 0x00 ); 
+  addLabel("convop1_output"); addWord(0x0000);
+  addFP("FP_convop1_input");  
 }
 void function_store_op1()
 {

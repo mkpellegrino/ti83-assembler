@@ -1449,6 +1449,7 @@ void a( string s )
   else if( s == "push hl" ){addByte(0xE5);}
   else if( s == "and *" ){addByte(0xE6);}
   else if( s == "rst 0x20" ){addByte(0xE7);}
+  else if( s == "rst 0x0020" ){addByte(0xE7);}
   else if( s == "ret pe" ){addByte(0xE8);}
   else if( s == "jp (hl)" ){addByte(0xE9);}
   else if( s == "jp pe, **" ){addByte(0xEA);}

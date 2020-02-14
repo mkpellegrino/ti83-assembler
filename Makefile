@@ -30,17 +30,14 @@ test: test.asm
 	./tias input-test.asm input-test.8xp
 	./tias repeat-test.asm repeat-test.8xp
 
-z80ctest: z80c-test.asm
-	./tias z80c-test.asm z80c-test.8xp
+qform: qform.asm
+	./tias qform.asm qform.8xp
 
 z80c: z80c.c
 	sdcc -mz80 -c --no-std-crt0 --code-loc 0x9D95 z80c.c
 	rm -f z80c.hex
 	rm -f z80c.sym
 	rm -f z80c.rel
-
-z80a: z80c.asm
-	./tias z80c-test.asm z80c-test.8xp
 
 distance: distance.asm
 	./tias distance.asm distance.8xp

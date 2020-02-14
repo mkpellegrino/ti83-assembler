@@ -18,6 +18,12 @@ disassemble: disassemble.cpp
 formulas: formulas.asm
 	./tias formulas.asm formulas.8xp
 
+convop1: convop1.asm
+	./tias convop1.asm convop1.8xp
+
+testconv: testconv.asm
+	./tias testconv.asm testconv.8xp
+
 test: test.asm
 	./tias test.asm test.8xp
 	./tias loop-test.asm loop-test.8xp

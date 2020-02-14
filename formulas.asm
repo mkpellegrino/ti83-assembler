@@ -5,6 +5,7 @@
 	;if invalid choice, show menu
 	;if valid choice, call function
 	;for the specific formula
+
 	
 	bCall(RunIndicOff)
 start:
@@ -16,19 +17,25 @@ start:
 	bCall(PutS)
 	ld hl, &prompt
 	bCall(PutS)
+	bCall(CursorOn)
 	bCall(GetKey)
+	bCall(CursorOff)
 	bCall(NewLine)
 
 	cp @0x8E
-	jp z, &dec_to_hex
-	cp @0x8F
-	jp z, &float
-	cp @0x90
-	jp z, &getkey
-	cp @0x91
-	jp z, &getcsc
-	cp @0x92
 	jp z, &exit
+	cp @0x8F
+	jp z, &dec_to_hex
+	cp @0x90
+	jp z, &float
+	cp @0x91
+	jp z, &getkey
+	cp @0x92
+	jp z, &getcsc
+	cp @0x93
+	jp z, &disassemble
+	;cp @0x94
+	;jp z, &exit
 	jr %start
 	ret
 	
@@ -43,12 +50,51 @@ fully_clear_screen:
 	bCall(ClrScrnFull)
 	bCall(ClrLCDFull)
 	bCall(ClrTxtShd)
-
 	pop hl
 	pop de
 	pop bc
 	pop af
 	ret
+
+disassemble:
+	call &fully_clear_screen
+
+	ld hl, &disassemble_title
+	bCall(PutS)
+	bCall(NewLine)
+
+	ld hl, &prompt
+	bCall(PutS)
+
+	call &dont_check_for_negatives
+	call &dont_check_for_decimal_points
+	bCall(CursorOn)
+	call &user_input
+	bCall(CursorOff)
+	ld hl, &FP_user_input
+	bCall(Mov9ToOP1)
+	
+	;bCall(ConvOP1)
+	call &convop1b
+	
+	ld hl, #0x9D95
+disassemble_loop:	
+	ld a, (hl)
+	push hl
+	ld h, @0x00
+	ld l, a
+	bCall(DispHL)
+	bCall(NewLine)
+	
+	bCall(GetKey)
+	pop hl
+	inc hl
+
+	cp @0x8D
+	jp z, &start
+	inc hl
+	jr %disassemble_loop
+
 	
 dec_to_hex:
 	call &fully_clear_screen
@@ -57,6 +103,7 @@ dec_to_hex:
 	bCall(PutS)
 	bCall(NewLine)
 
+
 	ld hl, &prompt
 	bCall(PutS)
 	call &dont_check_for_negatives
@@ -64,13 +111,13 @@ dec_to_hex:
 	bCall(CursorOn)
 	call &user_input
 	bCall(CursorOff)
-		
 	ld hl, &FP_user_input
 	bCall(Mov9ToOP1)
-	bCall(ConvOP1)
-
+	;bCall(ConvOP1)
+	call &convop1b
 	; now de is the value
 
+	
 	ld b, @0x04
 dec_to_hex_loop0:
 	ld a, e
@@ -323,14 +370,18 @@ getkey_title:
 .str "     GetKey     ----------------"
 getcsc_title:
 .str "     GetCSC     ----------------"
+disassemble_title:
+.str "disassemble ti8x----------------"
+disassemble_prompt:
+.str "start> "
 pak_text:
 .str "Press Any Key"
 title_text:
 .str "    Formulas    by mr pellegrino----------------"
-;     123456789012345-123456789012345-123456789012345- 
+;     123456789012345-123456789012345-123456789012345-123456789012345- 
 .db 0x00
 menu_text:
-.str "0.Dc>Hx 1.FP>Hx 2.Key>? 3.CSC>? 4.Exit          "
+.str "0.Exit  1.Dc>Hx 2.FP>Bt 3.Key>? 4.CSC>? 5.Diss> 6.tbd   7.tbd   "
 more_text:
 .str "more..."
 prompt:
@@ -346,3 +397,5 @@ FP_16:
 .db 0x00
 .db 0x00
 .db 0x00	
+
+	

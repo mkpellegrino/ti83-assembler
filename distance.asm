@@ -5,46 +5,34 @@
 ;; distance formula 
 .name distance
 begin:
+	bCall(RunIndicOff)
+	call &fully_clear_screen
 
+	ld hl, &prompt_text_x1
+	ld (&index), hl
+	
 	ld hl, &title
 	bCall(PutS)
+
+	ld hl, &FP_x1
+	ld b, @0x04
+
+loop_top:
+	call &show_prompt
+	call &user_input
+	ld d, h
+	ld e, l
+	push bc
+	push hl
+	ld hl, &FP_user_input
+	bCall(Mov9B)
+	pop hl
+	pop bc
+	ld de, #0x0009
+	add hl, de
+	djnz %loop_top
+
 	
-	ld hl, &prompt_text_x1
-	bCall(PutS)
-	call &show_prompt
-	call &user_input
-	ld hl, &FP_user_input
-	ld de, &FP_x1
-	bCall(Mov9B)
-	bCall(NewLine)
-
-	ld hl, &prompt_text_y1
-	bCall(PutS)
-	call &show_prompt
-	call &user_input
-	ld hl, &FP_user_input
-	ld de, &FP_y1
-	bCall(Mov9B)
-
-	bCall(NewLine)
-
-	ld hl, &prompt_text_x2
-	bCall(PutS)
-	call &show_prompt
-	call &user_input
-	ld hl, &FP_user_input
-	ld de, &FP_x2
-	bCall(Mov9B)
-	bCall(NewLine)
-	ld hl, &prompt_text_y2
-	bCall(PutS)
-	call &show_prompt
-	call &user_input
-	ld hl, &FP_user_input
-	ld de, &FP_y2
-	bCall(Mov9B)
-	bCall(NewLine)
-
 	ld hl, &FP_y2
 	bCall(Mov9ToOP1)
 
@@ -53,6 +41,7 @@ begin:
 
 	bCall(FPSub)
 	bCall(FPSquare)
+	
 
 	ld hl, &OP1
 	ld de, &FP_left
@@ -111,33 +100,37 @@ show_prompt:
 	push bc
 	push de
 	push hl
-	ld hl, &prompt_text
+	ld hl, (&index)
+	push hl
 	bCall(PutS)
+	pop hl
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	
+	ld (&index), hl
 	pop hl
 	pop de
 	pop bc
 	pop af
 	ret
-	
-prompt_text:
-.str "> "
-.db 0x00
+
+
+index:
+.dw 0x0000
 	
 prompt_text_x1:
-.str "X1"
-.db 0x00
+.str "X1>"
 	
 prompt_text_y1:
-.str "Y1"
-.db 0x00
+.str "Y1>"
 	
 prompt_text_x2:
-.str "X2"
-.db 0x00
+.str "X2>"
 	
 prompt_text_y2:
-.str "Y2"
-.db 0x00
+.str "Y2>"
 
 .fp FP_x1
 .fp FP_y1
@@ -150,8 +143,6 @@ prompt_text_y2:
 	
 text_distance:
 .str "Dst: "
-.db 0
 
 title:
 .str "Distance Formulaby mr pellegrino----------------"
-.db 0

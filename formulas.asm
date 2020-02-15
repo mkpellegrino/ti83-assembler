@@ -25,7 +25,7 @@ start:
 	cp @0x8E
 	jp z, &exit
 	cp @0x8F
-	jp z, &dec_to_hex
+	jr z, %dec_to_hex
 	cp @0x90
 	jp z, &float
 	cp @0x91
@@ -33,29 +33,12 @@ start:
 	cp @0x92
 	jp z, &getcsc
 	cp @0x93
-	jp z, &disassemble
+	jr z, %disassemble
 	;cp @0x94
 	;jp z, &exit
 	jr %start
 	ret
 	
-fully_clear_screen:
-	push af
-	push bc
-	push de
-	push hl
-	xor a
-	ld (&CurRow), a
-	ld (&CurCol), a
-	bCall(ClrScrnFull)
-	bCall(ClrLCDFull)
-	bCall(ClrTxtShd)
-	pop hl
-	pop de
-	pop bc
-	pop af
-	ret
-
 disassemble:
 	call &fully_clear_screen
 
@@ -68,9 +51,7 @@ disassemble:
 
 	call &dont_check_for_negatives
 	call &dont_check_for_decimal_points
-	bCall(CursorOn)
 	call &user_input
-	bCall(CursorOff)
 	ld hl, &FP_user_input
 	bCall(Mov9ToOP1)
 	
@@ -91,7 +72,7 @@ disassemble_loop:
 	inc hl
 
 	cp @0x8D
-	jp z, &start
+	jr z, %start
 	inc hl
 	jr %disassemble_loop
 
@@ -108,9 +89,7 @@ dec_to_hex:
 	bCall(PutS)
 	call &dont_check_for_negatives
 	call &dont_check_for_decimal_points
-	bCall(CursorOn)
 	call &user_input
-	bCall(CursorOff)
 	ld hl, &FP_user_input
 	bCall(Mov9ToOP1)
 	;bCall(ConvOP1)
@@ -235,9 +214,7 @@ float:
 	bCall(PutS)
 	ld hl, &prompt
 	bCall(PutS)
-	bCall(CursorOn)
 	call &user_input
-	bCall(CursorOff)
 	
 	ld b, @0x09
 	ld de, &FP_user_input
@@ -302,7 +279,6 @@ getkey:
 	ld hl, &prompt
 	bCall(PutS)
 	bCall(CursorOn)
-
 	bCall(GetKey)
 	bCall(CursorOff)
 	bCall(NewLine)
@@ -396,6 +372,4 @@ FP_16:
 .db 0x00
 .db 0x00
 .db 0x00
-.db 0x00	
-
-	
+.db 0x00

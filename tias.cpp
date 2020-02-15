@@ -2561,7 +2561,7 @@ void function_user_input()
   addLabel( "user_input" );
   
   pushall();
-
+  sysCall("CursorOn");
   // clear out the buffer
   a( "ld hl, **" ); addAddress( "functionUI_text_bfr_start" );  
   a( "ld (**), hl");addAddress( "functionUI_text_bfr_ptr" );
@@ -2772,8 +2772,9 @@ void function_user_input()
   //a( "call **" ); addAddress( "disp_op1" );
 
   addLabel( "functionUI_return_dontstore" );
-
+  sysCall("CursorOff");
   popall();
+
 
   a( "ret" );
 

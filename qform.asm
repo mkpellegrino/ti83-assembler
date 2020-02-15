@@ -1,80 +1,83 @@
-.name qform
-begin:
-
-clsA:
+.name quadform
+start:
+	bCall(RunIndicOff)
 	call &fully_clear_screen
 	ld hl, &title
 	bCall(PutS)
 
-	;; PUT THESE IN A LOOP!
-	ld hl, &text_promptA
-	bCall(PutS)
-	call &user_input
-	ld hl, &FP_bfr
-	ld de, &FP_A
-	bCall(Mov9B)
-	bCall(NewLine)
-
+;; Get 3 Inputs (b=3)
+;; A, B, and C  ('A' is 0x41)
+;; Because there memory locations
+;; are all 9 apart, we can
+;; just keep adding 0x0009 to
+;; HL to fill them up
+;; The first one is at: &FP_A
 	
-	ld hl, &text_promptB
-	bCall(PutS)
-	call &user_input
-	ld hl, &FP_bfr
-	ld de, &FP_B
-	bCall(Mov9B)
-	bCall(NewLine)
-
-	ld hl, &text_promptC
-	bCall(PutS)
-	call &user_input
-	ld hl, &FP_bfr
-	ld de, &FP_C
-	bCall(Mov9B)
-	bCall(NewLine)
-
-	;; DOWN TO HERE
-	
+	ld a, @0x41
 	ld hl, &FP_A
+	ld b, @0x03
+loop_top:
+	bCall(PutC)
+	push af
+	ld a, @0x3E
+	bCall(PutC)
+	pop af
 
+	call &user_input
+
+	ld d, h
+	ld e, l
+	push bc
+	push hl
+	ld hl, &FP_user_input
+	bCall(Mov9B)
+	pop hl
+	pop bc
+	ld de, #0x0009
+	add hl, de
+	inc a
+	djnz %loop_top
+
+	
+	
+;;; Calculate 2*A
+	ld hl, &FP_A
 	bCall(Mov9ToOP1)
-
 	bCall(OP2Set2)
 	bCall(FPMult)
+
+
 	ld hl, &OP1
 	ld de, &FP_2A
 	bCall(Mov9B)
-	
-	ld hl, &FP_2A
+
+;;; Calculate -4AC
+	ld hl, &FP_A
+	bCall(Mov9ToOP1)
+
+	ld hl, &FP_C
 	bCall(Mov9ToOP2)
 
-	ld hl, &FP_B
-	rst 0x0020
-	bCall(InvOP1S)
-	bCall(FPDiv)
-	ld hl, &OP1
-	ld de, &FP_AOS
-	bCall(Mov9B)
-	
-	ld hl, &FP_A
-	bCall(Mov9ToOP2)
-	ld hl, &FP_C
-	rst 0x0020
 	bCall(FPMult)
 	bCall(OP2Set4)
 	bCall(FPMult)
-	bCall(InvOP1S)
 
 	ld hl, &OP1
-	ld de, &FP_bfr
+	ld de, &FP_4AC
 	bCall(Mov9B)
-	
-	ld hl, &FP_B
-	rst 0x0020
-	bCall(FPSquare)
-	ld hl, &FP_bfr
-	bCall(Mov9ToOP2)
-	bCall(FPAdd)
 
+;;; Calculate B^2
+	ld hl, &FP_B
+	bCall(Mov9ToOP1)
+	bCall(FPSquare)
+
+;;; Calculate B^2-4AC
+	ld hl, &FP_4AC
+	bCall(Mov9ToOP2)
+	bCall(FPSub)
+	
+;; If Discriminant is < 0 then the results
+;; will be in the Complex Plane
 	ld hl, &OP1
 	ld de, &FP_Discriminant
 	bCall(Mov9B)
@@ -82,176 +85,185 @@ clsA:
 	bCall(ZeroOP2)
 	bCall(CpOP1OP2)
 
-	jr c, %complex_solutions
+	jp c, &complex_solutions
+;; otherwise, just calculate them and store them in X and Y
+	bCall(SqRoot)
+	bCall(OP1ToOP2)
 	
-	bCall(Sqroot)
-	ld hl, &OP1
-	ld de, &FP_Discriminant
-	bCall(Mov9B)
+	ld hl, &FP_B
+	bCall(Mov9ToOP1)
+	bCall(InvOP1S)
+	
+	bCall(FPAdd)
 
 	ld hl, &FP_2A
 	bCall(Mov9ToOP2)
 	bCall(FPDiv)
-
-	ld hl, &OP1
-	ld de, &FP_tmp
-	bCall(Mov9B)
-
-	ld hl, &FP_AOS
-	rst 0x0020
-
-	ld hl, &FP_tmp
-	bCall(Mov9ToOP2)
-
-	bCall(FPAdd)
+;; ***********************88*************
+	; this is one solution
+	bCall(StoX)
 	
 	ld hl, &OP1
 	ld de, &FP_Solution1
 	bCall(Mov9B)
 
-	call &disp_op1
-
-	ld hl, &FP_AOS
-	rst 0x0020
-
-	ld hl, &FP_tmp
-	bCall(Mov9ToOP2)
-
-	bCall(FPSub)
 	
+	;;Do it again here but with FPSub
+	ld hl, &FP_Discriminant
+	bCall(Mov9ToOP1)
+	bCall(SqRoot)
+	bCall(OP1ToOP2)
+
+	ld hl, &FP_B
+	bCall(Mov9ToOP1)
+	bCall(InvOP1S)
+	
+	bCall(FPSub)
+
+	ld hl, &FP_2A
+	bCall(Mov9ToOP2)
+	bCall(FPDiv)
+	
+	bCall(StoY)
+
 	ld hl, &OP1
 	ld de, &FP_Solution2
 	bCall(Mov9B)
 
-	call &disp_op1
 
-	ld hl, &FP_Solution1
-	ld a, tX
-	call storeVariable
-
-	ld hl, &FP_Solution1
-	ld a, tAns
-	call storeVariable
-	
+show_solutions:
+	; This will show both solutions
+	; be they real or complex
 	ld hl, &FP_Solution2
-	ld a, tY
-	call storeVariable
+	bCall(Mov9ToOP1)
+	bCall(StoY)
 
+	ld hl, &FP_S1R
+	bCall(Mov9ToOP1)
+	ld hl, &FP_S1C
+	bCall(Mov9ToOP2)
+	bCall(FormDCplx)
+	ld hl, #0x97B1
+	bCall(PutS)
+	bCall(NewLine)
 	
+	ld hl, &FP_S2R
+	bCall(Mov9ToOP1)
+	ld hl, &FP_S2C
+	bCall(Mov9ToOP2)
+	bCall(FormDCplx)
+	ld hl, #0x97B1
+	bCall(PutS)
+	bCall(NewLine)
+
 	ret
 
 	
 complex_solutions:
-	
-	ld hl, &FP_Discriminant
-	rst 0x0020
-	xor a
-	ld (&OP1), a
-	bCall(SqRoot)
+
+	; Calculate the AOS (Again!)
+	ld hl, &FP_B
+	bCall(Mov9ToOP1)
+	bCall(InvOP1S)
 	ld hl, &FP_2A
 	bCall(Mov9ToOP2)
 	bCall(FPDiv)
 	ld hl, &OP1
+	ld de, &FP_AOS
+	bCall(Mov9B)
+	
+	ld hl, &FP_Discriminant
+	bCall(Mov9ToOP1)
+
+	; Essentially find the ABS of OP1
+	; by taking the first byte and making
+	; it zero
+	xor a
+	ld (&OP1), a
+
+	bCall(SqRoot)
+	ld hl, &FP_2A
+	bCall(Mov9ToOP2)
+	bCall(FPDiv)
+
+	; OP1 now has sqrt(abs(b^2-4ac))/2a
+	ld hl, &OP1
 	ld de, &FP_S1C
 	bCall(Mov9B)
-
-	ld hl, &FP_AOS
-	ld de, &FP_S1R
-	bCall(Mov9B)
 	
-	ld hl, &FP_S1R
-	ld a, (hl)
-	or @0x0C
-	ld (hl), a
-
-	ld hl, &FP_S1C
-	ld a, @0x0C
-	ld (hl), a
-	
-	ld hl, &FP_Solution1
-	ld a, tX
-	call &storeVariableC
-
-	ld hl, &FP_Solution1
-	ld a, tAns
-	call storeVariable
-	
-	ld hl, &FP_S1R
-	ld de, &FP_S2R
-	bCall(Mov9B)
-
-	ld hl, &FP_S1C
+	ld hl, &OP1
 	ld de, &FP_S2C
 	bCall(Mov9B)
 
+	;=--------------=
+	
+	ld hl, &FP_AOS
+	ld de, &FP_S1R
+	bCall(Mov9B)
+	ld hl, &FP_AOS
+	ld de, &FP_S2R
+	bCall(Mov9B)
+
+	; The Positive Complex Portion
+	; in FP it's: 00000110
+	ld hl, &FP_S1C
+	ld a, @0x0C
+	ld (hl), a
+
+	; The Negative Complex Portion
+	; in FP it's: 10000110
+	; (The first bit; bit 7; is sign)
 	ld hl, &FP_S2C
 	ld a, @0x8C
 	ld (hl), a
 
-	ld hl, &FP_Solution2
-	ld a, tY
-	call storeVariableC
+	; Make them complex
+	ld hl, &FP_S1R
+	ld a, (hl)
+	or @0x0C
+	ld (hl), a
+	
+	ld hl, &FP_S2R
+	ld a, (hl)
+	or @0x0C
+	ld (hl), a
 
 	ld hl, &FP_S1R
-	rst 0x0020
+	bCall(Mov9ToOP1)
 	ld hl, &FP_S1C
 	bCall(Mov9ToOP2)
-	bCall(FormDCplx)
-	ld hl, &fmtString
-	bCall(PutS)
-	bCall(NewLine)
+	bCall(StoX)
+
+	; 
 	ld hl, &FP_S2R
-	rst 0x0020
+	bCall(Mov9ToOP1)
 	ld hl, &FP_S2C
 	bCall(Mov9ToOP2)
-	bCall(FormDCplx)
-	ld hl, &fmtString
-	bCall(PutS)
-	bCall(NewLine)
+	bCall(StoY)
+
+	jp &show_solutions
 	
 	ret
 
-variablenameC:
-.db CplxObj
-variabletokenC:
-.db 0x00
-.db 0x00
-.db 0x00
-variabledataC:
-.fp variabledataC
-.fp variabledataC-PartII
-	
 	
 title:
-;;  1234567890123456
-.str "   Quadratic     Formula Solver ================by mr pellegrino================",0
+;;    123456789012345-123456789012345-123456789012345-123456789012345-1234567890123456
+;;.str "Quad Form Solver"
+.str "   Quadratic     Formula Solver ================by mr pellegrino================"
 
 .fp FP_A
 .fp FP_B
 .fp FP_C
+	
 .fp FP_Discriminant
 .fp FP_AOS
-.fp FP_tmp
 .fp FP_2A
-
+.fp FP_4AC
 	
 ;; These are twice as big as FP's because they could be complex
-FP_S1R:
-.fp FP_Solution1
+FP_Solution1:
+.fp FP_S1R
 .fp FP_S1C
-FP_S2R:
-.fp FP_Solution2
+FP_Solution2:
+.fp FP_S2R
 .fp FP_S2C
-	
-.fp FP_bfr
-FP_bfr:
-.db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-
-generic_prompt:
-.str "> "
-text_promptA:
-.str "A"
-text_promptB:
-.str "B"
-text_promptC:
-.str "C"

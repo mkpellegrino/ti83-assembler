@@ -31,7 +31,7 @@ test: test.asm
 	./tias repeat-test.asm repeat-test.8xp
 
 qform: qform.asm
-	./tias qform.asm qform.8xp
+	./tias qform2.asm qform.8xp
 
 z80c: z80c.c
 	sdcc -mz80 -c --no-std-crt0 --code-loc 0x9D95 z80c.c

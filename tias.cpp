@@ -1265,6 +1265,9 @@ void a( string s )
   else if( s == "ld h, c" ){  addByte(0x61);}
   else if( s == "ld h, d" ){  addByte(0x62);}
   else if( s == "ld h, e" ){  addByte(0x63);}
+  else if( s == "ld hl, de" ){ addByte(0x62);addByte(0x6B);}
+  else if( s == "ld hl, bc" ){ addByte(0x60);addByte(0x69);}
+
   else if( s == "ld h, h" ){  addByte(0x64);}
   else if( s == "ld h, l" ){  addByte(0x65);}
   else if( s == "ld h, (hl)" ){  addByte(0x66);}

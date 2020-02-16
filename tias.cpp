@@ -1265,9 +1265,12 @@ void a( string s )
   else if( s == "ld h, c" ){  addByte(0x61);}
   else if( s == "ld h, d" ){  addByte(0x62);}
   else if( s == "ld h, e" ){  addByte(0x63);}
-  else if( s == "ld hl, de" ){ addByte(0x62);addByte(0x6B);}
-  else if( s == "ld hl, bc" ){ addByte(0x60);addByte(0x69);}
-
+  else if( s == "ld hl, de" ){ addByte(0x62);addByte(0x6B);} // macro
+  else if( s == "ld hl, bc" ){ addByte(0x60);addByte(0x69);} // macro
+  else if( s == "ld de, hl" ){ addByte(0x54);addByte(0x5D);} // macro
+  else if( s == "ld bc, hl" ){ addByte(0x44);addByte(0x4D);} // macro
+  else if( s == "ld de, bc" ){ addByte(0x50);addByte(0x59);} // macro
+  else if( s == "ld bc, de" ){ addByte(0x42);addByte(0x4B);} // macro
   else if( s == "ld h, h" ){  addByte(0x64);}
   else if( s == "ld h, l" ){  addByte(0x65);}
   else if( s == "ld h, (hl)" ){  addByte(0x66);}
@@ -1793,23 +1796,23 @@ void a( string s )
   else if( s == "set 7, l"){addByte(0xCB);addByte(0xFD);}
   else if( s == "set 7, (hl)"){addByte(0xCB);addByte(0xFE);}
   else if( s == "set 7, a" ){addByte(0xCB);addByte(0xFF);}
-  
-  else if( s == "rlc (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x0);}
-  else if( s == "rlc (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x1);}
-  else if( s == "rlc (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x2);}
-  else if( s == "rlc (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x3);}
-  else if( s == "rlc (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x4);}
-  else if( s == "rlc (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x5);}
+  // the IX mneumonics
+  else if( s == "rlc (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);}
+  else if( s == "rlc (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x01);}
+  else if( s == "rlc (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x02);}
+  else if( s == "rlc (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x03);}
+  else if( s == "rlc (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x04);}
+  else if( s == "rlc (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x05);}
   else if( s == "rlc (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x6);}
-  else if( s == "rlc (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x7);}
-  else if( s == "rrc (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x8);}
-  else if( s == "rrc (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x9);}
-  else if( s == "rrc (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0xA);}
-  else if( s == "rrc (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0xB);}
-  else if( s == "rrc (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0xC);}
-  else if( s == "rrc (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0xD);}
-  else if( s == "rrc (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xE);}
-  else if( s == "rrc (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0xF);}
+  else if( s == "rlc (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x07);}
+  else if( s == "rrc (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x08);}
+  else if( s == "rrc (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x09);}
+  else if( s == "rrc (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x0A);}
+  else if( s == "rrc (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x0B);}
+  else if( s == "rrc (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x0C);}
+  else if( s == "rrc (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x0D);}
+  else if( s == "rrc (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x0E);}
+  else if( s == "rrc (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x0F);}
   else if( s == "rl (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x10);}
   else if( s == "rl (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x11);}
   else if( s == "rl (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x12);}
@@ -2057,7 +2060,10 @@ void a( string s )
   else if( s == "rlc (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x4);}
   else if( s == "rlc (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x5);}
   else if( s == "rlc (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x6);}
-  else if( s == "rlc (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x7);}
+  else if( s == "rlc (iy+*), a")
+    {
+      addByte(0xFD);addByte(0xCB);addByte(0x07);
+    }
   else if( s == "rrc (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x8);}
   else if( s == "rrc (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x9);}
   else if( s == "rrc (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0xA);}
@@ -2065,7 +2071,10 @@ void a( string s )
   else if( s == "rrc (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0xC);}
   else if( s == "rrc (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0xD);}
   else if( s == "rrc (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xE);}
-  else if( s == "rrc (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0xF);}
+  else if( s == "rrc (iy+*), a" )
+    {
+      addByte(0xFD);addByte(0xCB);addByte(0x0F);
+    }
   else if( s == "rl (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x10);}
   else if( s == "rl (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x11);}
   else if( s == "rl (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x12);}
@@ -3302,7 +3311,38 @@ int main(int argc, char *argv[])
 
 		  addString( tmp );
 		}
-	      
+	      if(line.substr(0,2) == ".e" )
+		{
+#ifdef DEBUG
+		  cerr << "[Label: e]" << endl;
+#endif	      		  
+		  addLabel("e");
+		  addByte(0x00);
+		  addByte(0x80);
+		  addByte(0x27);
+		  addByte(0x18);
+		  addByte(0x28);
+		  addByte(0x18);
+		  addByte(0x28);
+		  addByte(0x59);
+		  addByte(0x04);
+		  
+		}
+	      if( line.substr(0,3) == ".pi" )
+		{
+#ifdef DEBUG
+		  cerr << "[Label: pi]" << endl;
+#endif	      
+		  addLabel("pi"); addByte(0x0);
+		  addByte(0x80);
+		  addByte(0x31);
+		  addByte(0x41);
+		  addByte(0x59);
+		  addByte(0x26);
+		  addByte(0x53);
+		  addByte(0x58);
+		  addByte(0x98);
+		}
 	       if( line.substr(0,3) ==".fp" )
 		{
 		  string tmp = removeUnwanted(line.substr(4, line.length() ));		  

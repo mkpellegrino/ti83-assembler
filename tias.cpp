@@ -1365,7 +1365,7 @@ void a( string s )
   else if( s == "and l" ){addByte(0xA5);}
   else if( s == "and (hl)" ){addByte(0xA6);}
   else if( s == "and a" ){addByte(0xA7);}
-  else if( s == "and b" ){addByte(0xA8);}
+  else if( s == "xor b" ){addByte(0xA8);}
   else if( s == "xor c" ){addByte(0xA9);}
   else if( s == "xor d" ){addByte(0xAA);}
   else if( s == "xor e" ){addByte(0xAB);}

@@ -18,14 +18,14 @@ disassemble: disassemble.cpp
 formulas: formulas.asm
 	./tias formulas.asm formulas.8xp
 
-testconv: testconv.asm
-	./tias testconv.asm testconv.8xp
+factors: factors.asm
+	./tias factors.asm factors.8xp
 
-test: test.asm
-	./tias test.asm test.8xp
-	./tias loop-test.asm loop-test.8xp
-	./tias input-test.asm input-test.8xp
-	./tias repeat-test.asm repeat-test.8xp
+times: times16_to_the_x.asm times10_to_the_x.asm str2hex.asm
+	./tias ./str2hex.asm ./str2hex.8xp
+
+hexinput: hex-input.asm
+	./tias hex-input.asm hex-input.8xp
 
 qform: qform.asm
 	./tias qform2.asm qform.8xp

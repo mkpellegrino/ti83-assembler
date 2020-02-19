@@ -43,6 +43,9 @@ start:
 
 dectochar:
 	pusha
+	call &fully_clear_screen
+	ld hl, &dec2char_title
+	bCall(PutS)
 	ld hl, &prompt
 	bCall(PutS)
 	call &user_input
@@ -65,7 +68,6 @@ rb:
 	
 disassemble:
 	call &fully_clear_screen
-
 	ld hl, &disassemble_title
 	bCall(PutS)
 	bCall(NewLine)
@@ -79,7 +81,6 @@ disassemble:
 	ld hl, &FP_user_input
 	bCall(Mov9ToOP1)
 	
-	;bCall(ConvOP1)
 	call &convop1b
 	ld h, d
 	ld l, e
@@ -104,9 +105,9 @@ disassemble_loop:
 	
 dec_to_hex:
 	call &fully_clear_screen
-
 	ld hl, &dec_to_hex_title
 	bCall(PutS)
+	
 	bCall(NewLine)
 
 
@@ -358,11 +359,15 @@ exit:
 
 hex2dec:
 	pusha
+	call &fully_clear_screen
+	ld hl, &hex2dec_title
+	bCall(PutS)
+	
+	
 	; clear out the tally (we'll have a tally of fun)
 	ld hl, #0x0000
 	ld (&str2hex_tally), hl
 	
-	call &fully_clear_screen
 	ld hl, &prompt
 	bCall(PutS)
 	
@@ -642,14 +647,18 @@ a_equals:
 dec_to_hex_title:
 ;     123456789012345-123456789012345-123456789012345-	
 .str "    Dec->Hex    ----------------"
+hex2dec_title:
+.str "    Hex->Dec    ----------------"
+dec2char_title:
+.str "    Dec->Chr    ----------------"
 float_title:
-.str " Float -> Bytes ----------------"
+.str "  Float->Bytes  ----------------"
 getkey_title:
 .str "     GetKey     ----------------"
 getcsc_title:
 .str "     GetCSC     ----------------"
 disassemble_title:
-.str "disassemble ti8x----------------"
+.str "disassemble ti8xpress '.' to end----------------"
 disassemble_prompt:
 .str "start> "
 pak_text:

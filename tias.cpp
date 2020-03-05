@@ -367,8 +367,11 @@ void addOffset(int i)
 
 void addWord( int w=0x0000 )
 {
-  addByte( w&0xFF );
-  addByte( (w&0xFF00 )/0xFF );
+#ifdef DEBUG
+  cerr << "adding word " << hex << w << "= 0x" << (w&0x00FF) << ":" << ((w&0xFF00)>>8) << endl;
+#endif 
+  addByte( (unsigned int)w&0xFF );
+  addByte( (unsigned int)((w&0xFF00)>>8) );
 }
 
 void addAddress( string s )
@@ -2893,12 +2896,6 @@ void function_user_input()
   a( "ld (**), a" ); addAddress( "functionUI_key" );
 
   a( "call **" ); addAddress( "functionUI_storeanddisplay" );
-  // todo: move the cursor
-  //a( "ld a, *" ); addByte( '*' );
-  //sysCall( "PutC" );
-
-  // TO DO - move the cursor and 
-  // go back to the top of the loop
   a( "jp **"); addAddress( "functionUI_top" );
  
   //=====================================================================
@@ -3356,6 +3353,20 @@ int main(int argc, char *argv[])
 	    {
 	      string addr=line.substr( 6, line.length() );
 	      sysCall( getBetween(line) );
+	    }
+	  else if( line == "pusha" )
+	    {
+	      a( "push af" );
+	      a( "push bc" );
+	      a( "push de" );
+	      a( "push hl" );
+	    }
+	  else if( line== "popa" )
+	    {
+	      a( "pop hl" );
+	      a( "pop de" );
+	      a( "pop bc" );
+	      a( "pop af" );
 	    }
 	  else if( line == "call &user_input" )
 	    {

@@ -4,16 +4,16 @@ DEBUG=-g -DDEBUG
 OPT=-O2
 OPT_SIZE=-O3 -Os -fno-threadsafe-statics -fno-exceptions -ffunction-sections -fdata-sections -fno-rtti -flto -fvisibility-inlines-hidden
 
-all: clean tias disassemble test distance
+all: clean tias disassemble distance
 
 tias: tias.cpp
 	g++ tias.cpp $(CPPFLAGS) $(OPT_SIZE) -o tias
 	g++ tias.cpp $(DEBUG) $(CPPFLAGS) -o tias-debug
-	strip -no_uuid -A -u -S -X -N -x tias
+	strip -no_uuid -A -u -S -X -x tias
 
 disassemble: disassemble.cpp
 	g++ disassemble.cpp $(CPPFLAGS) $(OPT_SIZE) -o disassemble
-	strip -no_uuid -A -u -S -X -N -x disassemble
+	strip -no_uuid -A -u -S -X -x disassemble
 
 formulas: formulas.asm
 	./tias formulas.asm formulas.8xp

@@ -40,7 +40,7 @@
 //
 // To disassemble: disassemble input.8xp
 //             or  disassemble input.8xp a <--- this will give you just the mneumonic listing.
-
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <stdio.h>

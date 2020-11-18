@@ -1806,524 +1806,520 @@ void a( string s )
   else if( s == "set 7, (hl)"){addByte(0xCB);addByte(0xFE);}
   else if( s == "set 7, a" ){addByte(0xCB);addByte(0xFF);}
   // the IX mneumonics
-  else if( s == "rlc (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);}
-  else if( s == "rlc (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x01);}
-  else if( s == "rlc (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x02);}
-  else if( s == "rlc (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x03);}
-  else if( s == "rlc (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x04);}
-  else if( s == "rlc (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x05);}
-  else if( s == "rlc (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x6);}
-  else if( s == "rlc (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x07);}
-  else if( s == "rrc (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x08);}
-  else if( s == "rrc (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x09);}
-  else if( s == "rrc (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x0A);}
-  else if( s == "rrc (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x0B);}
-  else if( s == "rrc (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x0C);}
-  else if( s == "rrc (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x0D);}
-  else if( s == "rrc (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x0E);}
-  else if( s == "rrc (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x0F);}
-  else if( s == "rl (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x10);}
-  else if( s == "rl (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x11);}
-  else if( s == "rl (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x12);}
-  else if( s == "rl (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x13);}
-  else if( s == "rl (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x14);}
-  else if( s == "rl (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x15);}
-  else if( s == "rl (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x16);}
-  else if( s == "rl (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x17);}
-  else if( s == "rr (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x18);}
-  else if( s == "rr (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x19);}
-  else if( s == "rr (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x1A);}
-  else if( s == "rr (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x1B);}
-  else if( s == "rr (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x1C);}
-  else if( s == "rr (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x1D);}
-  else if( s == "rr (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x1E);}
-  else if( s == "rr (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x1F);}
-  else if( s == "sla (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x20);}
-  else if( s == "sla (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x21);}
-  else if( s == "sla (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x22);}
-  else if( s == "sla (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x23);}
-  else if( s == "sla (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x24);}
-  else if( s == "sla (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x25);}
-  else if( s == "sla (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x26);}
-  else if( s == "sla (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x27);}
-  else if( s == "sra (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x28);}
-  else if( s == "sra (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x29);}
-  else if( s == "sra (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x2A);}
-  else if( s == "sra (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x2B);}
-  else if( s == "sra (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x2C);}
-  else if( s == "sra (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x2D);}
-  else if( s == "sra (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x2E);}
-  else if( s == "sra (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x2F);}
-  else if( s == "sll (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x30);}
-  else if( s == "sll (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x31);}
-  else if( s == "sll (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x32);}
-  else if( s == "sll (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x33);}
-  else if( s == "sll (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x34);}
-  else if( s == "sll (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x35);}
-  else if( s == "sll (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x36);}
-  else if( s == "sll (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x37);}
-  else if( s == "srl (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x38);}
-  else if( s == "srl (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x39);}
-  else if( s == "srl (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x3A);}
-  else if( s == "srl (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x3B);}
-  else if( s == "srl (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x3C);}
-  else if( s == "srl (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x3D);}
-  else if( s == "srl (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x3E);}
-  else if( s == "srl (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x3F);}
-  else if( s == "bit 0, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x40);}
-  else if( s == "bit 0, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x41);}
-  else if( s == "bit 0, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x42);}
-  else if( s == "bit 0, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x43);}
-  else if( s == "bit 0, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x44);}
-  else if( s == "bit 0, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x45);}
-  else if( s == "bit 0, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x46);}
-  else if( s == "bit 0, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x47);}
-  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x48);}
-  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x49);}
-  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x4A);}
-  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x4B);}
-  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x4C);}
-  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x4D);}
-  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x4E);}
-  else if( s == "bit 1, (ix+*)" ){addByte(0xDD);addByte(0xCB);addByte(0x4F);}
-  else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x50);}
-  else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x51);}
-  else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x52);}
-  else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x53);}
-  else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x54);}
-  else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x55);}
-  else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x56);}
-  else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x57);}
-  else if( s == "bit 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x58);}
-  else if( s == "bit 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x59);}
-  else if( s == "bit 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x5A);}
-  else if( s == "bit 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x5B);}
-  else if( s == "bit 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x5C);}
-  else if( s == "bit 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x5D);}
-  else if( s == "bit 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x5E);}
-  else if( s == "bit 3, (ix+*)" ){addByte(0xDD);addByte(0xCB);addByte(0x5F);}
-  else if( s == "bit 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x60);}
-  else if( s == "bit 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x61);}
-  else if( s == "bit 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x62);}
-  else if( s == "bit 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x63);}
-  else if( s == "bit 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x64);}
-  else if( s == "bit 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x65);}
-  else if( s == "bit 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x66);}
-  else if( s == "bit 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x67);}
-  else if( s == "bit 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x68);}
-  else if( s == "bit 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x69);}
-  else if( s == "bit 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x6A);}
-  else if( s == "bit 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x6B);}
-  else if( s == "bit 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x6C);}
-  else if( s == "bit 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x6D);}
-  else if( s == "bit 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x6E);}
-  else if( s == "bit 5, (ix+*)" ){addByte(0xDD);addByte(0xCB);addByte(0x6F);}
-  else if( s == "bit 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x70);}
-  else if( s == "bit 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x71);}
-  else if( s == "bit 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x72);}
-  else if( s == "bit 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x73);}
-  else if( s == "bit 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x74);}
-  else if( s == "bit 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x75);}
-  else if( s == "bit 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x76);}
-  else if( s == "bit 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x77);}
-  else if( s == "bit 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x78);}
-  else if( s == "bit 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x79);}
-  else if( s == "bit 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x7A);}
-  else if( s == "bit 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x7B);}
-  else if( s == "bit 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x7C);}
-  else if( s == "bit 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x7D);}
-  else if( s == "bit 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x7E);}
-  else if( s == "bit 7, (ix+*)" ){addByte(0xDD);addByte(0xCB);addByte(0x7F);}
-  else if( s == "res 0, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x80);}
-  else if( s == "res 0, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x81);}
-  else if( s == "res 0, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x82);}
-  else if( s == "res 0, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x83);}
-  else if( s == "res 0, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x84);}
-  else if( s == "res 0, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x85);}
-  else if( s == "res 0, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x86);}
-  else if( s == "res 0, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x87);}
-  else if( s == "res 1, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x88);}
-  else if( s == "res 1, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x89);}
-  else if( s == "res 1, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x8A);}
-  else if( s == "res 1, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x8B);}
-  else if( s == "res 1, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x8C);}
-  else if( s == "res 1, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x8D);}
-  else if( s == "res 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x8E);}
-  else if( s == "res 1, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x8F);}
-  else if( s == "res 2, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x90);}
-  else if( s == "res 2, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x91);}
-  else if( s == "res 2, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x92);}
-  else if( s == "res 2, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x93);}
-  else if( s == "res 2, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x94);}
-  else if( s == "res 2, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x95);}
-  else if( s == "res 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x96);}
-  else if( s == "res 2, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x97);}
-  else if( s == "res 3, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x98);}
-  else if( s == "res 3, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x99);}
-  else if( s == "res 3, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x9A);}
-  else if( s == "res 3, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x9B);}
-  else if( s == "res 3, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x9C);}
-  else if( s == "res 3, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x9D);}
-  else if( s == "res 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x9E);}
-  else if( s == "res 3, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x9F);}
-  else if( s == "res 4, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0xA0);}
-  else if( s == "res 4, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0xA1);}
-  else if( s == "res 4, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0xA2);}
-  else if( s == "res 4, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0xA3);}
-  else if( s == "res 4, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0xA4);}
-  else if( s == "res 4, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0xA5);}
-  else if( s == "res 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xA6);}
-  else if( s == "res 4, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0xA7);}
-  else if( s == "res 5, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0xA8);}
-  else if( s == "res 5, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0xA9);}
-  else if( s == "res 5, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0xAA);}
-  else if( s == "res 5, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0xAB);}
-  else if( s == "res 5, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0xAC);}
-  else if( s == "res 5, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0xAD);}
-  else if( s == "res 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xAE);}
-  else if( s == "res 5, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0xAF);}
-  else if( s == "res 6, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0xB0);}
-  else if( s == "res 6, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0xB1);}
-  else if( s == "res 6, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0xB2);}
-  else if( s == "res 6, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0xB3);}
-  else if( s == "res 6, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0xB4);}
-  else if( s == "res 6, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0xB5);}
-  else if( s == "res 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xB6);}
-  else if( s == "res 6, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0xB7);}
-  else if( s == "res 7, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0xB8);}
-  else if( s == "res 7, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0xB9);}
-  else if( s == "res 7, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0xBA);}
-  else if( s == "res 7, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0xBB);}
-  else if( s == "res 7, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0xBC);}
-  else if( s == "res 7, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0xBD);}
-  else if( s == "res 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xBE);}
-  else if( s == "res 7, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0xBF);}
-  else if( s == "set 0, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0xC0);}
-  else if( s == "set 0, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0xC1);}
-  else if( s == "set 0, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0xC2);}
-  else if( s == "set 0, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0xC3);}
-  else if( s == "set 0, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0xC4);}
-  else if( s == "set 0, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0xC5);}
-  else if( s == "set 0, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xC6);}
-  else if( s == "set 0, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0xC7);}
-  else if( s == "set 1, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0xC8);}
-  else if( s == "set 1, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0xC9);}
-  else if( s == "set 1, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0xCA);}
-  else if( s == "set 1, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0xCB);}
-  else if( s == "set 1, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0xCC);}
-  else if( s == "set 1, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0xCD);}
-  else if( s == "set 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xCE);}
-  else if( s == "set 1, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0xCF);}
-  else if( s == "set 2, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0xD0);}
-  else if( s == "set 2, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0xD1);}
-  else if( s == "set 2, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0xD2);}
-  else if( s == "set 2, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0xD3);}
-  else if( s == "set 2, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0xD4);}
-  else if( s == "set 2, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0xD5);}
-  else if( s == "set 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xD6);}
-  else if( s == "set 2, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0xD7);}
-  else if( s == "set 3, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0xD8);}
-  else if( s == "set 3, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0xD9);}
-  else if( s == "set 3, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0xDA);}
-  else if( s == "set 3, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0xDB);}
-  else if( s == "set 3, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0xDC);}
-  else if( s == "set 3, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0xDD);}
-  else if( s == "set 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xDE);}
-  else if( s == "set 3, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0xDF);}
-  else if( s == "set 4, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0xE0);}
-  else if( s == "set 4, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0xE1);}
-  else if( s == "set 4, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0xE2);}
-  else if( s == "set 4, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0xE3);}
-  else if( s == "set 4, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0xE4);}
-  else if( s == "set 4, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0xE5);}
-  else if( s == "set 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xE6);}
-  else if( s == "set 4, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0xE7);}
-  else if( s == "set 5, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0xE8);}
-  else if( s == "set 5, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0xE9);}
-  else if( s == "set 5, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0xEA);}
-  else if( s == "set 5, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0xEB);}
-  else if( s == "set 5, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0xEC);}
-  else if( s == "set 5, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0xED);}
-  else if( s == "set 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xEE);}
-  else if( s == "set 5, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0xEF);}
-  else if( s == "set 6, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0xF0);}
-  else if( s == "set 6, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0xF1);}
-  else if( s == "set 6, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0xF2);}
-  else if( s == "set 6, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0xF3);}
-  else if( s == "set 6, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0xF4);}
-  else if( s == "set 6, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0xF5);}
-  else if( s == "set 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xF6);}
-  else if( s == "set 6, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0xF7);}
-  else if( s == "set 7, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0xF8);}
-  else if( s == "set 7, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0xF9);}
-  else if( s == "set 7, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0xFA);}
-  else if( s == "set 7, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0xFB);}
-  else if( s == "set 7, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0xFC);}
-  else if( s == "set 7, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0xFD);}
-  else if( s == "set 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0xFE);}
-  else if( s == "set 7, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0xFF);}
-  else if( s == "rlc (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x0);}
-  else if( s == "rlc (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x1);}
-  else if( s == "rlc (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x2);}
-  else if( s == "rlc (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x3);}
-  else if( s == "rlc (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x4);}
-  else if( s == "rlc (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x5);}
-  else if( s == "rlc (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x6);}
-  else if( s == "rlc (iy+*), a")
-    {
-      addByte(0xFD);addByte(0xCB);addByte(0x07);
-    }
-  else if( s == "rrc (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x8);}
-  else if( s == "rrc (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x9);}
-  else if( s == "rrc (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0xA);}
-  else if( s == "rrc (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0xB);}
-  else if( s == "rrc (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0xC);}
-  else if( s == "rrc (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0xD);}
-  else if( s == "rrc (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xE);}
-  else if( s == "rrc (iy+*), a" )
-    {
-      addByte(0xFD);addByte(0xCB);addByte(0x0F);
-    }
-  else if( s == "rl (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x10);}
-  else if( s == "rl (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x11);}
-  else if( s == "rl (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x12);}
-  else if( s == "rl (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x13);}
-  else if( s == "rl (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x14);}
-  else if( s == "rl (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x15);}
-  else if( s == "rl (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x16);}
-  else if( s == "rl (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x17);}
-  else if( s == "rr (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x18);}
-  else if( s == "rr (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x19);}
-  else if( s == "rr (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x1A);}
-  else if( s == "rr (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x1B);}
-  else if( s == "rr (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x1C);}
-  else if( s == "rr (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x1D);}
-  else if( s == "rr (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x1E);}
-  else if( s == "rr (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x1F);}
-  else if( s == "sla (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x20);}
-  else if( s == "sla (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x21);}
-  else if( s == "sla (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x22);}
-  else if( s == "sla (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x23);}
-  else if( s == "sla (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x24);}
-  else if( s == "sla (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x25);}
-  else if( s == "sla (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x26);}
-  else if( s == "sla (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x27);}
-  else if( s == "sra (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x28);}
-  else if( s == "sra (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x29);}
-  else if( s == "sra (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x2A);}
-  else if( s == "sra (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x2B);}
-  else if( s == "sra (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x2C);}
-  else if( s == "sra (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x2D);}
-  else if( s == "sra (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x2E);}
-  else if( s == "sra (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x2F);}
-  else if( s == "sll (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x30);}
-  else if( s == "sll (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x31);}
-  else if( s == "sll (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x32);}
-  else if( s == "sll (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x33);}
-  else if( s == "sll (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x34);}
-  else if( s == "sll (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x35);}
-  else if( s == "sll (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x36);}
-  else if( s == "sll (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x37);}
-  else if( s == "srl (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x38);}
-  else if( s == "srl (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x39);}
-  else if( s == "srl (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x3A);}
-  else if( s == "srl (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x3B);}
-  else if( s == "srl (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x3C);}
-  else if( s == "srl (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x3D);}
-  else if( s == "srl (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x3E);}
-  else if( s == "srl (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x3F);}
-  else if( s == "bit 0, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x40);}
-  else if( s == "bit 0, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x41);}
-  else if( s == "bit 0, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x42);}
-  else if( s == "bit 0, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x43);}
-  else if( s == "bit 0, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x44);}
-  else if( s == "bit 0, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x45);}
-  else if( s == "bit 0, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x46);}
-  else if( s == "bit 0, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x47);}
-  else if( s == "bit 1, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x48);}
-  else if( s == "bit 1, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x49);}
-  else if( s == "bit 1, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x4A);}
-  else if( s == "bit 1, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x4B);}
-  else if( s == "bit 1, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x4C);}
-  else if( s == "bit 1, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x4D);}
-  else if( s == "bit 1, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x4E);}
-  else if( s == "bit 1, (iy+*)" ){addByte(0xFD);addByte(0xCB);addByte(0x4F);}
-  else if( s == "bit 2, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x50);}
-  else if( s == "bit 2, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x51);}
-  else if( s == "bit 2, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x52);}
-  else if( s == "bit 2, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x53);}
-  else if( s == "bit 2, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x54);}
-  else if( s == "bit 2, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x55);}
-  else if( s == "bit 2, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x56);}
-  else if( s == "bit 2, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x57);}
-  else if( s == "bit 3, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x58);}
-  else if( s == "bit 3, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x59);}
-  else if( s == "bit 3, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x5A);}
-  else if( s == "bit 3, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x5B);}
-  else if( s == "bit 3, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x5C);}
-  else if( s == "bit 3, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x5D);}
-  else if( s == "bit 3, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x5E);}
-  else if( s == "bit 3, (iy+*)" ){addByte(0xFD);addByte(0xCB);addByte(0x5F);}
-  else if( s == "bit 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x60);}
-  else if( s == "bit 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x61);}
-  else if( s == "bit 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x62);}
-  else if( s == "bit 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x63);}
-  else if( s == "bit 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x64);}
-  else if( s == "bit 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x65);}
-  else if( s == "bit 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x66);}
-  else if( s == "bit 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x67);}
-  else if( s == "bit 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x68);}
-  else if( s == "bit 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x69);}
-  else if( s == "bit 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x6A);}
-  else if( s == "bit 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x6B);}
-  else if( s == "bit 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x6C);}
-  else if( s == "bit 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x6D);}
-  else if( s == "bit 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x6E);}
-  else if( s == "bit 5, (iy+*)" ){addByte(0xFD);addByte(0xCB);addByte(0x6F);}
-  else if( s == "bit 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x70);}
-  else if( s == "bit 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x71);}
-  else if( s == "bit 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x72);}
-  else if( s == "bit 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x73);}
-  else if( s == "bit 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x74);}
-  else if( s == "bit 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x75);}
-  else if( s == "bit 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x76);}
-  else if( s == "bit 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x77);}
-  else if( s == "bit 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x78);}
-  else if( s == "bit 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x79);}
-  else if( s == "bit 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x7A);}
-  else if( s == "bit 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x7B);}
-  else if( s == "bit 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x7C);}
-  else if( s == "bit 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x7D);}
-  else if( s == "bit 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x7E);}
-  else if( s == "bit 7, (iy+*)" ){addByte(0xFD);addByte(0xCB);addByte(0x7F);}
-  else if( s == "res 0, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x80);}
-  else if( s == "res 0, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x81);}
-  else if( s == "res 0, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x82);}
-  else if( s == "res 0, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x83);}
-  else if( s == "res 0, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x84);}
-  else if( s == "res 0, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x85);}
-  else if( s == "res 0, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x86);}
-  else if( s == "res 0, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x87);}
-  else if( s == "res 1, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x88);}
-  else if( s == "res 1, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x89);}
-  else if( s == "res 1, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x8A);}
-  else if( s == "res 1, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x8B);}
-  else if( s == "res 1, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x8C);}
-  else if( s == "res 1, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x8D);}
-  else if( s == "res 1, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x8E);}
-  else if( s == "res 1, (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x8F);}
-  else if( s == "res 2, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x90);}
-  else if( s == "res 2, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x91);}
-  else if( s == "res 2, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x92);}
-  else if( s == "res 2, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x93);}
-  else if( s == "res 2, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x94);}
-  else if( s == "res 2, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x95);}
-  else if( s == "res 2, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x96);}
-  else if( s == "res 2, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x97);}
-  else if( s == "res 3, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x98);}
-  else if( s == "res 3, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x99);}
-  else if( s == "res 3, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x9A);}
-  else if( s == "res 3, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x9B);}
-  else if( s == "res 3, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x9C);}
-  else if( s == "res 3, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x9D);}
-  else if( s == "res 3, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x9E);}
-  else if( s == "res 3, (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x9F);}
-  else if( s == "res 4, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0xA0);}
-  else if( s == "res 4, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0xA1);}
-  else if( s == "res 4, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0xA2);}
-  else if( s == "res 4, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0xA3);}
-  else if( s == "res 4, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0xA4);}
-  else if( s == "res 4, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0xA5);}
-  else if( s == "res 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xA6);}
-  else if( s == "res 4, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0xA7);}
-  else if( s == "res 5, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0xA8);}
-  else if( s == "res 5, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0xA9);}
-  else if( s == "res 5, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0xAA);}
-  else if( s == "res 5, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0xAB);}
-  else if( s == "res 5, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0xAC);}
-  else if( s == "res 5, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0xAD);}
-  else if( s == "res 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xAE);}
-  else if( s == "res 5, (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0xAF);}
-  else if( s == "res 6, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0xB0);}
-  else if( s == "res 6, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0xB1);}
-  else if( s == "res 6, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0xB2);}
-  else if( s == "res 6, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0xB3);}
-  else if( s == "res 6, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0xB4);}
-  else if( s == "res 6, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0xB5);}
-  else if( s == "res 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xB6);}
-  else if( s == "res 6, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0xB7);}
-  else if( s == "res 7, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0xB8);}
-  else if( s == "res 7, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0xB9);}
-  else if( s == "res 7, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0xBA);}
-  else if( s == "res 7, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0xBB);}
-  else if( s == "res 7, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0xBC);}
-  else if( s == "res 7, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0xBD);}
-  else if( s == "res 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xBE);}
-  else if( s == "res 7, (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0xBF);}
-  else if( s == "set 0, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0xC0);}
-  else if( s == "set 0, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0xC1);}
-  else if( s == "set 0, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0xC2);}
-  else if( s == "set 0, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0xC3);}
-  else if( s == "set 0, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0xC4);}
-  else if( s == "set 0, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0xC5);}
-  else if( s == "set 0, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xC6);}
-  else if( s == "set 0, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0xC7);}
-  else if( s == "set 1, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0xC8);}
-  else if( s == "set 1, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0xC9);}
-  else if( s == "set 1, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0xCA);}
-  else if( s == "set 1, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0xCB);}
-  else if( s == "set 1, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0xCC);}
-  else if( s == "set 1, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0xCD);}
-  else if( s == "set 1, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xCE);}
-  else if( s == "set 1, (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0xCF);}
-  else if( s == "set 2, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0xD0);}
-  else if( s == "set 2, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0xD1);}
-  else if( s == "set 2, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0xD2);}
-  else if( s == "set 2, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0xD3);}
-  else if( s == "set 2, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0xD4);}
-  else if( s == "set 2, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0xD5);}
-  else if( s == "set 2, (iy+*)"){addByte(0xFD);addByte(0xCB);/*placeholder*/addByte(0x00);addByte(0xD6);byte_delay=1;}
-  else if( s == "set 2, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0xD7);}
-  else if( s == "set 3, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0xD8);}
-  else if( s == "set 3, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0xD9);}
-  else if( s == "set 3, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0xDA);}
-  else if( s == "set 3, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0xDB);}
-  else if( s == "set 3, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0xDC);}
-  else if( s == "set 3, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0xDD);}
-  else if( s == "set 3, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xDE);}
-  else if( s == "set 3, (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0xDF);}
-  else if( s == "set 4, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0xE0);}
-  else if( s == "set 4, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0xE1);}
-  else if( s == "set 4, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0xE2);}
-  else if( s == "set 4, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0xE3);}
-  else if( s == "set 4, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0xE4);}
-  else if( s == "set 4, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0xE5);}
-  else if( s == "set 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xE6);}
-  else if( s == "set 4, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0xE7);}
-  else if( s == "set 5, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0xE8);}
-  else if( s == "set 5, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0xE9);}
-  else if( s == "set 5, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0xEA);}
-  else if( s == "set 5, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0xEB);}
-  else if( s == "set 5, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0xEC);}
-  else if( s == "set 5, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0xED);}
-  else if( s == "set 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xEE);}
-  else if( s == "set 5, (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0xEF);}
-  else if( s == "set 6, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0xF0);}
-  else if( s == "set 6, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0xF1);}
-  else if( s == "set 6, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0xF2);}
-  else if( s == "set 6, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0xF3);}
-  else if( s == "set 6, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0xF4);}
-  else if( s == "set 6, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0xF5);}
-  else if( s == "set 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xF6);}
-  else if( s == "set 6, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0xF7);}
-  else if( s == "set 7, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0xF8);}
-  else if( s == "set 7, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0xF9);}
-  else if( s == "set 7, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0xFA);}
-  else if( s == "set 7, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0xFB);}
-  else if( s == "set 7, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0xFC);}
-  else if( s == "set 7, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0xFD);}
-  else if( s == "set 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xFE);}
-  else if( s == "set 7, (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0xFF);}
+
+  // Do these need the byte_delay and a placeholder?
+  else if( s == "rlc (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x00);byte_delay=2;}
+  else if( s == "rlc (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x01);byte_delay=2;}
+  else if( s == "rlc (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x02);byte_delay=2;}
+  else if( s == "rlc (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x03);byte_delay=2;}
+  else if( s == "rlc (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x04);byte_delay=2;}
+  else if( s == "rlc (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x05);byte_delay=2;}
+  else if( s == "rlc (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x6);byte_delay=2;}
+  else if( s == "rlc (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x07);byte_delay=2;}
+  else if( s == "rrc (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x08);byte_delay=2;}
+  else if( s == "rrc (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x09);byte_delay=2;}
+  else if( s == "rrc (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x0A);byte_delay=2;}
+  else if( s == "rrc (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x0B);byte_delay=2;}
+  else if( s == "rrc (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x0C);byte_delay=2;}
+  else if( s == "rrc (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x0D);byte_delay=2;}
+  else if( s == "rrc (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x0E);byte_delay=2;}
+  else if( s == "rrc (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x0F);byte_delay=2;}
+  else if( s == "rl (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x10);byte_delay=2;}
+  else if( s == "rl (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x11);byte_delay=2;}
+  else if( s == "rl (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x12);byte_delay=2;}
+  else if( s == "rl (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x13);byte_delay=2;}
+  else if( s == "rl (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x14);byte_delay=2;}
+  else if( s == "rl (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x15);byte_delay=2;}
+  else if( s == "rl (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x16);byte_delay=2;}
+  else if( s == "rl (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x17);byte_delay=2;}
+  else if( s == "rr (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x18);byte_delay=2;}
+  else if( s == "rr (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x19);byte_delay=2;}
+  else if( s == "rr (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x1A);byte_delay=2;}
+  else if( s == "rr (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x1B);byte_delay=2;}
+  else if( s == "rr (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x1C);byte_delay=2;}
+  else if( s == "rr (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x1D);byte_delay=2;}
+  else if( s == "rr (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x1E);byte_delay=2;}
+  else if( s == "rr (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x1F);byte_delay=2;}
+  else if( s == "sla (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x20);byte_delay=2;}
+  else if( s == "sla (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x21);byte_delay=2;}
+  else if( s == "sla (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x22);byte_delay=2;}
+  else if( s == "sla (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x23);byte_delay=2;}
+  else if( s == "sla (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x24);byte_delay=2;}
+  else if( s == "sla (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x25);byte_delay=2;}
+  else if( s == "sla (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x26);byte_delay=2;}
+  else if( s == "sla (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x27);byte_delay=2;}
+  else if( s == "sra (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x28);byte_delay=2;}
+  else if( s == "sra (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x29);byte_delay=2;}
+  else if( s == "sra (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x2A);byte_delay=2;}
+  else if( s == "sra (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x2B);byte_delay=2;}
+  else if( s == "sra (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x2C);byte_delay=2;}
+  else if( s == "sra (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x2D);byte_delay=2;}
+  else if( s == "sra (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x2E);byte_delay=2;}
+  else if( s == "sra (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x2F);byte_delay=2;}
+  else if( s == "sll (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x30);byte_delay=2;}
+  else if( s == "sll (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x31);byte_delay=2;}
+  else if( s == "sll (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x32);byte_delay=2;}
+  else if( s == "sll (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x33);byte_delay=2;}
+  else if( s == "sll (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x34);byte_delay=2;}
+  else if( s == "sll (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x35);byte_delay=2;}
+  else if( s == "sll (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x36);byte_delay=2;}
+  else if( s == "sll (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x37);byte_delay=2;}
+  else if( s == "srl (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x38);byte_delay=2;}
+  else if( s == "srl (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x39);byte_delay=2;}
+  else if( s == "srl (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x3A);byte_delay=2;}
+  else if( s == "srl (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x3B);byte_delay=2;}
+  else if( s == "srl (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x3C);byte_delay=2;}
+  else if( s == "srl (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x3D);byte_delay=2;}
+  else if( s == "srl (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x3E);byte_delay=2;}
+  else if( s == "srl (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x3F);byte_delay=2;}
+  else if( s == "bit 0, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x40);byte_delay=2;}
+  else if( s == "bit 0, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x41);byte_delay=2;}
+  else if( s == "bit 0, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x42);byte_delay=2;}
+  else if( s == "bit 0, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x43);byte_delay=2;}
+  else if( s == "bit 0, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x44);byte_delay=2;}
+  else if( s == "bit 0, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x45);byte_delay=2;}
+  else if( s == "bit 0, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x46);byte_delay=2;}
+  else if( s == "bit 0, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x47);byte_delay=2;}
+  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x48);byte_delay=2;}
+  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x49);byte_delay=2;}
+  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4A);byte_delay=2;}
+  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4B);byte_delay=2;}
+  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4C);byte_delay=2;}
+  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4D);byte_delay=2;}
+  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4E);byte_delay=2;}
+  else if( s == "bit 1, (ix+*)" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4F);byte_delay=2;}
+  else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x50);byte_delay=2;}
+  else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x51);byte_delay=2;}
+  else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x52);byte_delay=2;}
+  else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x53);byte_delay=2;}
+  else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x54);byte_delay=2;}
+  else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x55);byte_delay=2;}
+  else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x56);byte_delay=2;}
+  else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x57);byte_delay=2;}
+  else if( s == "bit 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x58);byte_delay=2;}
+  else if( s == "bit 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x59);byte_delay=2;}
+  else if( s == "bit 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x5A);byte_delay=2;}
+  else if( s == "bit 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x5B);byte_delay=2;}
+  else if( s == "bit 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x5C);byte_delay=2;}
+  else if( s == "bit 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x5D);byte_delay=2;}
+  else if( s == "bit 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x5E);byte_delay=2;}
+  else if( s == "bit 3, (ix+*)" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x5F);byte_delay=2;}
+  else if( s == "bit 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x60);byte_delay=2;}
+  else if( s == "bit 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x61);byte_delay=2;}
+  else if( s == "bit 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x62);byte_delay=2;}
+  else if( s == "bit 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x63);byte_delay=2;}
+  else if( s == "bit 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x64);byte_delay=2;}
+  else if( s == "bit 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x65);byte_delay=2;}
+  else if( s == "bit 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x66);byte_delay=2;}
+  else if( s == "bit 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x67);byte_delay=2;}
+  else if( s == "bit 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x68);byte_delay=2;}
+  else if( s == "bit 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x69);byte_delay=2;}
+  else if( s == "bit 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x6A);byte_delay=2;}
+  else if( s == "bit 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x6B);byte_delay=2;}
+  else if( s == "bit 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x6C);byte_delay=2;}
+  else if( s == "bit 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x6D);byte_delay=2;}
+  else if( s == "bit 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x6E);byte_delay=2;}
+  else if( s == "bit 5, (ix+*)" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x6F);byte_delay=2;}
+  else if( s == "bit 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x70);byte_delay=2;}
+  else if( s == "bit 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x71);byte_delay=2;}
+  else if( s == "bit 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x72);byte_delay=2;}
+  else if( s == "bit 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x73);byte_delay=2;}
+  else if( s == "bit 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x74);byte_delay=2;}
+  else if( s == "bit 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x75);byte_delay=2;}
+  else if( s == "bit 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x76);byte_delay=2;}
+  else if( s == "bit 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x77);byte_delay=2;}
+  else if( s == "bit 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x78);byte_delay=2;}
+  else if( s == "bit 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x79);byte_delay=2;}
+  else if( s == "bit 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x7A);byte_delay=2;}
+  else if( s == "bit 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x7B);byte_delay=2;}
+  else if( s == "bit 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x7C);byte_delay=2;}
+  else if( s == "bit 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x7D);byte_delay=2;}
+  else if( s == "bit 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x7E);byte_delay=2;}
+  else if( s == "bit 7, (ix+*)" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x7F);byte_delay=2;}
+  else if( s == "res 0, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x80);byte_delay=2;}
+  else if( s == "res 0, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x81);byte_delay=2;}
+  else if( s == "res 0, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x82);byte_delay=2;}
+  else if( s == "res 0, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x83);byte_delay=2;}
+  else if( s == "res 0, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x84);byte_delay=2;}
+  else if( s == "res 0, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x85);byte_delay=2;}
+  else if( s == "res 0, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x86);byte_delay=2;}
+  else if( s == "res 0, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x87);byte_delay=2;}
+  else if( s == "res 1, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x88);byte_delay=2;}
+  else if( s == "res 1, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x89);byte_delay=2;}
+  else if( s == "res 1, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x8A);byte_delay=2;}
+  else if( s == "res 1, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x8B);byte_delay=2;}
+  else if( s == "res 1, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x8C);byte_delay=2;}
+  else if( s == "res 1, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x8D);byte_delay=2;}
+  else if( s == "res 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x8E);byte_delay=2;}
+  else if( s == "res 1, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x8F);byte_delay=2;}
+  else if( s == "res 2, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x90);byte_delay=2;}
+  else if( s == "res 2, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x91);byte_delay=2;}
+  else if( s == "res 2, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x92);byte_delay=2;}
+  else if( s == "res 2, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x93);byte_delay=2;}
+  else if( s == "res 2, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x94);byte_delay=2;}
+  else if( s == "res 2, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x95);byte_delay=2;}
+  else if( s == "res 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x96);byte_delay=2;}
+  else if( s == "res 2, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x97);byte_delay=2;}
+  else if( s == "res 3, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x98);byte_delay=2;}
+  else if( s == "res 3, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x99);byte_delay=2;}
+  else if( s == "res 3, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x9A);byte_delay=2;}
+  else if( s == "res 3, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x9B);byte_delay=2;}
+  else if( s == "res 3, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x9C);byte_delay=2;}
+  else if( s == "res 3, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x9D);byte_delay=2;}
+  else if( s == "res 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x9E);byte_delay=2;}
+  else if( s == "res 3, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x9F);byte_delay=2;}
+  else if( s == "res 4, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xA0);byte_delay=2;}
+  else if( s == "res 4, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xA1);byte_delay=2;}
+  else if( s == "res 4, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xA2);byte_delay=2;}
+  else if( s == "res 4, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xA3);byte_delay=2;}
+  else if( s == "res 4, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xA4);byte_delay=2;}
+  else if( s == "res 4, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xA5);byte_delay=2;}
+  else if( s == "res 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xA6);byte_delay=2;}
+  else if( s == "res 4, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xA7);byte_delay=2;}
+  else if( s == "res 5, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xA8);byte_delay=2;}
+  else if( s == "res 5, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xA9);byte_delay=2;}
+  else if( s == "res 5, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xAA);byte_delay=2;}
+  else if( s == "res 5, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xAB);byte_delay=2;}
+  else if( s == "res 5, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xAC);byte_delay=2;}
+  else if( s == "res 5, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xAD);byte_delay=2;}
+  else if( s == "res 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xAE);byte_delay=2;}
+  else if( s == "res 5, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xAF);byte_delay=2;}
+  else if( s == "res 6, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xB0);byte_delay=2;}
+  else if( s == "res 6, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xB1);byte_delay=2;}
+  else if( s == "res 6, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xB2);byte_delay=2;}
+  else if( s == "res 6, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xB3);byte_delay=2;}
+  else if( s == "res 6, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xB4);byte_delay=2;}
+  else if( s == "res 6, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xB5);byte_delay=2;}
+  else if( s == "res 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xB6);byte_delay=2;}
+  else if( s == "res 6, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xB7);byte_delay=2;}
+  else if( s == "res 7, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xB8);byte_delay=2;}
+  else if( s == "res 7, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xB9);byte_delay=2;}
+  else if( s == "res 7, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xBA);byte_delay=2;}
+  else if( s == "res 7, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xBB);byte_delay=2;}
+  else if( s == "res 7, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xBC);byte_delay=2;}
+  else if( s == "res 7, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xBD);byte_delay=2;}
+  else if( s == "res 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xBE);byte_delay=2;}
+  else if( s == "res 7, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xBF);byte_delay=2;}
+  else if( s == "set 0, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xC0);byte_delay=2;}
+  else if( s == "set 0, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xC1);byte_delay=2;}
+  else if( s == "set 0, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xC2);byte_delay=2;}
+  else if( s == "set 0, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xC3);byte_delay=2;}
+  else if( s == "set 0, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xC4);byte_delay=2;}
+  else if( s == "set 0, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xC5);byte_delay=2;}
+  else if( s == "set 0, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xC6);byte_delay=2;}
+  else if( s == "set 0, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xC7);byte_delay=2;}
+  else if( s == "set 1, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xC8);byte_delay=2;}
+  else if( s == "set 1, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xC9);byte_delay=2;}
+  else if( s == "set 1, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xCA);byte_delay=2;}
+  else if( s == "set 1, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xCB);byte_delay=2;}
+  else if( s == "set 1, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xCC);byte_delay=2;}
+  else if( s == "set 1, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xCD);byte_delay=2;}
+  else if( s == "set 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xCE);byte_delay=2;}
+  else if( s == "set 1, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xCF);byte_delay=2;}
+  else if( s == "set 2, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xD0);byte_delay=2;}
+  else if( s == "set 2, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xD1);byte_delay=2;}
+  else if( s == "set 2, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xD2);byte_delay=2;}
+  else if( s == "set 2, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xD3);byte_delay=2;}
+  else if( s == "set 2, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xD4);byte_delay=2;}
+  else if( s == "set 2, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xD5);byte_delay=2;}
+  else if( s == "set 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xD6);byte_delay=2;}
+  else if( s == "set 2, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xD7);byte_delay=2;}
+  else if( s == "set 3, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xD8);byte_delay=2;}
+  else if( s == "set 3, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xD9);byte_delay=2;}
+  else if( s == "set 3, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xDA);byte_delay=2;}
+  else if( s == "set 3, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xDB);byte_delay=2;}
+  else if( s == "set 3, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xDC);byte_delay=2;}
+  else if( s == "set 3, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xDD);byte_delay=2;}
+  else if( s == "set 3, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xDE);byte_delay=2;}
+  else if( s == "set 3, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xDF);byte_delay=2;}
+  else if( s == "set 4, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xE0);byte_delay=2;}
+  else if( s == "set 4, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xE1);byte_delay=2;}
+  else if( s == "set 4, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xE2);byte_delay=2;}
+  else if( s == "set 4, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xE3);byte_delay=2;}
+  else if( s == "set 4, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xE4);byte_delay=2;}
+  else if( s == "set 4, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xE5);byte_delay=2;}
+  else if( s == "set 4, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xE6);byte_delay=2;}
+  else if( s == "set 4, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xE7);byte_delay=2;}
+  else if( s == "set 5, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xE8);byte_delay=2;}
+  else if( s == "set 5, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xE9);byte_delay=2;}
+  else if( s == "set 5, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xEA);byte_delay=2;}
+  else if( s == "set 5, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xEB);byte_delay=2;}
+  else if( s == "set 5, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xEC);byte_delay=2;}
+  else if( s == "set 5, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xED);byte_delay=2;}
+  else if( s == "set 5, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xEE);byte_delay=2;}
+  else if( s == "set 5, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xEF);byte_delay=2;}
+  else if( s == "set 6, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xF0);byte_delay=2;}
+  else if( s == "set 6, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xF1);byte_delay=2;}
+  else if( s == "set 6, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xF2);byte_delay=2;}
+  else if( s == "set 6, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xF3);byte_delay=2;}
+  else if( s == "set 6, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xF4);byte_delay=2;}
+  else if( s == "set 6, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xF5);byte_delay=2;}
+  else if( s == "set 6, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xF6);byte_delay=2;}
+  else if( s == "set 6, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xF7);byte_delay=2;}
+  else if( s == "set 7, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xF8);byte_delay=2;}
+  else if( s == "set 7, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xF9);byte_delay=2;}
+  else if( s == "set 7, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xFA);byte_delay=2;}
+  else if( s == "set 7, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xFB);byte_delay=2;}
+  else if( s == "set 7, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xFC);byte_delay=2;}
+  else if( s == "set 7, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xFD);byte_delay=2;}
+  else if( s == "set 7, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xFE);byte_delay=2;}
+  else if( s == "set 7, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0xFF);byte_delay=2;}
+  else if( s == "rlc (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x0);byte_delay=2;}
+  else if( s == "rlc (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x1);byte_delay=2;}
+  else if( s == "rlc (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x2);byte_delay=2;}
+  else if( s == "rlc (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x3);byte_delay=2;}
+  else if( s == "rlc (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x4);byte_delay=2;}
+  else if( s == "rlc (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x5);byte_delay=2;}
+  else if( s == "rlc (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x6);byte_delay=2;}
+  else if( s == "rlc (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x07);byte_delay=2;}
+  else if( s == "rrc (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x8);byte_delay=2;}
+  else if( s == "rrc (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x9);byte_delay=2;}
+  else if( s == "rrc (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xA);byte_delay=2;}
+  else if( s == "rrc (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xB);byte_delay=2;}
+  else if( s == "rrc (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xC);byte_delay=2;}
+  else if( s == "rrc (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD);byte_delay=2;}
+  else if( s == "rrc (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xE);byte_delay=2;}
+  else if( s == "rrc (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x0F);byte_delay=2;}
+  else if( s == "rl (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x10);byte_delay=2;}
+  else if( s == "rl (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x11);byte_delay=2;}
+  else if( s == "rl (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x12);byte_delay=2;}
+  else if( s == "rl (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x13);byte_delay=2;}
+  else if( s == "rl (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x14);byte_delay=2;}
+  else if( s == "rl (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x15);byte_delay=2;}
+  else if( s == "rl (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x16);byte_delay=2;}
+  else if( s == "rl (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x17);byte_delay=2;}
+  else if( s == "rr (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x18);byte_delay=2;}
+  else if( s == "rr (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x19);byte_delay=2;}
+  else if( s == "rr (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x1A);byte_delay=2;}
+  else if( s == "rr (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x1B);byte_delay=2;}
+  else if( s == "rr (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x1C);byte_delay=2;}
+  else if( s == "rr (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x1D);byte_delay=2;}
+  else if( s == "rr (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x1E);byte_delay=2;}
+  else if( s == "rr (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x1F);byte_delay=2;}
+  else if( s == "sla (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x20);byte_delay=2;}
+  else if( s == "sla (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x21);byte_delay=2;}
+  else if( s == "sla (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x22);byte_delay=2;}
+  else if( s == "sla (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x23);byte_delay=2;}
+  else if( s == "sla (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x24);byte_delay=2;}
+  else if( s == "sla (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x25);byte_delay=2;}
+  else if( s == "sla (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x26);byte_delay=2;}
+  else if( s == "sla (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x27);byte_delay=2;}
+  else if( s == "sra (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x28);byte_delay=2;}
+  else if( s == "sra (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x29);byte_delay=2;}
+  else if( s == "sra (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x2A);byte_delay=2;}
+  else if( s == "sra (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x2B);byte_delay=2;}
+  else if( s == "sra (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x2C);byte_delay=2;}
+  else if( s == "sra (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x2D);byte_delay=2;}
+  else if( s == "sra (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x2E);byte_delay=2;}
+  else if( s == "sra (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x2F);byte_delay=2;}
+  else if( s == "sll (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x30);byte_delay=2;}
+  else if( s == "sll (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x31);byte_delay=2;}
+  else if( s == "sll (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x32);byte_delay=2;}
+  else if( s == "sll (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x33);byte_delay=2;}
+  else if( s == "sll (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x34);byte_delay=2;}
+  else if( s == "sll (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x35);byte_delay=2;}
+  else if( s == "sll (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x36);byte_delay=2;}
+  else if( s == "sll (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x37);byte_delay=2;}
+  else if( s == "srl (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x38);byte_delay=2;}
+  else if( s == "srl (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x39);byte_delay=2;}
+  else if( s == "srl (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x3A);byte_delay=2;}
+  else if( s == "srl (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x3B);byte_delay=2;}
+  else if( s == "srl (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x3C);byte_delay=2;}
+  else if( s == "srl (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x3D);byte_delay=2;}
+  else if( s == "srl (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x3E);byte_delay=2;}
+  else if( s == "srl (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x3F);byte_delay=2;}
+  else if( s == "bit 0, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x40);byte_delay=2;}
+  else if( s == "bit 0, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x41);byte_delay=2;}
+  else if( s == "bit 0, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x42);byte_delay=2;}
+  else if( s == "bit 0, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x43);byte_delay=2;}
+  else if( s == "bit 0, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x44);byte_delay=2;}
+  else if( s == "bit 0, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x45);byte_delay=2;}
+  else if( s == "bit 0, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x46);byte_delay=2;}
+  else if( s == "bit 0, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x47);byte_delay=2;}
+  else if( s == "bit 1, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x48);byte_delay=2;}
+  else if( s == "bit 1, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x49);byte_delay=2;}
+  else if( s == "bit 1, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x4A);byte_delay=2;}
+  else if( s == "bit 1, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x4B);byte_delay=2;}
+  else if( s == "bit 1, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x4C);byte_delay=2;}
+  else if( s == "bit 1, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x4D);byte_delay=2;}
+  else if( s == "bit 1, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x4E);byte_delay=2;}
+  else if( s == "bit 1, (iy+*)" ){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x00);addByte(0x4F);byte_delay=2;}
+  else if( s == "bit 2, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x50);byte_delay=2;}
+  else if( s == "bit 2, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x51);byte_delay=2;}
+  else if( s == "bit 2, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x52);byte_delay=2;}
+  else if( s == "bit 2, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x53);byte_delay=2;}
+  else if( s == "bit 2, (iy+*). e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x54);byte_delay=2;}
+  else if( s == "bit 2, (iy+*). h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x55);byte_delay=2;}
+  else if( s == "bit 2, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00); addByte(0x56);byte_delay=2;}
+  else if( s == "bit 2, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x57);byte_delay=2;}
+  else if( s == "bit 3, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x5C);byte_delay=2;}
+  else if( s == "bit 3, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x5D);byte_delay=2;}
+  else if( s == "bit 3, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x5E);byte_delay=2;}
+  else if( s == "bit 3, (iy+*)" ){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x5F);byte_delay=2;}
+  else if( s == "bit 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x60);byte_delay=2;}
+  else if( s == "bit 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x61);byte_delay=2;}
+  else if( s == "bit 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x62);byte_delay=2;}
+  else if( s == "bit 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x63);byte_delay=2;}
+  else if( s == "bit 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x64);byte_delay=2;}
+  else if( s == "bit 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x65);byte_delay=2;}
+  else if( s == "bit 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x66);byte_delay=2;}
+  else if( s == "bit 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x67);byte_delay=2;}
+  else if( s == "bit 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x68);byte_delay=2;}
+  else if( s == "bit 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x69);byte_delay=2;}
+  else if( s == "bit 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x6A);byte_delay=2;}
+  else if( s == "bit 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x6B);byte_delay=2;}
+  else if( s == "bit 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x6C);byte_delay=2;}
+  else if( s == "bit 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x6D);byte_delay=2;}
+  else if( s == "bit 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x6E);byte_delay=2;}
+  else if( s == "bit 5, (iy+*)" ){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x6F);byte_delay=2;}
+  else if( s == "bit 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x70);byte_delay=2;}
+  else if( s == "bit 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x71);byte_delay=2;}
+  else if( s == "bit 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x72);byte_delay=2;}
+  else if( s == "bit 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x73);byte_delay=2;}
+  else if( s == "bit 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x74);byte_delay=2;}
+  else if( s == "bit 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x75);byte_delay=2;}
+  else if( s == "bit 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x76);byte_delay=2;}
+  else if( s == "bit 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x77);byte_delay=2;}
+  else if( s == "bit 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x78);byte_delay=2;}
+  else if( s == "bit 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x79);byte_delay=2;}
+  else if( s == "bit 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x7A);byte_delay=2;}
+  else if( s == "bit 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x7B);byte_delay=2;}
+  else if( s == "bit 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x7C);byte_delay=2;}
+  else if( s == "bit 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x7D);byte_delay=2;}
+  else if( s == "bit 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x7E);byte_delay=2;}
+  else if( s == "bit 7, (iy+*)" ){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x7F);byte_delay=2;}
+  else if( s == "res 0, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x80);byte_delay=2;}
+  else if( s == "res 0, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x81);byte_delay=2;}
+  else if( s == "res 0, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x82);byte_delay=2;}
+  else if( s == "res 0, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x83);byte_delay=2;}
+  else if( s == "res 0, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x84);byte_delay=2;}
+  else if( s == "res 0, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x85);byte_delay=2;}
+  else if( s == "res 0, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x86);byte_delay=2;}
+  else if( s == "res 0, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x87);byte_delay=2;}
+  else if( s == "res 1, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x88);byte_delay=2;}
+  else if( s == "res 1, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x89);byte_delay=2;}
+  else if( s == "res 1, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x8A);byte_delay=2;}
+  else if( s == "res 1, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x8B);byte_delay=2;}
+  else if( s == "res 1, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x8C);byte_delay=2;}
+  else if( s == "res 1, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x8D);byte_delay=2;}
+  else if( s == "res 1, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x8E);byte_delay=2;}
+  else if( s == "res 1, (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x8F);byte_delay=2;}
+  else if( s == "res 2, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x90);byte_delay=2;}
+  else if( s == "res 2, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x91);byte_delay=2;}
+  else if( s == "res 2, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x92);byte_delay=2;}
+  else if( s == "res 2, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x93);byte_delay=2;}
+  else if( s == "res 2, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x94);byte_delay=2;}
+  else if( s == "res 2, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x95);byte_delay=2;}
+  else if( s == "res 2, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x96);byte_delay=2;}
+  else if( s == "res 2, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x97);byte_delay=2;}
+  else if( s == "res 3, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x98);byte_delay=2;}
+  else if( s == "res 3, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x99);byte_delay=2;}
+  else if( s == "res 3, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x9A);byte_delay=2;}
+  else if( s == "res 3, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x9B);byte_delay=2;}
+  else if( s == "res 3, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x9C);byte_delay=2;}
+  else if( s == "res 3, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x9D);byte_delay=2;}
+  else if( s == "res 3, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x9E);byte_delay=2;}
+  else if( s == "res 3, (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0x9F);byte_delay=2;}
+  else if( s == "res 4, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xA0);byte_delay=2;}
+  else if( s == "res 4, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xA1);byte_delay=2;}
+  else if( s == "res 4, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xA2);byte_delay=2;}
+  else if( s == "res 4, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xA3);byte_delay=2;}
+  else if( s == "res 4, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xA4);byte_delay=2;}
+  else if( s == "res 4, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xA5);byte_delay=2;}
+  else if( s == "res 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xA6);byte_delay=2;}
+  else if( s == "res 4, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xA7);byte_delay=2;}
+  else if( s == "res 5, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xA8);byte_delay=2;}
+  else if( s == "res 5, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xA9);byte_delay=2;}
+  else if( s == "res 5, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xAA);byte_delay=2;}
+  else if( s == "res 5, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xAB);byte_delay=2;}
+  else if( s == "res 5, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xAC);byte_delay=2;}
+  else if( s == "res 5, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xAD);byte_delay=2;}
+  else if( s == "res 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xAE);byte_delay=2;}
+  else if( s == "res 5, (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xAF);byte_delay=2;}
+  else if( s == "res 6, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xB0);byte_delay=2;}
+  else if( s == "res 6, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xB1);byte_delay=2;}
+  else if( s == "res 6, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xB2);byte_delay=2;}
+  else if( s == "res 6, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xB3);byte_delay=2;}
+  else if( s == "res 6, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xB4);byte_delay=2;}
+  else if( s == "res 6, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xB5);byte_delay=2;}
+  else if( s == "res 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xB6);byte_delay=2;}
+  else if( s == "res 6, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xB7);byte_delay=2;}
+  else if( s == "res 7, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xB8);byte_delay=2;}
+  else if( s == "res 7, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xB9);byte_delay=2;}
+  else if( s == "res 7, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xBA);byte_delay=2;}
+  else if( s == "res 7, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xBB);byte_delay=2;}
+  else if( s == "res 7, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xBC);byte_delay=2;}
+  else if( s == "res 7, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xBD);byte_delay=2;}
+  else if( s == "res 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xBE);byte_delay=2;}
+  else if( s == "res 7, (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xBF);byte_delay=2;}
+  else if( s == "set 0, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xC0);byte_delay=2;}
+  else if( s == "set 0, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xC1);byte_delay=2;}
+  else if( s == "set 0, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xC2);byte_delay=2;}
+  else if( s == "set 0, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xC3);byte_delay=2;}
+  else if( s == "set 0, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xC4);byte_delay=2;}
+  else if( s == "set 0, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xC5);byte_delay=2;}
+  else if( s == "set 0, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xC6);byte_delay=2;}
+  else if( s == "set 0, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xC7);byte_delay=2;}
+  else if( s == "set 1, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xC8);byte_delay=2;}
+  else if( s == "set 1, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xC9);byte_delay=2;}
+  else if( s == "set 1, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xCA);byte_delay=2;}
+  else if( s == "set 1, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xCB);byte_delay=2;}
+  else if( s == "set 1, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xCC);byte_delay=2;}
+  else if( s == "set 1, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xCD);byte_delay=2;}
+  else if( s == "set 1, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xCE);byte_delay=2;}
+  else if( s == "set 1, (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xCF);byte_delay=2;}
+  
+  else if( s == "set 2, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD0);byte_delay=2;}
+  else if( s == "set 2, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD1);byte_delay=2;}
+  else if( s == "set 2, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD2);byte_delay=2;}
+  else if( s == "set 2, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD0);byte_delay=2;}
+  else if( s == "set 2, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD1);byte_delay=2;}
+  else if( s == "set 2, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD2);byte_delay=2;}
+  else if( s == "set 2, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD3);byte_delay=2;}
+  else if( s == "set 2, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD4);byte_delay=2;}
+  else if( s == "set 2, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD5);byte_delay=2;}
+  else if( s == "set 2, (iy+*)"){addByte(0xFD);addByte(0xCB);/*placeholder*/addByte(0x00);addByte(0xD6);byte_delay=2;}
+  else if( s == "set 2, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD7);byte_delay=2;}
+  else if( s == "set 3, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD8);byte_delay=2;}
+  else if( s == "set 3, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD9);byte_delay=2;}
+  else if( s == "set 3, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xDA);byte_delay=2;}
+  else if( s == "set 3, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xDB);byte_delay=2;}
+  else if( s == "set 3, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xDC);byte_delay=2;}
+  else if( s == "set 3, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xDD);byte_delay=2;}
+  else if( s == "set 3, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xDE);byte_delay=2;}
+  else if( s == "set 3, (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xDF);byte_delay=2;}
+  else if( s == "set 4, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xE0);byte_delay=2;}
+  else if( s == "set 4, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xE1);byte_delay=2;}
+  else if( s == "set 4, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xE2);byte_delay=2;}
+  else if( s == "set 4, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xE3);byte_delay=2;}
+  else if( s == "set 4, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xE4);byte_delay=2;}
+  else if( s == "set 4, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xE5);byte_delay=2;}
+  else if( s == "set 4, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xE6);byte_delay=2;}
+  else if( s == "set 4, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xE7);byte_delay=2;}
+  else if( s == "set 5, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xE8);byte_delay=2;}
+  else if( s == "set 5, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xE9);byte_delay=2;}
+  else if( s == "set 5, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xEA);byte_delay=2;}
+  else if( s == "set 5, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xEB);byte_delay=2;}
+  else if( s == "set 5, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xEC);byte_delay=2;}
+  else if( s == "set 5, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xED);byte_delay=2;}
+  else if( s == "set 5, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xEE);byte_delay=2;}
+  else if( s == "set 5, (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xEF);byte_delay=2;}
+  else if( s == "set 6, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xF0);byte_delay=2;}
+  else if( s == "set 6, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xF1);byte_delay=2;}
+  else if( s == "set 6, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xF2);byte_delay=2;}
+  else if( s == "set 6, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xF3);byte_delay=2;}
+  else if( s == "set 6, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xF4);byte_delay=2;}
+  else if( s == "set 6, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xF5);byte_delay=2;}
+  else if( s == "set 6, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xF6);byte_delay=2;}
+  else if( s == "set 6, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xF7);byte_delay=2;}
+  else if( s == "set 7, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xF8);byte_delay=2;}
+  else if( s == "set 7, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xF9);byte_delay=2;}
+  else if( s == "set 7, (iy+*), d"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xFA);byte_delay=2;}
+  else if( s == "set 7, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xFB);byte_delay=2;}
+  else if( s == "set 7, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xFC);byte_delay=2;}
+  else if( s == "set 7, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xFD);byte_delay=2;}
+  else if( s == "set 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xFE);byte_delay=2;}
+  else if( s == "set 7, (iy+*), a" ){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xFF);byte_delay=2;}
 
   else if( s == "add ix, bc"){addByte(0xDD);addByte(0x9);}
   else if( s == "add ix, de"){addByte(0xDD);addByte(0x19);}
@@ -2931,17 +2927,28 @@ void function_user_input()
 
 void function_degree_mode()
 {
-  if( degree_mode == 1) return;
+  if(degree_mode == 1) return;
   degree_mode = 1;
   addLabel("degree_mode");
-  addByte( 0xFD );
-  addByte( 0xCB );
-  addByte( 0x00 );
-  addByte( 0xD6 );
-  addByte( 0xC9 );
-    
-  
+  addByte(0xFD);
+  addByte(0xCB);
+  addByte(0x00);
+  addByte(0xD6);
+  addByte(0xC9);
 }
+
+void function_radian_mode()
+{
+  if(radian_mode == 1) return;
+  radian_mode = 1;
+  addLabel("radian_mode");
+  addByte(0xFD);
+  addByte(0xCB);
+  addByte(0x00);
+  addByte(0x96);
+  addByte(0xC9);
+}
+
 void function_disp_op1()
 {
   if( disp_op1 == 1) return;
@@ -2976,15 +2983,13 @@ void function_fully_clear_screen()
 
 void function_convop1b()
 {
+  // converts OP1 to a Hexadecimal value in DE
   if( convop1b == 1 ) return;
   convop1b=1;
   addLabel("convop1b");
   a("push af");
   a("push bc");
   a("push hl");
-  // Don't need to do this because input will already be in OP1
-  //a("ld hl, **"); addAddress("FP_convop1_input");
-  //sysCall(Mov9ToOP1);
 
   // mkpellegrino - 2020 11 16
   //a("ld hl, **"); addAddress("OP1");
@@ -3160,9 +3165,6 @@ int stringToHexValue( string s )
 	  break;
 	}
       retVal+=intg*pow(16,e);
-#ifdef DEBUG
-      // cerr << "retval: " << retVal << endl; 
-#endif
       e++;
     }
   return retVal;
@@ -3258,9 +3260,6 @@ int main(int argc, char *argv[])
   addByte( 0xFF ); // len of Machine Code + 2 bytes (H) (This will get overwritten)
   addByte( 0xFF ); // Machine Code Size (L)  (This will get overwritten)
 
-
-
-    
   addByte( 0xFF ); // Machine Code Size (H) (This will get overwritten)
 
   addByte( 0xBB ); // Machine Code
@@ -3284,8 +3283,9 @@ int main(int argc, char *argv[])
 	  // remove tabs and other unwanted characters
 	  line=removeUnwanted(line);
 	    
-	  // 
+	  // an empty line or a comment
 	  if( line=="" || line[0]==';' ){}
+	  // program name directive
 	  else if( line.substr(0,5) == ".name" )
 	    {
 	      for( int i=0; i<8; i++ )
@@ -3294,18 +3294,19 @@ int main(int argc, char *argv[])
 		  byte_vector[i+60]=name[i];
 		}
 	    }
+	  // a label (if the last character is a :
 	  else if( line.back() == ':' )
 	    {
 	      // Then we have a label
 	      line.pop_back();
 	      addLabel(line);
 	    }
+	  // a directive other than name
 	  else if( line[0] == '.' )
 	    {
 #ifdef DEBUG
 	      cerr << "directive: [" << line << "]" << endl;
 #endif	     
-	      // Then we have a directive
 	      if( line.substr(0,3)==".db" || line.substr(0,3)==".dw" )
 		{
 		  // turn the rest into a number or numbers
@@ -3371,11 +3372,14 @@ int main(int argc, char *argv[])
 		  addFP( tmp );
 		}
 	    }
+	  // a System Call
 	  else if( line.substr(0,5) == "bCall" )
 	    {
 	      string addr=line.substr( 6, line.length() );
 	      sysCall( getBetween(line) );
 	    }
+
+	  // push all z80 registers
 	  else if( line == "pusha" )
 	    {
 	      a( "push af" );
@@ -3383,6 +3387,8 @@ int main(int argc, char *argv[])
 	      a( "push de" );
 	      a( "push hl" );
 	    }
+
+	  // pop all z80 registers
 	  else if( line== "popa" )
 	    {
 	      a( "pop hl" );
@@ -3390,34 +3396,45 @@ int main(int argc, char *argv[])
 	      a( "pop bc" );
 	      a( "pop af" );
 	    }
+
+	  // our own user input function
 	  else if( line == "call &user_input" )
 	    {
 	      add_input=1;
 	      a( "call **" ); addAddress( "user_input" );
 
 	    }
+
+	  // stores op1 as a variable in the calc
 	  else if( line == "call &store_op1" )
 	    {
 	      add_store_op1=1;
 	      a( "call **" ); addAddress( "store_op1" );
 
 	    }
+
+	  // puts calc into degree mode
 	  else if( line == "call &degree_mode" )
 	    {
 	      add_degree_mode=1;
 	      a( "call **" ); addAddress( "degree_mode" );
 
 	    }
+
+	  // displays OP1 on the screen
 	  else if( line == "call &disp_op1" )
 	    {
 	      add_disp_op1=1;
 	      a( "call **" ); addAddress( "disp_op1" );
 	    }
+
+	  // converts OP1 to a hex value in DE
 	  else if( line == "call &convop1b" )
 	    {
 	      add_convop1b=1;
 	      a( "call **" ); addAddress( "convop1b" );
 	    }
+	  // cls
 	  else if( line == "call &fully_clear_screen" )
 	    {
 	      add_fully_clear_screen=1;
@@ -3434,7 +3451,7 @@ int main(int argc, char *argv[])
 	      // # Word
 	      // @ Byte
 	      
-	      // here we have true assembler
+	      // here we have true assembler.
 	      // find value if there is one
 	      // save the value (either a byte or a word)
 	      // replace the value with a * for byte or
@@ -3504,15 +3521,31 @@ int main(int argc, char *argv[])
 #ifdef DEBUG
 		  cerr << "FOUND @ : line of code: " << line << "\tByte: " << dec << stringToHexValue(s) << endl;
 #endif
+
+		  // 2020 11 18 - mkpellegrino
+		  // this is where for some of the mneumonics,
+		  // we need to Change Byte at program_index - 1
 		  a( line );  processed=1;
 		  if( getType(s) == 4 )
 		    {
 		      // *****
-		      addByte( stringToHexValue(s));
+		      if( byte_delay > 0 )
+			{
+			  byte_vector[program_index-byte_delay]=stringToHexValue(s);
+			  byte_delay=0;
+			}
+		      else addByte( stringToHexValue(s));
 		    }
 		  else
 		    {
-		      addByte(stringToHexValue(s));
+		      // if there was already a placeholder created in the
+		      // assembler command, then just overwrite the byte
+		      if( byte_delay > 0 )
+			{
+			  byte_vector[program_index-byte_delay]=stringToHexValue(s);
+			  byte_delay=0;
+			}
+		      else addByte(stringToHexValue(s));
 		      //addByte( (int) s.substr(1,s.length())[0] );
 		    }
 		}

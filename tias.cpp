@@ -40,19 +40,21 @@
 //
 // To disassemble: disassemble input.8xp
 //             or  disassemble input.8xp a <--- this will give you just the mneumonic listing.
-#include <algorithm>
+
+#include <stdio.h>
+#include <cstdlib>
 #include <iostream>
 #include <fstream>
-#include <stdio.h>
 #include <vector>
 #include <cctype>
 #include <math.h>
-#include <cstdlib>
+//#include <cstdlib>
 
 // included for the parser
 #include <sstream>
 #include <string>
 
+using namespace std;
 
 #define RealObj 0x00
 #define _OP1 0x8478
@@ -95,6 +97,7 @@ using namespace std;
 
 vector<unsigned char> byte_vector;
 
+int byte_delay=0;
 int error_count=0;
 int compilation_failed=0;
 int memorylocation;
@@ -103,11 +106,14 @@ int program_index=0;
 int function_ui=0;
 int store_op1=0;
 int disp_op1=0;
+int degree_mode=0;
+int radian_mode=0;
 int convop1b=0;
 int fully_clear_screen=0;
 string name;
 int line_number=0;
 
+int add_degree_mode=0;
 int add_input=0;
 int add_store_op1=0;
 int add_disp_op1=0;
@@ -2276,7 +2282,7 @@ void a( string s )
   else if( s == "set 2, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0xD3);}
   else if( s == "set 2, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0xD4);}
   else if( s == "set 2, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0xD5);}
-  else if( s == "set 2, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0xD6);}
+  else if( s == "set 2, (iy+*)"){addByte(0xFD);addByte(0xCB);/*placeholder*/addByte(0x00);addByte(0xD6);byte_delay=1;}
   else if( s == "set 2, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0xD7);}
   else if( s == "set 3, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0xD8);}
   else if( s == "set 3, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0xD9);}
@@ -2922,6 +2928,20 @@ void function_user_input()
 
   
 }
+
+void function_degree_mode()
+{
+  if( degree_mode == 1) return;
+  degree_mode = 1;
+  addLabel("degree_mode");
+  addByte( 0xFD );
+  addByte( 0xCB );
+  addByte( 0x00 );
+  addByte( 0xD6 );
+  addByte( 0xC9 );
+    
+  
+}
 void function_disp_op1()
 {
   if( disp_op1 == 1) return;
@@ -2965,9 +2985,12 @@ void function_convop1b()
   // Don't need to do this because input will already be in OP1
   //a("ld hl, **"); addAddress("FP_convop1_input");
   //sysCall(Mov9ToOP1);
-  a("ld hl, **"); addAddress("OP1");
+
+  // mkpellegrino - 2020 11 16
+  //a("ld hl, **"); addAddress("OP1");
   a("ld de, **"); addAddress("FP_convop1_input");
-  sysCall("Mov9B");
+  //sysCall("Mov9B");
+  sysCall("MovFrOP1");
   a("ld hl, **"); addAddress("convop1b_max_float");
   sysCall("Mov9ToOP2");
   sysCall("CpOP1OP2");
@@ -3198,9 +3221,8 @@ int main(int argc, char *argv[])
       cerr << "you must supply an input and an output filename THAT HAS A DIFFERENT NAME" << endl;
       cerr << "ex: " << argv[0] << " sourcecode.asm " << " " << "program.8xp" << endl;
       exit(-1);
-
-
     }
+
   addLabel( "OP1", 0x8478 );
   addLabel( "OP2", 0x8483 );
   addLabel( "OP3", 0x848E );
@@ -3380,6 +3402,12 @@ int main(int argc, char *argv[])
 	      a( "call **" ); addAddress( "store_op1" );
 
 	    }
+	  else if( line == "call &degree_mode" )
+	    {
+	      add_degree_mode=1;
+	      a( "call **" ); addAddress( "degree_mode" );
+
+	    }
 	  else if( line == "call &disp_op1" )
 	    {
 	      add_disp_op1=1;
@@ -3501,6 +3529,7 @@ int main(int argc, char *argv[])
   // ================================================================================================================================================================================================
       if( add_input==1 ) function_user_input();
       if( add_store_op1==1 ) function_store_op1();
+      if( add_degree_mode==1 ) function_degree_mode();
       if( add_disp_op1==1 ) function_disp_op1();
       if( add_convop1b==1 ) function_convop1b();
       if( add_fully_clear_screen==1 ) function_fully_clear_screen();

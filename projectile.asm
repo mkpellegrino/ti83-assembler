@@ -5,7 +5,7 @@
 ;;;  Put the Calculator into Degree Mode
 ;;; set 2, (iy+0x00)
 	call &degree_mode
-
+prjct_top:	
         call &fully_clear_screen
         ld hl, &title
         bCall(PutS)
@@ -13,6 +13,18 @@
 	ld hl, &txt1		
 	bCall(PutS)
 	call &user_input
+
+;;; Compare OP1 with Zero
+;;; if it is equal to then end
+	bCall(OP2Set0)
+	bCall(CpOP1OP2)
+	jr nz, %dont_end_yet
+	ld hl, &txt5
+	bCall(PutS)
+	bCall(NewLine)
+	bCall(RunIndicOn)
+	ret
+dont_end_yet:	
 ;;; Make sure its negative
 	bCall(FPSquare)
 	bCall(SqRoot)
@@ -210,11 +222,17 @@
 	ld d, @0x03
 	bCall(Round)
 	call &disp_op1
-
-	ret
+	jr %no_error
+;;; ret
 error1:
 	ld hl, &error_msg1
 	bCall(PutS)
+	bCall(NewLine)
+no_error:
+	ld hl, &txt6
+	bCall(PutS)
+	bCall(GetKey)
+	jp &prjct_top
 	ret
 	
 time_msg:
@@ -228,8 +246,8 @@ hmax_msg:
 error_msg1:
 .str "no solutions"
 title:
-;;;   123456789ABCDEF-123456789ABCDEF-123456789ABCDEF-
-.str "prj. motion calcby mr pellegrino----------------"
+;;;   123456789ABCDEF-123456789ABCDEF-123456789ABCDEF-123456789ABCDEF-
+.str "prj. motion calcby mr pellegrinoenter g=0 to end----------------"
 	
 wrn1:	
 .str "using: "
@@ -244,7 +262,11 @@ txt4:
 .db 0x3E
 .db 0x20
 .db 0x00
-
+txt5:
+.str "goodbye"
+txt6:
+;;;   123456789ABCDEF-123456789ABCDEF-123456789ABCDEF-123456789ABCDEF-
+.str "<press any key>" 
 ;;; Gravitational Contant
 	.fp FP_g
 ;;; Initial Velocity

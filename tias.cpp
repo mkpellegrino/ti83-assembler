@@ -104,6 +104,7 @@ int memorylocation;
 int start_counting=0;
 int program_index=0;
 int function_ui=0;
+int function_loop=0;
 int store_op1=0;
 int disp_op1=0;
 int degree_mode=0;
@@ -114,6 +115,7 @@ string name;
 int line_number=0;
 
 int add_degree_mode=0;
+int add_loop=0;
 int add_input=0;
 int add_store_op1=0;
 int add_disp_op1=0;
@@ -1525,7 +1527,6 @@ void a( string s )
   else if( s == "neg"){addByte(0xED);addByte(0x74);}
   else if( s == "retn"){addByte(0xED);addByte(0x75);}
   else if( s == "im 1"){addByte(0xED);addByte(0x76);}
-  else if( s == "" ){addByte(0xED);addByte(0x77);}
   else if( s == "in a,(c)"){addByte(0xED);addByte(0x78);}
   else if( s == "out (c),a"){addByte(0xED);addByte(0x79);}
   else if( s == "adc hl,sp"){addByte(0xED);addByte(0x7A);}
@@ -1807,7 +1808,6 @@ void a( string s )
   else if( s == "set 7, a" ){addByte(0xCB);addByte(0xFF);}
   // the IX mneumonics
 
-  // Do these need the byte_delay and a placeholder?
   else if( s == "rlc (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x00);byte_delay=2;}
   else if( s == "rlc (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x01);byte_delay=2;}
   else if( s == "rlc (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x02);byte_delay=2;}
@@ -1880,14 +1880,14 @@ void a( string s )
   else if( s == "bit 0, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x45);byte_delay=2;}
   else if( s == "bit 0, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x46);byte_delay=2;}
   else if( s == "bit 0, (ix+*), a"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x47);byte_delay=2;}
-  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x48);byte_delay=2;}
-  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x49);byte_delay=2;}
-  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4A);byte_delay=2;}
-  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4B);byte_delay=2;}
-  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4C);byte_delay=2;}
-  else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4D);byte_delay=2;}
+  else if( s == "bit 1, (ix+*), b"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x48);byte_delay=2;}
+  else if( s == "bit 1, (ix+*), c"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x49);byte_delay=2;}
+  else if( s == "bit 1, (ix+*), d"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4A);byte_delay=2;}
+  else if( s == "bit 1, (ix+*), e"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4B);byte_delay=2;}
+  else if( s == "bit 1, (ix+*), h"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4C);byte_delay=2;}
+  else if( s == "bit 1, (ix+*), l"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4D);byte_delay=2;}
   else if( s == "bit 1, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4E);byte_delay=2;}
-  else if( s == "bit 1, (ix+*)" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4F);byte_delay=2;}
+  else if( s == "bit 1, (ix+*), a" ){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x4F);byte_delay=2;}
   else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x50);byte_delay=2;}
   else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x51);byte_delay=2;}
   else if( s == "bit 2, (ix+*)"){addByte(0xDD);addByte(0xCB);addByte(0x00);addByte(0x52);byte_delay=2;}
@@ -2278,7 +2278,7 @@ void a( string s )
   else if( s == "set 2, (iy+*), e"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD3);byte_delay=2;}
   else if( s == "set 2, (iy+*), h"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD4);byte_delay=2;}
   else if( s == "set 2, (iy+*), l"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD5);byte_delay=2;}
-  else if( s == "set 2, (iy+*)"){addByte(0xFD);addByte(0xCB);/*placeholder*/addByte(0x00);addByte(0xD6);byte_delay=2;}
+  else if( s == "set 2, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD6);byte_delay=2;}
   else if( s == "set 2, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD7);byte_delay=2;}
   else if( s == "set 3, (iy+*), b"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD8);byte_delay=2;}
   else if( s == "set 3, (iy+*), c"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xD9);byte_delay=2;}
@@ -2569,6 +2569,30 @@ string getBetween( string s, char L='(', char R=')' )
   return retVal;
 }
 
+void loop()
+{
+  if( function_loop == 1 ) return;
+  function_loop=1;
+  addLabel( "function_loop" );
+
+  pushall();
+
+  
+  a("ld hl, **");addAddress("function_loop_count");
+  a("ld b, (hl)");
+  addLabel("function_loop_top");
+  a("push hl");
+  addByte(0xCD);
+  addLabel("function_loop_cmd_adr");
+  addWord(0x0000);
+  a("pop hl");
+  a("djnz *");addByte(0xF9);
+  popall();
+  a("ret");
+  addLabel("function_loop_count");
+  addWord(0x0000);
+  
+}
 void function_user_input()
 {
  
@@ -3398,6 +3422,11 @@ int main(int argc, char *argv[])
 	    }
 
 	  // our own user input function
+	  else if( line == "loop" )
+	    {
+	      add_loop=1;
+	      a( "call **"); addAddress( "function_loop" );
+	    }
 	  else if( line == "call &user_input" )
 	    {
 	      add_input=1;
@@ -3560,6 +3589,7 @@ int main(int argc, char *argv[])
     }
 
   // ================================================================================================================================================================================================
+  if( add_loop==1 ) loop();
       if( add_input==1 ) function_user_input();
       if( add_store_op1==1 ) function_store_op1();
       if( add_degree_mode==1 ) function_degree_mode();

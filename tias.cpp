@@ -2569,17 +2569,52 @@ string getBetween( string s, char L='(', char R=')' )
   return retVal;
 }
 
+
+// loop (macro) - 2020 11 23 (3:30am!)
+
+// push limit
+// push address of function
+// loop
+
 void loop()
 {
   if( function_loop == 1 ) return;
   function_loop=1;
-  addLabel( "function_loop" );
 
-  pushall();
 
+  addLabel("function_loop_ret_addr");
+  addWord(0x0000);
+  addLabel("function_loop_count");
+  addWord(0x0000);
+
+  addLabel( "function_loop" );  
+
+  // pop the return address off of the stack and save it!
+  a("pop hl");
+  a("ld (**), hl");addAddress("function_loop_ret_addr");
+
+  // next should be the count limit for the loop (save it also)
+  a("pop hl");
+  a( "ld (**), hl");addAddress("function_loop_count");
+
+  // and finally, in the stack should be the
+  // the address of the commands we want looped
+  a("pop hl");
+  a( "ld (**), hl");addAddress("function_loop_cmd_adr");
   
-  a("ld hl, **");addAddress("function_loop_count");
-  a("ld b, (hl)");
+  pushall();
+ 
+  a("ld hl, (**)");addAddress("function_loop_count");
+  a("ld b, l");
+  a("ld c, h");
+
+
+  /// THIS IS THE LOOP
+  /// if any changes are made
+  /// in terms of number of
+  /// bytes it is, please
+  /// modify the: djnz * (0xF9)
+  /// value
   addLabel("function_loop_top");
   a("push hl");
   addByte(0xCD);
@@ -2587,10 +2622,16 @@ void loop()
   addWord(0x0000);
   a("pop hl");
   a("djnz *");addByte(0xF9);
+  ///  THIS ENDS THE LOOP
+
   popall();
+
+  // restore the return address back to the stack
+  a("ld hl, (**)");addAddress("function_loop_ret_addr");
+  a("push hl");
+
+  // 
   a("ret");
-  addLabel("function_loop_count");
-  addWord(0x0000);
   
 }
 void function_user_input()

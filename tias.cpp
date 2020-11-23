@@ -1499,12 +1499,12 @@ void a( string s )
   else if( s == "in e,(c)"){addByte(0xED);addByte(0x58);}
   else if( s == "out (c),e"){addByte(0xED);addByte(0x59);}
   else if( s == "adc hl,de"){addByte(0xED);addByte(0x5A);}
-  else if( s == "ld de,(**)"){addByte(0xED);addByte(0x5B);}
+  else if( s == "ld de, (**)"){addByte(0xED);addByte(0x5B);}
   else if( s == "neg"){addByte(0xED);addByte(0x5C);}
   else if( s == "retn"){addByte(0xED);addByte(0x5D);}
   else if( s == "im 2"){addByte(0xED);addByte(0x5E);}
   else if( s == "ld a,r" ){addByte(0xED);addByte(0x5F);}
-  else if( s == "in h,(c)"){addByte(0xED);addByte(0x60);}
+  else if( s == "in h, (c)"){addByte(0xED);addByte(0x60);}
   else if( s == "out (c),h"){addByte(0xED);addByte(0x61);}
   else if( s == "sbc hl,hl"){addByte(0xED);addByte(0x62);}
   else if( s == "ld (**),hl"){addByte(0xED);addByte(0x63);}
@@ -1515,7 +1515,7 @@ void a( string s )
   else if( s == "in l,(c)"){addByte(0xED);addByte(0x68);}
   else if( s == "out (c),l"){addByte(0xED);addByte(0x69);}
   else if( s == "adc hl,hl"){addByte(0xED);addByte(0x6A);}
-  else if( s == "ld hl,(**)"){addByte(0xED);addByte(0x6B);}
+  else if( s == "ld hl, (**)"){addByte(0xED);addByte(0x6B);}
   else if( s == "neg"){addByte(0xED);addByte(0x6C);}
   else if( s == "retn"){addByte(0xED);addByte(0x6D);}
   else if( s == "im 0/1"){addByte(0xED);addByte(0x6E);}
@@ -2908,16 +2908,18 @@ void function_user_input()
   // increase the size
   // 2020 11 23 - mkpellegrino
   // old code
-  //a( "ld hl, **"); addAddress("functionUI_text_bfr_size");
-  //a( "ld a, (hl)" );
-  //a( "inc a" );
-  //a( "ld (hl), a");
-
-
-  // new code
-  a( "ld a, (**)" ); addAddress("functionUI_text_bfr_size");
+  a( "ld hl, **"); addAddress("functionUI_text_bfr_size");
+  a( "ld a, (hl)" );
   a( "inc a" );
-  a( "ld (**), a"); addAddress("functionUI_text_bfr_size");
+  a( "ld (hl), a");
+
+
+  // new code - keep this commented out
+  // while it may be less LOC, it contains
+  // one more byte in opcodes than the old code
+  //a( "ld a, (**)" ); addAddress("functionUI_text_bfr_size");
+  //a( "inc a" );
+  //a( "ld (**), a"); addAddress("functionUI_text_bfr_size");
 
 
   /// end of change

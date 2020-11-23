@@ -2634,6 +2634,9 @@ void loop()
   a("ret");
   
 }
+
+
+
 void function_user_input()
 {
  
@@ -2881,9 +2884,10 @@ void function_user_input()
   a( "add hl, bc" );
   
   a( "ld a, (hl)" );
+
   a( "ld hl, (**)" );  addAddress( "functionUI_text_bfr_ptr" );
   a( "ld (hl), a" );
-
+ 
   // check for the negative sign token
   a( "cp *" ); addByte( 0xB0 );
   a( "jr c, *" ); addOffset( "functionUI_storeanddisplay_skip1" );
@@ -2902,11 +2906,21 @@ void function_user_input()
   a( "inc (hl)" ); 
 
   // increase the size
-  a( "ld hl, **"); addAddress("functionUI_text_bfr_size");
-  a( "ld a, (hl)" );
+  // 2020 11 23 - mkpellegrino
+  // old code
+  //a( "ld hl, **"); addAddress("functionUI_text_bfr_size");
+  //a( "ld a, (hl)" );
+  //a( "inc a" );
+  //a( "ld (hl), a");
+
+
+  // new code
+  a( "ld a, (**)" ); addAddress("functionUI_text_bfr_size");
   a( "inc a" );
-  a( "ld (hl), a");
-  
+  a( "ld (**), a"); addAddress("functionUI_text_bfr_size");
+
+
+  /// end of change
   a( "pop hl" );
   a( "pop bc" );
   a( "pop af" );

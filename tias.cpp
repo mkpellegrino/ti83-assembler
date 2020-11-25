@@ -754,7 +754,8 @@ void sysCall( string s )
   else if( s == "FindOSHeaderSubField" ){addWord(0x8075);}
   else if( s == "FindSubField" ){addWord(0x805D);}
   else if( s == "FindSwapSector EQU 5095h" ){addWord(0x5095);}
-  else if( s == "FindSym" ){addWord(0x42F4);}
+  // else if( s == "FindSym" ){addWord(0x42F4);} // should be rst 0x10h
+  else if( s == "FindSym" ){subtractByte();addByte(0xD7);} // should be rst 0x10h
   else if( s == "FiveExec" ){addWord(0x467E);}
   else if( s == "FixTempCnt" ){addWord(0x4A3B);}
   else if( s == "FlashToRam" ){addWord(0x5017);}
@@ -767,7 +768,8 @@ void sysCall( string s )
   else if( s == "FormEReal" ){addWord(0x4990);}
   else if( s == "FormReal" ){addWord(0x4999);}
   else if( s == "FourExec" ){addWord(0x467B);}
-  else if( s == "FPAdd" ){addWord(0x4072);}
+  //else if( s == "FPAdd" ){addWord(0x4072);} // this should be rst(0x30h)
+  else if( s == "FPAdd" ){subtractByte();addByte(0xF7);} // this should be rst(0x30h)
   else if( s == "FPDiv" ){addWord(0x4099);}
   else if( s == "FPMult" ){addWord(0x4084);}
   else if( s == "FPRecip" ){addWord(0x4096);}
@@ -871,7 +873,7 @@ void sysCall( string s )
   else if( s == "Mov9B" ){addWord(0x415F);}
   else if( s == "Mov9OP1OP2" ){addWord(0x417D);}
   else if( s == "Mov9OP2Cp" ){addWord(0x410B);}
-  else if( s == "Mov9ToOP1" )
+  else if( s == "Mov9ToOP1" )// rst(0x20h)
     {
       subtractByte();
       addByte( 0xE7 );
@@ -898,7 +900,8 @@ void sysCall( string s )
   else if( s == "OP1Set2" ){addWord(0x41A7);}
   else if( s == "OP1Set3" ){addWord(0x41A1);}
   else if( s == "OP1Set4" ){addWord(0x419E);}
-  else if( s == "OP1ToOP2" ){addWord(0x412F);}
+  //else if( s == "OP1ToOP2" ){addWord(0x412F);} // rst 0x08h        subtractByte();
+  else if( s == "OP1ToOP2" ){subtractByte();addByte(0xCF);} // rst 0x08h        subtractByte();
   else if( s == "OP1ToOP3" ){addWord(0x4123);}
   else if( s == "OP1ToOP4" ){addWord(0x4117);}
   else if( s == "OP1ToOP5" ){addWord(0x4153);}
@@ -974,7 +977,8 @@ void sysCall( string s )
   else if( s == "PushOP3" ){addWord(0x43C3);}
   else if( s == "PushOP5" ){addWord(0x43C0);}
   else if( s == "PushReal" ){addWord(0x43BD);}
-  else if( s == "PushRealO1" ){addWord(0x43BA);}
+  //else if( s == "PushRealO1" ){addWord(0x43BA);}// rst 0x18h
+  else if( s == "PushRealO1" ){subtractByte();addByte(0xDF);}// rst 0x18h
   else if( s == "PushRealO2" ){addWord(0x43B7);}
   else if( s == "PushRealO3" ){addWord(0x43B4);}
   else if( s == "PushRealO4" ){addWord(0x43B1);}

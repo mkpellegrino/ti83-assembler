@@ -33,6 +33,7 @@ loop_top:
 	bCall(Mov9B)
 	pop hl
 	pop bc
+	
 	ld de, #0x0009
 	add hl, de
 	inc a
@@ -46,11 +47,11 @@ loop_top:
 	bCall(OP2Set2)
 	bCall(FPMult)
 
-
-	ld hl, &OP1
+;;; 	ld hl, &OP1
 	ld de, &FP_2A
-	bCall(Mov9B)
-
+;;;     bCall(Mov9B)
+	bCall(MovFrOP1)
+	
 ;;; Calculate -4AC
 	ld hl, &FP_A
 	bCall(Mov9ToOP1)
@@ -62,9 +63,10 @@ loop_top:
 	bCall(OP2Set4)
 	bCall(FPMult)
 
-	ld hl, &OP1
+;;; 	ld hl, &OP1
 	ld de, &FP_4AC
-	bCall(Mov9B)
+;;; 	bCall(Mov9B)
+	bCall(MovFrOP1)
 
 ;;; Calculate B^2
 	ld hl, &FP_B
@@ -78,9 +80,10 @@ loop_top:
 	
 ;; If Discriminant is < 0 then the results
 ;; will be in the Complex Plane
-	ld hl, &OP1
+;;; 	ld hl, &OP1
 	ld de, &FP_Discriminant
-	bCall(Mov9B)
+;;; 	bCall(Mov9B)
+	bCall(MovFrOP1)
 	
 	bCall(ZeroOP2)
 	bCall(CpOP1OP2)
@@ -103,10 +106,10 @@ loop_top:
 	; this is one solution
 	bCall(StoX)
 	
-	ld hl, &OP1
+;;; 	ld hl, &OP1
 	ld de, &FP_Solution1
-	bCall(Mov9B)
-
+;;; 	bCall(Mov9B)
+	bCall(MovFrOP1)
 	
 	;;Do it again here but with FPSub
 	ld hl, &FP_Discriminant
@@ -126,10 +129,10 @@ loop_top:
 	
 	bCall(StoY)
 
-	ld hl, &OP1
+;;; 	ld hl, &OP1
 	ld de, &FP_Solution2
-	bCall(Mov9B)
-
+;;; 	bCall(Mov9B)
+	bCall(MovFrOP1)
 
 show_solutions:
 	; This will show both solutions
@@ -187,13 +190,15 @@ complex_solutions:
 	bCall(FPDiv)
 
 	; OP1 now has sqrt(abs(b^2-4ac))/2a
-	ld hl, &OP1
+;;; 	ld hl, &OP1
 	ld de, &FP_S1C
-	bCall(Mov9B)
+;;; 	bCall(Mov9B)
+	bCall(MovFrOP1)
 	
-	ld hl, &OP1
+;;; 	ld hl, &OP1
 	ld de, &FP_S2C
-	bCall(Mov9B)
+;;; 	bCall(Mov9B)
+	bCall(MovFrOP1)
 
 	;=--------------=
 	

@@ -1,9 +1,8 @@
 .name splitchk
-	call &fully_clear_screen
- 	bCall(RunIndicOff)
+;;; 	call &fully_clear_screen
 
 	call &dont_check_for_negatives
- 	bCall(RunIndicOff)
+;;;  	bCall(RunIndicOff)
 	
 	ld hl, &title
 	bCall(PutS)
@@ -33,7 +32,7 @@
 	ld de, &FP_how_many
 ;;; 	bCall(Mov9B)
 	bCall(MovFrOP1)
- 	bCall(RunIndicOn)
+;;;  	bCall(RunIndicOn)
 
 	ld hl, #0x0064
 	bCall(SetXXXXOP2)

@@ -15,13 +15,14 @@ start:
 	call &dont_check_for_decimal_points
 	call &dont_check_for_negatives
 	call &user_input
-	ld hl, &FP_user_input
+;;; 	ld hl, &FP_user_input
 	ld de, &FP_x
-	bCall(Mov9B)
-	bCall(NewLine)
+	bCall(MovFrOP1)
+;;; 	bCall(Mov9B)
+;;; 	bCall(NewLine)
 
-	ld hl, &FP_x
-	bCall(Mov9ToOP1)
+;;; 	ld hl, &FP_x
+;;; 	bCall(Mov9ToOP1)
 
 	bCall(TimesPt5)
 	bCall(Plus1)

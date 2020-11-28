@@ -403,6 +403,11 @@ void addAddress( int i )
   addWord(0x0000);
 }
 
+void addChars( string s )
+{
+  for( int i=0; i<s.size(); i++ ) addByte( s[i] );
+}
+
 void addString( string s )
 {
   for( int i=0; i<s.size(); i++ ) addByte( s[i] );
@@ -3415,6 +3420,17 @@ int main(int argc, char *argv[])
 		  tmp.erase( remove(tmp.begin(),tmp.end(),'\"'),tmp.end());
 
 		  addString( tmp );
+		}
+	      if( line.substr(0,6) ==".chars" )
+		{
+		  string tmp = removeUnwanted(line.substr(7, line.length() ));		  
+#ifdef DEBUG
+		  cerr << "[string: " << tmp << "]" << endl;
+#endif	      
+		  // remove quotes
+		  tmp.erase( remove(tmp.begin(),tmp.end(),'\"'),tmp.end());
+
+		  addChars( tmp );
 		}
 	      if(line.substr(0,2) == ".e" )
 		{

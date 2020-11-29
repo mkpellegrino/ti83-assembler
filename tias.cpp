@@ -103,6 +103,7 @@ int compilation_failed=0;
 int memorylocation;
 int start_counting=0;
 int program_index=0;
+int function_mem_clr=0;
 int function_ui=0;
 int function_loop=0;
 int store_op1=0;
@@ -116,6 +117,7 @@ int line_number=0;
 
 int add_degree_mode=0;
 int add_loop=0;
+int add_mem_clear=0;
 int add_input=0;
 int add_store_op1=0;
 int add_disp_op1=0;
@@ -2646,6 +2648,48 @@ void loop()
 
 
 
+void function_mem_clear()
+{
+  // mkpellegrino - 2020 11 29
+  // function_mem_clear_address: word
+  // function_mem_clear_bytes: 
+  
+  if( function_mem_clr == 1 ) return;
+  function_mem_clr = 1;
+  addLabel("mem_clear" );
+  a( "push hl" );
+  a( "push bc" );
+  a( "push af" );
+  a( "ld hl, **" );
+  addLabel( "function_mem_clear_address" );   
+  addWord(0x0000);
+  a( "ld bc, **" );
+  addLabel( "function_mem_clear_number_of_bytes" );
+  addLabel( "function_mem_clear_number_of_bytesL" );
+  addByte(0x00);
+  addLabel( "function_mem_clear_number_of_bytesH" );
+  addByte(0x00);
+  a( "xor a" );
+
+
+  // setup is done, now loop
+  addLabel("function_mem_clear_loop_top" );
+  a( "ld (hl), a" );
+  a( "inc hl" );
+  a( "djnz *" ); addOffset( "function_mem_clear_loop_top" );
+  
+  // clean up the address before returning
+  // a( "xor a" );
+  // "a" should still be zero
+  
+  a( "ld (**), a" ); addAddress("function_mem_clear_number_of_bytesL");
+  a( "ld (**), a" ); addAddress("function_mem_clear_number_of_bytesH");
+  a( "pop af" );
+  a( "pop bc" );
+  a( "pop hl" );
+  a("ret");
+  return;
+}
 void function_user_input()
 {
  
@@ -2663,7 +2707,11 @@ void function_user_input()
   a( "ld bc, **" ); addWord(0x0A00);// The buffer is 10 bytes
   //====================================================================
   addLabel( "functionUI_clear_bfr_top" );
-
+  //=========
+  // 2020 11 28 - mkpellegrino
+  // changed the loop to the syscall MemSet
+  //a("xor a");
+  //sysCall("MemSet");
   // Store a zero at hl
   a( "ld (hl), *" ); addByte(0x00);
   a( "inc hl" );
@@ -3310,8 +3358,6 @@ string removeUnwanted( string s )
 
   // Remove Everything from a ";" to the EOL
   // 2020 11 28 - mkpellegrino
-
-
   int _in_quotes=0;
   int _remove_from=s.length();
   for( int i=s.length(); i>0; i-- )
@@ -3335,7 +3381,7 @@ string removeUnwanted( string s )
   s=s.substr(0,_remove_from);
   if( s == " " ) s="";
 #ifdef DEBUG
-  cerr << "line of code: " << s << endl;
+  //  cerr << "line of code: " << s << endl;
 #endif
   return s;
 }
@@ -3540,7 +3586,11 @@ int main(int argc, char *argv[])
 	      a( "pop bc" );
 	      a( "pop af" );
 	    }
-
+	  else if( line == "call &mem_clear" )
+	    {
+	      add_mem_clear=1;
+	      a( "call **" ); addAddress( "mem_clear" );
+	    }
 	  // our own user input function
 	  else if( line == "loop" )
 	    {
@@ -3588,15 +3638,13 @@ int main(int argc, char *argv[])
 	    {
 	      add_fully_clear_screen=1;
 	      a( "call **" ); addAddress( "fully_clear_screen" );
-	    }
-
-	      
+	    }	      
 	  else
 	    {
 	      int processed=0;
 
-	      // & Address Label
-	      // % Address Offset
+	      // & Address
+	      // % Offset
 	      // # Word
 	      // @ Byte
 	      
@@ -3620,8 +3668,7 @@ int main(int argc, char *argv[])
 		  line.replace( found, s.length(), string("**") );
 #ifdef DEBUG
 		  cerr << endl;
-		  cerr << "line of code: " << line << "\taddress: " << s << endl;
-		  cerr << endl;
+		  cout << "line of code: [address]" << s << endl;
 #endif
 		  a( line ); processed=1;	  
 		  addAddress( s.substr(1,s.length()) );
@@ -3637,7 +3684,7 @@ int main(int argc, char *argv[])
 		  // Now replace the text with ** replace(9,5,str2);
 		  line.replace( found, s.length(), string("*") );
 #ifdef DEBUG
-		  cerr << "line of code: " << line << "\toffset: " << s << endl;
+		  cout << "line of code: [offset]" << s << endl;
 #endif
 		  a( line );  processed=1;	  
 		  addOffset( s.substr(1,s.length() ));
@@ -3651,7 +3698,7 @@ int main(int argc, char *argv[])
 		  // Now replace the text with ** replace(9,5,str2);
 		  line.replace( found, s.length(), string("**") );
 #ifdef DEBUG
-		  cerr << "line of code: " << line << "\tWord: " << s << endl;
+		  cout << "line of code: [word] " << s << endl;
 #endif
 		  a( line );  processed=1;
 
@@ -3668,7 +3715,7 @@ int main(int argc, char *argv[])
 		  // Now replace the text with ** replace(9,5,str2);
 		  line.replace( found, s.length(), string("*") );
 #ifdef DEBUG
-		  cerr << "FOUND @ : line of code: " << line << "\tByte: " << dec << stringToHexValue(s) << endl;
+		  cout << "line of code: [byte] " << dec << stringToHexValue(s) << endl;
 #endif
 
 		  // 2020 11 18 - mkpellegrino
@@ -3702,7 +3749,9 @@ int main(int argc, char *argv[])
 	      if( !processed ) a( line );
 	      
 	    }
-	  
+#ifdef DEBUG
+	  cout << "line of code: " << line << endl;
+#endif
 	}
 
       file.close();
@@ -3716,7 +3765,7 @@ int main(int argc, char *argv[])
       if( add_disp_op1==1 ) function_disp_op1();
       if( add_convop1b==1 ) function_convop1b();
       if( add_fully_clear_screen==1 ) function_fully_clear_screen();
-      
+      if( add_mem_clear==1 ) function_mem_clear();
 
 
   

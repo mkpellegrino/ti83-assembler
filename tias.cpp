@@ -3313,7 +3313,7 @@ string removeUnwanted( string s )
 
 
   int _in_quotes=0;
-  int _remove_from=0;
+  int _remove_from=s.length();
   for( int i=s.length(); i>0; i-- )
     {
       if( s[i] == '"' )

@@ -885,7 +885,7 @@ void sysCall( string s )
       //addWord(0x417A);
     }
   else if( s == "Mov9ToOP2" ){addWord(0x4180);}
-  else if( s == "MovFrOP1" ){addWord(0x4183);}
+  else if( s == "MovFrOP1" ){addWord(0x4183);} // Why Error?
   else if( s == "MultAbyDE" ){addWord(0x8045);}
   else if( s == "MultAbyE" ){addWord(0x8042);}
   else if( s == "NewContext" ){addWord(0x4030);}
@@ -2847,11 +2847,15 @@ void function_user_input()
   sysCall( "ParseInp" );
 
   // Copy OP1 to FP_user_input
-  a("ld hl, **" ); addWord( _OP1 );
+  // mkpellegrino - 11/28/2020
+  
+  //a("ld hl, **" ); addWord( _OP1 );
   a( "ld de, **" ); addAddress( "FP_user_input" );
-  a( "ld bc, **" ); addWord( 0x0009 );
-  a("ldir" );
+  //a( "ld bc, **" ); addWord( 0x0009 );
+  //a("ldir" );
+  sysCall( "MovFrOP1" );
 
+  
   // Now delete the Variable from memory
   a( "ld hl, **" ); addAddress( "equationName" );
   sysCall( "Mov9ToOP1" );
@@ -2918,9 +2922,12 @@ void function_user_input()
   // 2020 11 23 - mkpellegrino
   // old code
   a( "ld hl, **"); addAddress("functionUI_text_bfr_size");
-  a( "ld a, (hl)" );
-  a( "inc a" );
-  a( "ld (hl), a");
+
+  // 2020 11 28 - mkpellegrino
+  //  a( "ld a, (hl)" );
+  //a( "inc a" );
+  //a( "ld (hl), a");
+  a( "inc (hl)" );
 
 
   // new code - keep this commented out
@@ -3163,10 +3170,14 @@ void function_store_op1()
   // todo push all registers
   pushall();
 
-  a("ld hl, **"); addWord( _OP1 );
+  // mkpellegrino - 2020 11 28
   a("ld de, **"); addAddress( "variabledata" );
-  a("ld bc, **"); addWord(0x0009);
-  a("ldir");
+  sysCall("MovFrOP1");
+  
+  // a("ld hl, **"); addWord( _OP1 );
+  //a("ld de, **"); addAddress( "variabledata" );
+  //a("ld bc, **"); addWord(0x0009);
+  //a("ldir");
  
   a("ld hl, **" ); addAddress( "variablename");
   sysCall( "Mov9ToOP1");
@@ -3177,10 +3188,12 @@ void function_store_op1()
   
   sysCall( "FindSym" );
   sysCall( "CreateReal" );
-  
-  a("ld hl, **");addAddress("variabledata");
-  a("ld bc, **");addWord( 0x0009 );
-  a("ldir");
+
+  // mkpellegrino -- 2020 11 28
+  sysCall("Mov9ToOP1");
+  // a("ld hl, **");addAddress("variabledata");
+  //a("ld bc, **");addWord( 0x0009 );
+  //a("ldir");
 
   // todo pop all registers
   popall();
@@ -3294,6 +3307,36 @@ string removeUnwanted( string s )
       s.pop_back();
     }
   s.erase( remove(s.begin(),s.end(),'\t'),s.end());
+
+  // Remove Everything from a ";" to the EOL
+  // 2020 11 28 - mkpellegrino
+
+
+  int _in_quotes=0;
+  int _remove_from=0;
+  for( int i=s.length(); i>0; i-- )
+    {
+      if( s[i] == '"' )
+	{
+	  if( _in_quotes==1 )
+	    {
+	      _in_quotes=0;
+	    }
+	  else
+	    {
+	      _in_quotes = 1;
+	    }
+	}
+      if( s[i] == ';' && _in_quotes == 0 )
+	{
+	  _remove_from = i;
+	}
+    }
+  s=s.substr(0,_remove_from);
+  if( s == " " ) s="";
+#ifdef DEBUG
+  cerr << "line of code: " << s << endl;
+#endif
   return s;
 }
 

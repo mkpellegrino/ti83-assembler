@@ -3809,7 +3809,7 @@ int main(int argc, char *argv[])
 	  cout << "line of code: " << line << endl;
 #endif
 	}
-
+      listfile.close();
       file.close();
     }
 

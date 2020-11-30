@@ -97,6 +97,8 @@ using namespace std;
 
 vector<unsigned char> byte_vector;
 
+ofstream listfile;  // listing file
+int nargs=0;
 int byte_delay=0;
 int error_count=0;
 int compilation_failed=0;
@@ -1186,6 +1188,7 @@ void popall()
 }
 void a( string s )
 {
+  //if( nargs == 4) listfile << s << endl;
   if( s == "ret" ){  addByte( 0xC9 );}
   else if( s == "nop" ){  addByte( 0x00 );}
   else if( s == "ld bc, **" ){  addByte(0x01);}
@@ -3388,6 +3391,7 @@ string removeUnwanted( string s )
 
 int main(int argc, char *argv[])
 {
+  nargs=argc;
 #ifdef DEBUG
   cerr << "Compiling " << argv[1] << " into " << argv[2] <<endl;
 #endif
@@ -3403,6 +3407,12 @@ int main(int argc, char *argv[])
       cerr << "ex: " << argv[0] << " sourcecode.asm " << " " << "program.8xp" << endl;
       exit(-1);
     }
+  if( argc == 4 )
+    {
+ #ifdef DEBUG
+      cerr << "** generating list file named " << argv[3] << endl;
+ #endif
+    }
 
   addLabel( "OP1", 0x8478 );
   addLabel( "OP2", 0x8483 );
@@ -3417,7 +3427,10 @@ int main(int argc, char *argv[])
   ifstream file(argv[1]);  // source code
 
   FILE *binary = fopen(argv[2], "wb");
-
+  if( argc == 4 )
+    {
+      listfile.open(argv[3]); 
+    }
   addString( "**TI83F*" );
   addByte( 0x1A );
   addByte( 0x0A );
@@ -3467,11 +3480,14 @@ int main(int argc, char *argv[])
 	  // program name directive
 	  else if( line.substr(0,5) == ".name" )
 	    {
+	      listfile << "; TI8x name: ";
 	      for( int i=0; i<8; i++ )
 		{
 		  name[i]=toupper(line.substr(6, line.size()-6)[i]);
 		  byte_vector[i+60]=name[i];
+		  listfile << name[i];
 		}
+	      listfile << endl;
 	    }
 	  // a label (if the last character is a :
 	  else if( line.back() == ':' )
@@ -3479,6 +3495,7 @@ int main(int argc, char *argv[])
 	      // Then we have a label
 	      line.pop_back();
 	      addLabel(line);
+	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << ":" << endl;
 	    }
 	  // a directive other than name
 	  else if( line[0] == '.' )
@@ -3498,6 +3515,7 @@ int main(int argc, char *argv[])
 		  if( getType(tmp) == 4 ) addByte( stringToHexValue(tmp) );
 		  else if( getType(tmp) == 2) addWord( stringToHexValue(tmp) );
 		  else if( getType(tmp) == 8) addByte( (int) tmp[1]);
+		  listfile  << std::uppercase << std::hex << memorylocation << ": " << ".db " << tmp << endl;
 		}
 	      if( line.substr(0,4) ==".str" )
 		{
@@ -3507,6 +3525,8 @@ int main(int argc, char *argv[])
 #endif	      
 		  // remove quotes
 		  tmp.erase( remove(tmp.begin(),tmp.end(),'\"'),tmp.end());
+
+		  listfile << std::uppercase << std::hex << memorylocation << ": " << ".str " << char(34) << tmp << char(34) << "; null terminated" << endl;
 
 		  addString( tmp );
 		}
@@ -3519,6 +3539,8 @@ int main(int argc, char *argv[])
 		  // remove quotes
 		  tmp.erase( remove(tmp.begin(),tmp.end(),'\"'),tmp.end());
 
+		  listfile << std::uppercase << std::hex << memorylocation << ": " <<".chars " << char(34) << tmp << char(34) << "; an array of bytes " << endl;
+		  
 		  addChars( tmp );
 		}
 	      if(line.substr(0,2) == ".e" )
@@ -3536,6 +3558,8 @@ int main(int argc, char *argv[])
 		  addByte(0x28);
 		  addByte(0x59);
 		  addByte(0x04);
+		  listfile << std::uppercase << std::hex << memorylocation << ": " << line << "; Euler's Number approx 2.71828... " << endl;
+
 		  
 		}
 	      if( line.substr(0,3) == ".pi" )
@@ -3552,6 +3576,7 @@ int main(int argc, char *argv[])
 		  addByte(0x53);
 		  addByte(0x58);
 		  addByte(0x98);
+		  listfile << std::uppercase << std::hex << memorylocation << ": " << line << "; pi approx 3.14159... " << endl;
 		}
 	       if( line.substr(0,3) ==".fp" )
 		{
@@ -3559,6 +3584,8 @@ int main(int argc, char *argv[])
 #ifdef DEBUG
 		  cerr << "[float: " << tmp << "]" << endl;
 #endif	      
+		  listfile << std::uppercase << std::hex <<  memorylocation << ": " << ".fp " << tmp << "; a floating point number" << endl;
+
 		  addFP( tmp );
 		}
 	    }
@@ -3567,11 +3594,13 @@ int main(int argc, char *argv[])
 	    {
 	      string addr=line.substr( 6, line.length() );
 	      sysCall( getBetween(line) );
+	      listfile << std::uppercase << std::hex <<  memorylocation << ": " << "bCall(" << addr << endl;
 	    }
 
 	  // push all z80 registers
 	  else if( line == "pusha" )
 	    {
+	      listfile << std::uppercase << std::hex << memorylocation << ": pusha" << endl;
 	      a( "push af" );
 	      a( "push bc" );
 	      a( "push de" );
@@ -3581,6 +3610,7 @@ int main(int argc, char *argv[])
 	  // pop all z80 registers
 	  else if( line== "popa" )
 	    {
+	      listfile << std::uppercase << std::hex << memorylocation << ": popa" << endl;
 	      a( "pop hl" );
 	      a( "pop de" );
 	      a( "pop bc" );
@@ -3588,17 +3618,20 @@ int main(int argc, char *argv[])
 	    }
 	  else if( line == "call &mem_clear" )
 	    {
+	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 	      add_mem_clear=1;
 	      a( "call **" ); addAddress( "mem_clear" );
 	    }
 	  // our own user input function
 	  else if( line == "loop" )
 	    {
+	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 	      add_loop=1;
 	      a( "call **"); addAddress( "function_loop" );
 	    }
 	  else if( line == "call &user_input" )
 	    {
+	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 	      add_input=1;
 	      a( "call **" ); addAddress( "user_input" );
 
@@ -3607,6 +3640,7 @@ int main(int argc, char *argv[])
 	  // stores op1 as a variable in the calc
 	  else if( line == "call &store_op1" )
 	    {
+	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 	      add_store_op1=1;
 	      a( "call **" ); addAddress( "store_op1" );
 
@@ -3615,6 +3649,7 @@ int main(int argc, char *argv[])
 	  // puts calc into degree mode
 	  else if( line == "call &degree_mode" )
 	    {
+	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 	      add_degree_mode=1;
 	      a( "call **" ); addAddress( "degree_mode" );
 
@@ -3623,6 +3658,7 @@ int main(int argc, char *argv[])
 	  // displays OP1 on the screen
 	  else if( line == "call &disp_op1" )
 	    {
+	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 	      add_disp_op1=1;
 	      a( "call **" ); addAddress( "disp_op1" );
 	    }
@@ -3630,12 +3666,14 @@ int main(int argc, char *argv[])
 	  // converts OP1 to a hex value in DE
 	  else if( line == "call &convop1b" )
 	    {
+	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 	      add_convop1b=1;
 	      a( "call **" ); addAddress( "convop1b" );
 	    }
 	  // cls
 	  else if( line == "call &fully_clear_screen" )
 	    {
+	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 	      add_fully_clear_screen=1;
 	      a( "call **" ); addAddress( "fully_clear_screen" );
 	    }	      
@@ -3663,7 +3701,10 @@ int main(int argc, char *argv[])
 		{
 		  int k=-1; string s = line.substr(found,line.length());
 		  for( int i=0; i<s.length();i++ ){if( s[i]==' ' || s[i]==')' || s[i]==','){k=i;i=s.length();}}
-		  if( k!=-1 ) s=s.substr(0,k);    
+		  if( k!=-1 ) s=s.substr(0,k);
+
+		  listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+		  
 		  // Now replace the text with ** replace(9,5,str2);
 		  line.replace( found, s.length(), string("**") );
 #ifdef DEBUG
@@ -3672,7 +3713,6 @@ int main(int argc, char *argv[])
 #endif
 		  a( line ); processed=1;	  
 		  addAddress( s.substr(1,s.length()) );
-		  
 		}
 
 	      found = line.find('%');
@@ -3681,12 +3721,17 @@ int main(int argc, char *argv[])
 		  int k=-1; string s = line.substr(found,line.length());
 		  for( int i=0; i<s.length();i++ ){if( s[i]==' ' || s[i]==')' || s[i]==','){k=i;i=s.length();}}
 		  if( k!=-1 ) s=s.substr(0,k);    
+
+		  listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+
+
 		  // Now replace the text with ** replace(9,5,str2);
 		  line.replace( found, s.length(), string("*") );
 #ifdef DEBUG
 		  cout << "line of code: [offset]" << s << endl;
 #endif
 		  a( line );  processed=1;	  
+
 		  addOffset( s.substr(1,s.length() ));
 		}
 	      found = line.find('#');
@@ -3694,13 +3739,17 @@ int main(int argc, char *argv[])
 		{
 		  int k=-1; string s = line.substr(found,line.length());
 		  for( int i=0; i<s.length();i++ ){if( s[i]==' ' || s[i]==')' || s[i]==','){k=i;i=s.length();}}
-		  if( k!=-1 ) s=s.substr(0,k);    
+		  if( k!=-1 ) s=s.substr(0,k);
+
+		  listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+		  
 		  // Now replace the text with ** replace(9,5,str2);
 		  line.replace( found, s.length(), string("**") );
 #ifdef DEBUG
 		  cout << "line of code: [word] " << s << endl;
 #endif
 		  a( line );  processed=1;
+		  listfile << line << endl;
 
 		  
 		  addWord( stringToHexValue(s.substr(1,s.length())) );
@@ -3711,7 +3760,11 @@ int main(int argc, char *argv[])
 		{
 		  int k=-1; string s = line.substr(found,line.length());
 		  for( int i=0; i<s.length();i++ ){if( s[i]==' ' || s[i]==')' || s[i]==','){k=i;i=s.length();}}
-		  if( k!=-1 ) s=s.substr(0,k);    
+		  if( k!=-1 ) s=s.substr(0,k);
+
+		  listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+
+		  
 		  // Now replace the text with ** replace(9,5,str2);
 		  line.replace( found, s.length(), string("*") );
 #ifdef DEBUG
@@ -3745,8 +3798,11 @@ int main(int argc, char *argv[])
 		      //addByte( (int) s.substr(1,s.length())[0] );
 		    }
 		}
-
-	      if( !processed ) a( line );
+	      if( !processed )
+		{
+		  listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+		  a( line );
+		}
 	      
 	    }
 #ifdef DEBUG
@@ -3810,6 +3866,11 @@ int main(int argc, char *argv[])
       fwrite(&byte_to_write, 1, sizeof(byte_to_write), binary);
     }
 
+  if( argc == 4 )
+    {
+      listfile.close(); 
+    }
+  
   cerr << endl << "*** Compilation success ***" << endl << endl;
   cerr << "    Filename: " << argv[1] << endl;
   cerr << "     TI Name: " << name << endl;    

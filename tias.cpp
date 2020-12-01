@@ -98,7 +98,7 @@ using namespace std;
 vector<unsigned char> byte_vector;
 
 ofstream listfile;  // listing file
-int nargs=0;
+int listed=0;
 int byte_delay=0;
 int error_count=0;
 int compilation_failed=0;
@@ -359,6 +359,7 @@ void addByte( unsigned char b )
   program_index++;
   if( start_counting == 1) memorylocation++;  
   byte_vector.push_back( (unsigned char) b );
+  // if( start_counting == 1 ) listfile << " " << std::uppercase << std::hex << (int)b;
   //#ifdef DEBUG
   //cerr << "Program Index [" << hex << program_index << "]" << endl;
   //#endif
@@ -1188,7 +1189,6 @@ void popall()
 }
 void a( string s )
 {
-  //if( nargs == 4) listfile << s << endl;
   if( s == "ret" ){  addByte( 0xC9 );}
   else if( s == "nop" ){  addByte( 0x00 );}
   else if( s == "ld bc, **" ){  addByte(0x01);}
@@ -1488,63 +1488,63 @@ void a( string s )
   else if( s == "call pe, **" ){addByte(0xEC);}
   else if( s == "in b, (c)" ){addByte(0xED);addByte(0x40);}
   else if( s == "out (c), b" ){addByte(0xED);addByte(0x41);}
-  else if( s == "sbc hl,bc" ){addByte(0xED);addByte(0x42);}
-  else if( s == "ld (**),bc" ){addByte(0xED);addByte(0x43);}
+  else if( s == "sbc hl, bc" ){addByte(0xED);addByte(0x42);}
+  else if( s == "ld (**), bc" ){addByte(0xED);addByte(0x43);}
   else if( s == "neg" ){addByte(0xED);addByte(0x44);}
   else if( s == "retn" ){addByte(0xED);addByte(0x45);}
   else if( s == "im 0" ){addByte(0xED);addByte(0x46);}
-  else if( s == "ld i,a" ){addByte(0xED);addByte(0x47);}
-  else if( s == "in c,(c)" ){addByte(0xED);addByte(0x48);}
-  else if( s == "out (c),c" ){addByte(0xED);addByte(0x49);}
-  else if( s == "adc hl,bc" ){addByte(0xED);addByte(0x4A);}
-  else if( s == "ld bc,(**)" ){addByte(0xED);addByte(0x4B);}
+  else if( s == "ld i, a" ){addByte(0xED);addByte(0x47);}
+  else if( s == "in c, (c)" ){addByte(0xED);addByte(0x48);}
+  else if( s == "out (c), c" ){addByte(0xED);addByte(0x49);}
+  else if( s == "adc hl, bc" ){addByte(0xED);addByte(0x4A);}
+  else if( s == "ld bc, (**)" ){addByte(0xED);addByte(0x4B);}
   else if( s == "neg"){addByte(0xED);addByte(0x4C);}
   else if( s == "reti"){addByte(0xED);addByte(0x4D);}
   else if( s == "im 0/1"){addByte(0xED);addByte(0x4E);}
-  else if( s == "ld r,a" ){addByte(0xED);addByte(0x4F);}
-  else if( s == "in d,(c)"){addByte(0xED);addByte(0x50);}
-  else if( s == "out (c),d"){addByte(0xED);addByte(0x51);}
-  else if( s == "sbc hl,de"){addByte(0xED);addByte(0x52);}
-  else if( s == "ld (**),de"){addByte(0xED);addByte(0x53);}
+  else if( s == "ld r, a" ){addByte(0xED);addByte(0x4F);}
+  else if( s == "in d, (c)"){addByte(0xED);addByte(0x50);}
+  else if( s == "out (c), d"){addByte(0xED);addByte(0x51);}
+  else if( s == "sbc hl, de"){addByte(0xED);addByte(0x52);}
+  else if( s == "ld (**), de"){addByte(0xED);addByte(0x53);}
   else if( s == "neg"){addByte(0xED);addByte(0x54);}
   else if( s == "retn"){addByte(0xED);addByte(0x55);}
   else if( s == "im 1"){addByte(0xED);addByte(0x56);}
-  else if( s == "ld a,i"){addByte(0xED);addByte(0x57);}
-  else if( s == "in e,(c)"){addByte(0xED);addByte(0x58);}
-  else if( s == "out (c),e"){addByte(0xED);addByte(0x59);}
-  else if( s == "adc hl,de"){addByte(0xED);addByte(0x5A);}
+  else if( s == "ld a, i"){addByte(0xED);addByte(0x57);}
+  else if( s == "in e, (c)"){addByte(0xED);addByte(0x58);}
+  else if( s == "out (c), e"){addByte(0xED);addByte(0x59);}
+  else if( s == "adc hl, de"){addByte(0xED);addByte(0x5A);}
   else if( s == "ld de, (**)"){addByte(0xED);addByte(0x5B);}
   else if( s == "neg"){addByte(0xED);addByte(0x5C);}
   else if( s == "retn"){addByte(0xED);addByte(0x5D);}
   else if( s == "im 2"){addByte(0xED);addByte(0x5E);}
-  else if( s == "ld a,r" ){addByte(0xED);addByte(0x5F);}
+  else if( s == "ld a, r" ){addByte(0xED);addByte(0x5F);}
   else if( s == "in h, (c)"){addByte(0xED);addByte(0x60);}
-  else if( s == "out (c),h"){addByte(0xED);addByte(0x61);}
-  else if( s == "sbc hl,hl"){addByte(0xED);addByte(0x62);}
-  else if( s == "ld (**),hl"){addByte(0xED);addByte(0x63);}
+  else if( s == "out (c), h"){addByte(0xED);addByte(0x61);}
+  else if( s == "sbc hl, hl"){addByte(0xED);addByte(0x62);}
+  else if( s == "ld (**), hl"){addByte(0xED);addByte(0x63);}
   else if( s == "neg"){addByte(0xED);addByte(0x64);}
   else if( s == "retn"){addByte(0xED);addByte(0x65);}
   else if( s == "im 0"){addByte(0xED);addByte(0x66);}
   else if( s == "rrd"){addByte(0xED);addByte(0x67);}
-  else if( s == "in l,(c)"){addByte(0xED);addByte(0x68);}
-  else if( s == "out (c),l"){addByte(0xED);addByte(0x69);}
-  else if( s == "adc hl,hl"){addByte(0xED);addByte(0x6A);}
+  else if( s == "in l, (c)"){addByte(0xED);addByte(0x68);}
+  else if( s == "out (c), l"){addByte(0xED);addByte(0x69);}
+  else if( s == "adc hl, hl"){addByte(0xED);addByte(0x6A);}
   else if( s == "ld hl, (**)"){addByte(0xED);addByte(0x6B);}
   else if( s == "neg"){addByte(0xED);addByte(0x6C);}
   else if( s == "retn"){addByte(0xED);addByte(0x6D);}
   else if( s == "im 0/1"){addByte(0xED);addByte(0x6E);}
   else if( s == "rld" ){addByte(0xED);addByte(0x6F);}
   else if( s == "in (c)"){addByte(0xED);addByte(0x70);}
-  else if( s == "out (c),0"){addByte(0xED);addByte(0x71);}
-  else if( s == "sbc hl,sp"){addByte(0xED);addByte(0x72);}
-  else if( s == "ld (**),sp"){addByte(0xED);addByte(0x73);}
+  else if( s == "out (c), 0"){addByte(0xED);addByte(0x71);}
+  else if( s == "sbc hl, sp"){addByte(0xED);addByte(0x72);}
+  else if( s == "ld (**), sp"){addByte(0xED);addByte(0x73);}
   else if( s == "neg"){addByte(0xED);addByte(0x74);}
   else if( s == "retn"){addByte(0xED);addByte(0x75);}
   else if( s == "im 1"){addByte(0xED);addByte(0x76);}
-  else if( s == "in a,(c)"){addByte(0xED);addByte(0x78);}
-  else if( s == "out (c),a"){addByte(0xED);addByte(0x79);}
-  else if( s == "adc hl,sp"){addByte(0xED);addByte(0x7A);}
-  else if( s == "ld sp,(**)"){addByte(0xED);addByte(0x7B);}
+  else if( s == "in a, (c)"){addByte(0xED);addByte(0x78);}
+  else if( s == "out (c), a"){addByte(0xED);addByte(0x79);}
+  else if( s == "adc hl, sp"){addByte(0xED);addByte(0x7A);}
+  else if( s == "ld sp, (**)"){addByte(0xED);addByte(0x7B);}
   else if( s == "neg"){addByte(0xED);addByte(0x7C);}
   else if( s == "retn"){addByte(0xED);addByte(0x7D);}
   else if( s == "im 2"){addByte(0xED);addByte(0x7E);}
@@ -2351,7 +2351,11 @@ void a( string s )
   else if( s == "ld ixl, *"){addByte(0xDD);addByte(0x2E);}
   else if( s == "inc (ix+*)"){addByte(0xDD);addByte(0x34);}
   else if( s == "dec (ix+*)"){addByte(0xDD);addByte(0x35);}
-  else if( s == "ld (ix+*), *"){addByte(0xDD);addByte(0x36);}
+  //else if( s == "ld (ix+*), *"){addByte(0xDD);addByte(0x36);} // this is a special instruction (maybe ld(ix+*), v - and then next byte is v?)
+
+
+  else if( s == "ld (ix+*)+"){addByte(0xDD);addByte(0x36);} // the next instruction MUST BE A .db 0x?? to know what integer to put into (IX+*)
+
   else if( s == "add ix, sp"){addByte(0xDD);addByte(0x39);}
   else if( s == "ld b, ixh"){addByte(0xDD);addByte(0x44);}
   else if( s == "ld b, ixl"){addByte(0xDD);addByte(0x45);}
@@ -2506,9 +2510,11 @@ else if( s == "push iy"){addByte(0xFD);addByte(0xE5);}
 else if( s == "jp (iy)"){addByte(0xFD);addByte(0xE9);}
 else if( s == "ld sp, iy"){addByte(0xFD);addByte(0xF9);}
 
+
+  
   
   else if( s == "xor *" ){addByte(0xEE);}
-  //else if( s == "rst 0x28" ){addByte(0xEF);}
+  else if( s == "rst 0x28" ){addByte(0xEF);}
   else if( s == "ret p" ){addByte(0xF0);}
   else if( s == "pop af" ){addByte(0xF1);}
   else if( s == "jp p, **" ){addByte(0xF2);}
@@ -2649,6 +2655,11 @@ void loop()
   
 }
 
+void addToListFile(int mem_loc, string loc)
+{
+  if( loc.length() > 0 )
+  listfile << loc << "; " << std::uppercase << std::hex << memorylocation << endl;
+}
 
 
 void function_mem_clear()
@@ -2693,6 +2704,7 @@ void function_mem_clear()
   a("ret");
   return;
 }
+
 void function_user_input()
 {
  
@@ -2792,23 +2804,33 @@ void function_user_input()
   //===========================
   // Flags to check for - and .
   addLabel( "check_for_decimal_points" );
-  pushall();
+  //pushall();
+  a( "push af" );
+  a( "push hl" );
   a( "ld a, *" ); addByte( 0x19 );
   a( "ld hl, **" ); addAddress( "dec_check_plus_1" );
   a( "dec hl" );
   a( "ld (hl), a" );
-  popall();
+  a( "pop hl" );
+  a( "pop af" );
+  // popall();
   a( "ret" );
   addLabel( "dont_check_for_decimal_points" );
-  pushall();
+  //pushall();
+  a( "push af" );
+  a( "push hl" );
   a( "xor a" ); addByte( 0x00 );
   a( "ld hl, **" ); addAddress( "dec_check_plus_1" );
   a( "dec hl" );
   a( "ld (hl), a" );
-  popall();
+  a( "pop hl" );
+  a( "pop af" );
+  //popall();
   a( "ret" );
   addLabel( "check_for_negatives" );
-  pushall();
+  //pushall();
+  a( "push af" );
+  a( "push hl" );
   a( "ld a, *" ); addByte( 0x0B );
   a( "ld hl, **" ); addAddress( "min_check_plus_1" );
   a( "dec hl" );
@@ -2818,11 +2840,15 @@ void function_user_input()
   a( "ld hl, **" ); addAddress( "neg_check_plus_1" );
   a( "dec hl" );
   a( "ld (hl), a" );
-  popall();
+  a( "pop hl" );
+  a( "pop af" );
+  //popall();
   a( "ret" );
   
   addLabel( "dont_check_for_negatives" );
-  pushall();
+  //pushall();
+  a( "push af" );
+  a( "push hl" );
   a( "ld a, *" ); addByte( 0x00 );
   a( "ld hl, **" ); addAddress( "min_check_plus_1" );
   a( "dec hl" );
@@ -2832,7 +2858,9 @@ void function_user_input()
   a( "ld hl, **" ); addAddress( "neg_check_plus_1" );
   a( "dec hl" );
   a( "ld (hl), a" );
-  popall();
+  a( "pop hl" );
+  a( "pop af" );
+  //popall();
   a( "ret" );
 
   //=====================================================================
@@ -3349,6 +3377,11 @@ int stringToValue(string s)
 
 string removeUnwanted( string s )
 {
+  // replace tabs with a space
+  // mkpellegrino - 2020 11 30
+#ifdef DEBUG
+  cerr << "line length: " << s.length() << " -> ";
+#endif
   while( s[0] == ' ' )
     {
       s=s.substr(1,s.length() );
@@ -3363,7 +3396,7 @@ string removeUnwanted( string s )
   // 2020 11 28 - mkpellegrino
   int _in_quotes=0;
   int _remove_from=s.length();
-  for( int i=s.length(); i>0; i-- )
+  for( int i=s.length(); i>=0; i-- )
     {
       if( s[i] == '"' )
 	{
@@ -3383,15 +3416,15 @@ string removeUnwanted( string s )
     }
   s=s.substr(0,_remove_from);
   if( s == " " ) s="";
+  
 #ifdef DEBUG
-  //  cerr << "line of code: " << s << endl;
+  cerr << s.length() << endl;
 #endif
   return s;
 }
 
 int main(int argc, char *argv[])
 {
-  nargs=argc;
 #ifdef DEBUG
   cerr << "Compiling " << argv[1] << " into " << argv[2] <<endl;
 #endif
@@ -3474,13 +3507,14 @@ int main(int argc, char *argv[])
 	  line_number++;
 	  // remove tabs and other unwanted characters
 	  line=removeUnwanted(line);
-	    
+	  if( line.substr(0,5) != ".name" ) addToListFile(memorylocation,line);
+
 	  // an empty line or a comment
 	  if( line=="" || line[0]==';' ){}
 	  // program name directive
 	  else if( line.substr(0,5) == ".name" )
 	    {
-	      listfile << "; TI8x name: ";
+	      listfile << ".name ";
 	      for( int i=0; i<8; i++ )
 		{
 		  name[i]=toupper(line.substr(6, line.size()-6)[i]);
@@ -3488,6 +3522,7 @@ int main(int argc, char *argv[])
 		  listfile << name[i];
 		}
 	      listfile << endl;
+	      listed=1;
 	    }
 	  // a label (if the last character is a :
 	  else if( line.back() == ':' )
@@ -3495,7 +3530,8 @@ int main(int argc, char *argv[])
 	      // Then we have a label
 	      line.pop_back();
 	      addLabel(line);
-	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << ":" << endl;
+	      // addToListFile(memorylocation, line);
+	      //listfile << std::uppercase << std::hex << memorylocation << ": " << line << ":" << endl;
 	    }
 	  // a directive other than name
 	  else if( line[0] == '.' )
@@ -3515,7 +3551,8 @@ int main(int argc, char *argv[])
 		  if( getType(tmp) == 4 ) addByte( stringToHexValue(tmp) );
 		  else if( getType(tmp) == 2) addWord( stringToHexValue(tmp) );
 		  else if( getType(tmp) == 8) addByte( (int) tmp[1]);
-		  listfile  << std::uppercase << std::hex << memorylocation << ": " << ".db " << tmp << endl;
+		  
+		  // addToListFile(memorylocation,line);
 		}
 	      if( line.substr(0,4) ==".str" )
 		{
@@ -3525,8 +3562,8 @@ int main(int argc, char *argv[])
 #endif	      
 		  // remove quotes
 		  tmp.erase( remove(tmp.begin(),tmp.end(),'\"'),tmp.end());
+		  // addToListFile(memorylocation,line);
 
-		  listfile << std::uppercase << std::hex << memorylocation << ": " << ".str " << char(34) << tmp << char(34) << "; null terminated" << endl;
 
 		  addString( tmp );
 		}
@@ -3538,8 +3575,8 @@ int main(int argc, char *argv[])
 #endif	      
 		  // remove quotes
 		  tmp.erase( remove(tmp.begin(),tmp.end(),'\"'),tmp.end());
+		  // addToListFile(memorylocation,line);
 
-		  listfile << std::uppercase << std::hex << memorylocation << ": " <<".chars " << char(34) << tmp << char(34) << "; an array of bytes " << endl;
 		  
 		  addChars( tmp );
 		}
@@ -3558,7 +3595,8 @@ int main(int argc, char *argv[])
 		  addByte(0x28);
 		  addByte(0x59);
 		  addByte(0x04);
-		  listfile << std::uppercase << std::hex << memorylocation << ": " << line << "; Euler's Number approx 2.71828... " << endl;
+		  // addToListFile(memorylocation,line);
+
 
 		  
 		}
@@ -3576,15 +3614,16 @@ int main(int argc, char *argv[])
 		  addByte(0x53);
 		  addByte(0x58);
 		  addByte(0x98);
-		  listfile << std::uppercase << std::hex << memorylocation << ": " << line << "; pi approx 3.14159... " << endl;
+		  // addToListFile(memorylocation,line);
+
 		}
 	       if( line.substr(0,3) ==".fp" )
 		{
 		  string tmp = removeUnwanted(line.substr(4, line.length() ));		  
 #ifdef DEBUG
 		  cerr << "[float: " << tmp << "]" << endl;
-#endif	      
-		  listfile << std::uppercase << std::hex <<  memorylocation << ": " << ".fp " << tmp << "; a floating point number" << endl;
+#endif
+		  // addToListFile(memorylocation,line);
 
 		  addFP( tmp );
 		}
@@ -3594,13 +3633,13 @@ int main(int argc, char *argv[])
 	    {
 	      string addr=line.substr( 6, line.length() );
 	      sysCall( getBetween(line) );
-	      listfile << std::uppercase << std::hex <<  memorylocation << ": " << "bCall(" << addr << endl;
+	      // addToListFile(memorylocation,line);
 	    }
 
 	  // push all z80 registers
 	  else if( line == "pusha" )
 	    {
-	      listfile << std::uppercase << std::hex << memorylocation << ": pusha" << endl;
+	      // addToListFile(memorylocation,line);
 	      a( "push af" );
 	      a( "push bc" );
 	      a( "push de" );
@@ -3610,7 +3649,7 @@ int main(int argc, char *argv[])
 	  // pop all z80 registers
 	  else if( line== "popa" )
 	    {
-	      listfile << std::uppercase << std::hex << memorylocation << ": popa" << endl;
+	      // addToListFile(memorylocation,line);
 	      a( "pop hl" );
 	      a( "pop de" );
 	      a( "pop bc" );
@@ -3618,20 +3657,20 @@ int main(int argc, char *argv[])
 	    }
 	  else if( line == "call &mem_clear" )
 	    {
-	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+	      //listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 	      add_mem_clear=1;
 	      a( "call **" ); addAddress( "mem_clear" );
 	    }
 	  // our own user input function
 	  else if( line == "loop" )
 	    {
-	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+	      //listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 	      add_loop=1;
 	      a( "call **"); addAddress( "function_loop" );
 	    }
 	  else if( line == "call &user_input" )
 	    {
-	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+	      //listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 	      add_input=1;
 	      a( "call **" ); addAddress( "user_input" );
 
@@ -3640,7 +3679,7 @@ int main(int argc, char *argv[])
 	  // stores op1 as a variable in the calc
 	  else if( line == "call &store_op1" )
 	    {
-	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+	      //listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 	      add_store_op1=1;
 	      a( "call **" ); addAddress( "store_op1" );
 
@@ -3649,7 +3688,7 @@ int main(int argc, char *argv[])
 	  // puts calc into degree mode
 	  else if( line == "call &degree_mode" )
 	    {
-	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+	      //listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 	      add_degree_mode=1;
 	      a( "call **" ); addAddress( "degree_mode" );
 
@@ -3658,7 +3697,7 @@ int main(int argc, char *argv[])
 	  // displays OP1 on the screen
 	  else if( line == "call &disp_op1" )
 	    {
-	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+	      //listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 	      add_disp_op1=1;
 	      a( "call **" ); addAddress( "disp_op1" );
 	    }
@@ -3666,14 +3705,14 @@ int main(int argc, char *argv[])
 	  // converts OP1 to a hex value in DE
 	  else if( line == "call &convop1b" )
 	    {
-	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+	      //listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 	      add_convop1b=1;
 	      a( "call **" ); addAddress( "convop1b" );
 	    }
 	  // cls
 	  else if( line == "call &fully_clear_screen" )
 	    {
-	      listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+	      //listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 	      add_fully_clear_screen=1;
 	      a( "call **" ); addAddress( "fully_clear_screen" );
 	    }	      
@@ -3703,8 +3742,10 @@ int main(int argc, char *argv[])
 		  for( int i=0; i<s.length();i++ ){if( s[i]==' ' || s[i]==')' || s[i]==','){k=i;i=s.length();}}
 		  if( k!=-1 ) s=s.substr(0,k);
 
-		  listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
-		  
+		  //listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+		  //addToListFile( memorylocation, line );
+		  listed=1;
+
 		  // Now replace the text with ** replace(9,5,str2);
 		  line.replace( found, s.length(), string("**") );
 #ifdef DEBUG
@@ -3722,7 +3763,10 @@ int main(int argc, char *argv[])
 		  for( int i=0; i<s.length();i++ ){if( s[i]==' ' || s[i]==')' || s[i]==','){k=i;i=s.length();}}
 		  if( k!=-1 ) s=s.substr(0,k);    
 
-		  listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+		  //listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+
+		  //addToListFile( memorylocation, line );
+		  listed=1;
 
 
 		  // Now replace the text with ** replace(9,5,str2);
@@ -3733,6 +3777,7 @@ int main(int argc, char *argv[])
 		  a( line );  processed=1;	  
 
 		  addOffset( s.substr(1,s.length() ));
+
 		}
 	      found = line.find('#');
 	      if (found!=string::npos)
@@ -3741,15 +3786,17 @@ int main(int argc, char *argv[])
 		  for( int i=0; i<s.length();i++ ){if( s[i]==' ' || s[i]==')' || s[i]==','){k=i;i=s.length();}}
 		  if( k!=-1 ) s=s.substr(0,k);
 
-		  listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
-		  
+		  //listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+		  //addToListFile( memorylocation, line );
+		  listed=1;
+
 		  // Now replace the text with ** replace(9,5,str2);
 		  line.replace( found, s.length(), string("**") );
 #ifdef DEBUG
 		  cout << "line of code: [word] " << s << endl;
 #endif
 		  a( line );  processed=1;
-		  listfile << line << endl;
+		  //listfile << line << endl;
 
 		  
 		  addWord( stringToHexValue(s.substr(1,s.length())) );
@@ -3762,9 +3809,11 @@ int main(int argc, char *argv[])
 		  for( int i=0; i<s.length();i++ ){if( s[i]==' ' || s[i]==')' || s[i]==','){k=i;i=s.length();}}
 		  if( k!=-1 ) s=s.substr(0,k);
 
-		  listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+		  //listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 
-		  
+		  //addToListFile( memorylocation, line );
+		  listed=1;
+
 		  // Now replace the text with ** replace(9,5,str2);
 		  line.replace( found, s.length(), string("*") );
 #ifdef DEBUG
@@ -3800,7 +3849,6 @@ int main(int argc, char *argv[])
 		}
 	      if( !processed )
 		{
-		  listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
 		  a( line );
 		}
 	      

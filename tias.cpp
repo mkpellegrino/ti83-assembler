@@ -2811,10 +2811,12 @@ void function_user_input()
   a( "ld hl, **" ); addAddress( "dec_check_plus_1" );
   a( "dec hl" );
   a( "ld (hl), a" );
+  //popall();
   a( "pop hl" );
   a( "pop af" );
-  // popall();
   a( "ret" );
+
+
   addLabel( "dont_check_for_decimal_points" );
   //pushall();
   a( "push af" );
@@ -2823,14 +2825,17 @@ void function_user_input()
   a( "ld hl, **" ); addAddress( "dec_check_plus_1" );
   a( "dec hl" );
   a( "ld (hl), a" );
+  //popall();
   a( "pop hl" );
   a( "pop af" );
-  //popall();
   a( "ret" );
+
+
   addLabel( "check_for_negatives" );
   //pushall();
   a( "push af" );
   a( "push hl" );
+
   a( "ld a, *" ); addByte( 0x0B );
   a( "ld hl, **" ); addAddress( "min_check_plus_1" );
   a( "dec hl" );
@@ -2840,15 +2845,16 @@ void function_user_input()
   a( "ld hl, **" ); addAddress( "neg_check_plus_1" );
   a( "dec hl" );
   a( "ld (hl), a" );
+  //popall();
   a( "pop hl" );
   a( "pop af" );
-  //popall();
   a( "ret" );
   
   addLabel( "dont_check_for_negatives" );
   //pushall();
   a( "push af" );
   a( "push hl" );
+
   a( "ld a, *" ); addByte( 0x00 );
   a( "ld hl, **" ); addAddress( "min_check_plus_1" );
   a( "dec hl" );
@@ -2858,9 +2864,9 @@ void function_user_input()
   a( "ld hl, **" ); addAddress( "neg_check_plus_1" );
   a( "dec hl" );
   a( "ld (hl), a" );
+  //popall();
   a( "pop hl" );
   a( "pop af" );
-  //popall();
   a( "ret" );
 
   //=====================================================================

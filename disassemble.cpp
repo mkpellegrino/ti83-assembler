@@ -5,6 +5,11 @@
 using namespace std;
 int main(int argc, char *argv[])
 {
+  if (argc==1)
+    {
+      cout << "usage:" << endl << argv[0] << " filename.8xp a|h (optional)" << endl;
+      exit(-1);
+    }
   int just_asm=1;
   int raw=0;
   if( argc==3 )
@@ -1112,21 +1117,22 @@ int main(int argc, char *argv[])
 	  cout << instruction << " ";
 	  if( post==1 )
 	    {
-	      cout << "0x";
+	      //cout << "0x";
 	      memory_start++;
 	    }
 	  if( post>0 )
 	    {
-	      if( b1< 16) cout << 0;
-	      cout << hex << (int)b1;
+	      cout << std::uppercase << setfill('0') << setw(2) << right << std::hex << "0x";
+	      if( b1< 16) cout << setw(1) << 0;
+	      cout << (int)b1;
 	    }
 	  if( post==2 )
 	    {
 	      if( b2< 16)
 		{
-		  cout << 0;
+		  //cout << 0;
 		}
-	      cout << hex << (int)b2;
+	      cout << std::uppercase << std::hex << (int)b2;
 	      memory_start+=2;
 	    }
 	  memory_start++;

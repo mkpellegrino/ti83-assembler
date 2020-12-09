@@ -12,6 +12,6 @@ user_input
 degree_mode
 radian_mode
 disp_op1 (a 'better' routine than the built-in one)
-fully_clear screen
+fully_clear_screen
 convop1b (a 'better' routine than the built-in one)
 store_op1

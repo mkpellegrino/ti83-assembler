@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
   unsigned char buffer;
   unsigned char b1;
   unsigned char b2;
+  unsigned char b3;
   string instruction;
   cout << hex << uppercase;
   int i=0;
@@ -865,8 +866,9 @@ int main(int argc, char *argv[])
 	      post=2;
 	      break;
 	    case 0xCB:
-	      instruction="**** ";
-	      post=2;
+	      // this is an extended instruction
+	      //instruction="*";
+	      post=1;
 	      break;
 	    case 0xCC:
 	      instruction="call z, **";
@@ -1083,7 +1085,7 @@ int main(int argc, char *argv[])
 
 	     
 	    }
-	  b1=0; b2=0;
+	  b1=0; b2=0; b3=0;
 	  if( post==1 )
 	    {
 	      fread(&b1, sizeof(unsigned char), sizeof(b1), binary);
@@ -1095,13 +1097,47 @@ int main(int argc, char *argv[])
 	      fread(&b2, sizeof(unsigned char), sizeof(b2), binary);
 	    }
 
+	  if( buffer==0xCB )
+	    {
+	      switch(b1)
+		{
+		case 0x27:
+		  instruction="sla a";
+		  break;
+		case 0x00:
+		  instruction="rlc b";
+		  break;
+		default:
+		  instruction="** unknown **";
+		}
+
+	    }
 	  if( buffer==0xED )
 	    {
 	      switch(b1)
 		{
+		case 0xA0:
+		  instruction="ldi";
+		  //post=1;
+		  break;
 		case 0xB0:
 		  instruction="ldir";
 		  //post=1;
+		  break;
+		case 0x5B:
+		  instruction="ld de, (**)";
+		  fread(&b2, sizeof(unsigned char), sizeof(b2), binary);
+		  fread(&b3, sizeof(unsigned char), sizeof(b3), binary);
+		  post=3;
+		  
+		  //post=2;
+		  break;
+		case 0x6B:
+		  instruction="ld hl, (**)";
+		  fread(&b2, sizeof(unsigned char), sizeof(b2), binary);
+		  fread(&b3, sizeof(unsigned char), sizeof(b3), binary);
+		  post=3;
+		  //post=2;
 		  break;
 		default:
 		  instruction="** unknown **";
@@ -1128,12 +1164,21 @@ int main(int argc, char *argv[])
 	    }
 	  if( post==2 )
 	    {
-	      if( b2< 16)
-		{
+	      //if( b2< 16)
+	      //{
 		  //cout << 0;
-		}
+	      //}
 	      cout << std::uppercase << std::hex << (int)b2;
 	      memory_start+=2;
+	    }
+	  if( post==3 )
+	    {
+	      //if( b2< 16)
+	      //{
+		  //cout << 0;
+	      //}
+	      cout << " " << std::uppercase << std::hex << (int)b2 << " " << (int)b3;
+	      memory_start+=3;
 	    }
 	  memory_start++;
 	  cout << endl;

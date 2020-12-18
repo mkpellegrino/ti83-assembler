@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
 	      post=0;
 	      break;
 	    case 0x10:
-	      instruction="djnc *";
+	      instruction="djnz *";
 	      post=1;
 	      break;
 	    case 0x11:
@@ -939,8 +939,9 @@ int main(int argc, char *argv[])
 	      post=2;
 	      break;
 	    case 0xDD:
-	      instruction="**** ";
-	      post=2;
+	      // extended opcodes
+	      //instruction="**** ";
+	      post=1;
 	      break;
 	    case 0xDE:
 	      instruction="sbc a, *";
@@ -1111,6 +1112,24 @@ int main(int argc, char *argv[])
 		  instruction="** unknown **";
 		}
 
+	    }
+	  if( buffer==0xDD)
+	    {
+	      switch(b1)
+		{
+		case 0xE1:
+		  instruction="pop ix";
+		  break;
+		case 0x7E:
+		  instruction="ld a, (ix+*)";
+		  fread(&b1, sizeof(unsigned char), sizeof(b2), binary);
+
+		  post=2;
+		  break;
+		default:
+		  instruction="** unknown **";
+
+		}
 	    }
 	  if( buffer==0xED )
 	    {

@@ -154,11 +154,11 @@ int main(int argc, char *argv[])
 	      post=1;
 	      break;
 	    case 0x19:
-	      instruction="add dl, de";
+	      instruction="add hl, de";
 	      post=0;
 	      break;
 	    case 0x1A:
-	      instruction="ls a, (de)";
+	      instruction="ld a, (de)";
 	      post=0;
 	      break;
 	    case 0x1B:

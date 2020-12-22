@@ -761,9 +761,10 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c, unsigne
 	      instruction="invalid";
 	      valid=false;
 	      size=0;
+	      break;
 	    }
 
-	  
+	  break;
 	default:
 	  instruction="invalid";
 	  valid=false;
@@ -2917,7 +2918,12 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c )
 	case 0x4867:
 	  instruction += string("(ZooDefault)");
 	  break;
+	default:
+	  instruction=string("invalid");
+	  valid=false;
+	  size=0;
 
+	  break;
 
 
 	}
@@ -3013,6 +3019,41 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c )
 	  instruction=string("ld h, (ix+") + dec2Hex(c) + ")";
 	  ticks=19;
 	  break;
+	case 0x70:
+	  instruction=string("ld (ix+") + dec2Hex(c) + "), b";
+	  ticks=19;
+	  break;
+	case 0x71:
+	  instruction=string("ld (ix+") + dec2Hex(c) + "), c";
+	  ticks=19;
+	  break;
+	case 0x72:
+	  instruction=string("ld (ix+") + dec2Hex(c) + "), d";
+	  ticks=19;
+	  break;
+	case 0x73:
+	  instruction=string("ld (ix+") + dec2Hex(c) + "), e";
+	  ticks=19;
+	  break;
+	case 0x74:
+	  instruction=string("ld (ix+") + dec2Hex(c) + "), h";
+	  ticks=19;
+	  break;
+	case 0x75:
+	  instruction=string("ld (ix+") + dec2Hex(c) + "), l";
+	  ticks=19;
+	  break;
+	case 0x77:
+	  instruction=string("ld (ix+") + dec2Hex(c) + "), a";
+	  ticks=19;
+	  break;
+
+	case 0x7E:
+	  instruction=string("ld a, (ix+") + dec2Hex(c) + ")";
+	  ticks=19;
+	  break;
+
+	  
 	case 0x86:
 	  instruction=string("add a, (ix+") + dec2Hex(c) + ")";
 	  ticks=19;
@@ -3036,7 +3077,7 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c )
 	  size=0;
 	}
       
-
+      break;
       
     case 0xE2:
       instruction=string("jp po, ") + dec2Hex(c*256+b);
@@ -3073,6 +3114,7 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c )
 			      
       valid=false;
       size=0;
+      break;
      
     }
 }
@@ -3195,11 +3237,160 @@ mneumonic::mneumonic( unsigned char a, unsigned char b )
 	case 0x39:
 	  instruction=string("add ix, sp"); ticks=15;
 	  break;
+	case 0x44:
+	  instruction=string("ld b, ixh"); ticks=8;
+	  break;
+	case 0x45:
+	  instruction=string("ld b, ixl"); ticks=8;
+	  break;
+	case 0x4C:
+	  instruction=string("ld c, ixh"); ticks=8;
+	  break;
+	case 0x4D:
+	  instruction=string("ld c, ixl"); ticks=8;
+	  break;
+
+
+	case 0x54:
+	  instruction=string("ld d, ixh"); ticks=8;
+	  break;
+	case 0x55:
+	  instruction=string("ld d, ixl"); ticks=8;
+	  break;
+	case 0x5C:
+	  instruction=string("ld e, ixh"); ticks=8;
+	  break;
+	case 0x5D:
+	  instruction=string("ld e, ixl"); ticks=8;
+	  break;
+
+	case 0x60:
+	  instruction=string("ld ixh, b"); ticks=8;
+	  break;
+	case 0x61:
+	  instruction=string("ld ixh, c"); ticks=8;
+	  break;
+	case 0x62:
+	  instruction=string("ld ixh, d"); ticks=8;
+	  break;
+	case 0x63:
+	  instruction=string("ld ixh, e"); ticks=8;
+	  break;
+	case 0x64:
+	  instruction=string("ld ixh, ixh"); ticks=8;
+	  break;
+	case 0x65:
+	  instruction=string("ld ixh, ixl"); ticks=8;
+	  break;
+	case 0x67:
+	  instruction=string("ld ixh, a"); ticks=8;
+	  break;
+	case 0x68:
+	  instruction=string("ld ixl, b"); ticks=8;
+	  break;
+	case 0x69:
+	  instruction=string("ld ixl, c"); ticks=8;
+	  break;
+	case 0x6A:
+	  instruction=string("ld ixl, d"); ticks=8;
+	  break;
+	case 0x6B:
+	  instruction=string("ld ixl, e"); ticks=8;
+	  break;
+	case 0x6C:
+	  instruction=string("ld ixl, ixh"); ticks=8;
+	  break;
+	case 0x6D:
+	  instruction=string("ld ixl, ixl"); ticks=8;
+	  break;
+	case 0x6F:
+	  instruction=string("ld ixl, a"); ticks=8;
+	  break;
+
+	case 0x7C:
+	  instruction=string("ld a, ixh"); ticks=8;
+	  break;
+	case 0x7D:
+	  instruction=string("ld a, ixl"); ticks=8;
+	  break;
+
+	case 0x84:
+	  instruction=string("add a, ixh"); ticks=8;
+	  break;
+	case 0x85:
+	  instruction=string("add a, ixl"); ticks=8;
+	  break;
+	case 0x8C:
+	  instruction=string("adc a, ixh"); ticks=8;
+	  break;
+	case 0x8D:
+	  instruction=string("adc a, ixl"); ticks=8;
+	  break;
+	  
+	case 0x94:
+	  instruction=string("sub a, ixh"); ticks=8;
+	  break;
+	case 0x95:
+	  instruction=string("sub a, ixl"); ticks=8;
+	  break;
+	case 0x9C:
+	  instruction=string("sbc a, ixh"); ticks=8;
+	  break;
+	case 0x9D:
+	  instruction=string("sbc a, ixl"); ticks=8;
+	  break;
+
+	case 0xA4:
+	  instruction=string("and ixh"); ticks=8;
+	  break;
+	case 0xA5:
+	  instruction=string("and ixl"); ticks=8;
+	  break;
+	case 0xAC:
+	  instruction=string("xor ixh"); ticks=8;
+	  break;
+	case 0xAD:
+	  instruction=string("xor ixl"); ticks=8;
+	  break;
+
+	  
+	case 0xB4:
+	  instruction=string("or ixh"); ticks=8;
+	  break;
+	case 0xB5:
+	  instruction=string("or ixl"); ticks=8;
+	  break;
+	case 0xBC:
+	  instruction=string("cp ixh"); ticks=8;
+	  break;
+	case 0xBD:
+	  instruction=string("cp ixl"); ticks=8;
+	  break;
+
+	case 0xE1:
+	  instruction=string("pop ix"); ticks=14;
+	  break;
+	case 0xE3:
+	  instruction=string("ex (sp), ix"); ticks=23;
+	  break;
+	case 0xE5:
+	  instruction=string("push ix"); ticks=15;
+	  break;
+	case 0xE9:
+	  instruction=string("jp (ix)"); ticks=8;
+	  break;
+
+	case 0xF9:
+	  instruction=string("ld sp, ix"); ticks=10;
+	  break;
+
+	  
 
 	default:
 	  valid=false;
 	  instruction=string("invalid");
 	  size=0;
+	  
 	}
       
       break;

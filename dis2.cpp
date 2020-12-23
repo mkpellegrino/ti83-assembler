@@ -177,9 +177,9 @@ ostream & operator << (ostream &out, const mneumonic &m)
     }
   for( int i=0; i<m.size; i++ )
     {
-      if( m.bytes[i] > '0' && m.bytes[o] < 'z' )
+      if( m.bytes[i] > '0' && m.bytes[i] < 'z' )
 	{
-	  out << (char) m.bytes[i];
+	  // out << (char) m.bytes[i];
 	}
     }
   // out << "| " << std::dec << m.ticks << std::hex << " |";

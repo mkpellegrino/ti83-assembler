@@ -5,6 +5,7 @@
 #include <string>
 using namespace std;
 
+bool code_only;
 
 int toTwosComp( int x )
 {
@@ -150,40 +151,57 @@ public:
   int getSize(){return size;};
   void setData( unsigned char a ){bytes[0]=a;size=1;instruction=string(".db ") + dec2Hex( a, 2 );valid=true;}
   void setAddress( int a ){ address = a; };
+  void setInstructionNumber( int a ){ instruction_number=a; };
+  int getInstructionNumber(){ return instruction_number; };
+  int getAddress(){ return address; };
+  
 
   friend ostream &operator << (ostream &out, const mneumonic &m); 
 
 private:
+  int instruction_number;
   int size;
   unsigned char bytes[4];
   string label;
   int address;
   int ticks;
+  int ticks2; // for conditions that have 2 tick counts
   string instruction;
   bool valid;
+  bool relative_jump;
+  bool absolute_jump;
 };
 
 
 ostream & operator << (ostream &out, const mneumonic &m) 
 {
-  out << std::hex << m.address << " ||";
-  for( int i=0; i<m.size; i++)
+  if( !code_only )
     {
-      out << " " << dec2Hex(m.bytes[i],2) << " |";
-    }
-  for( int i=(4-m.size); i>0; i-- )
-    {
-      out << " ---- |";
-    }
-  for( int i=0; i<m.size; i++ )
-    {
-      if( m.bytes[i] > '0' && m.bytes[i] < 'z' )
+      out << std::dec << m.instruction_number << " " << std::hex << m.address << " ||";
+      for( int i=0; i<m.size; i++)
 	{
-	  // out << (char) m.bytes[i];
+	  out << " " << dec2Hex(m.bytes[i],2) << " |";
 	}
+      for( int i=(4-m.size); i>0; i-- )
+	{
+	  out << " ---- |";
+	}
+      for( int i=0; i<m.size; i++ )
+	{
+	  if( m.bytes[i] > '0' && m.bytes[i] < 'z' )
+	    {
+	      // out << (char) m.bytes[i];
+	    }
+	}
+      out << "| ";
     }
   // out << "| " << std::dec << m.ticks << std::hex << " |";
-  out << "| " << m.instruction;
+  out << m.instruction;
+  if( m.relative_jump && !code_only )
+    {
+      out << "; [relative " << std::to_string(toTwosComp(m.bytes[1])) << "] --> ";
+      out << m.address + 2 + (toTwosComp(m.bytes[1]));
+    }
   out << endl;
   return out;
 }
@@ -210,6 +228,9 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c, unsigne
   size=4;
   valid=true;
   bytes[0]=a; bytes[1]=b; bytes[2]=c; bytes[3]=d;
+  relative_jump=false;
+  absolute_jump=false;
+
   switch(a)
     {
     case 0xDD:
@@ -1435,6 +1456,9 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c )
   size=3;
   valid=true;
   bytes[0]=a; bytes[1]=b; bytes[2]=c;
+  relative_jump=false;
+  absolute_jump=false;
+
   switch(a)
     {
 
@@ -3595,43 +3619,43 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c )
 	      
       break;
     case 0xC2:
-      instruction=string("jp nz, ")  + dec2Hex(c*256+b,4);
+      instruction=string("jp nz, ")  + dec2Hex(c*256+b,4); absolute_jump=true;
 	      
       break;
     case 0xC3:
-      instruction=string("jp ")  + dec2Hex(c*256+b,4);
+      instruction=string("jp ")  + dec2Hex(c*256+b,4);absolute_jump=true;
 	      
       break;
     case 0xC4:
-      instruction=string("call nz, ")  + dec2Hex(c*256+b,4);
+      instruction=string("call nz, ")  + dec2Hex(c*256+b,4); absolute_jump=true;
 	      
       break;
     case 0xCA:
-      instruction=string("jp z, ")  + dec2Hex(c*256+b,4);
+      instruction=string("jp z, ")  + dec2Hex(c*256+b,4);absolute_jump=true;
 	      
       break;
     case 0xCC:
-      instruction=string("call z, ")  + dec2Hex(c*256+b,4);
+      instruction=string("call z, ")  + dec2Hex(c*256+b,4);absolute_jump=true;
 	      
       break;
     case 0xCD:
-      instruction=string("call ")  + dec2Hex(c*256+b,4);
+      instruction=string("call ")  + dec2Hex(c*256+b,4);absolute_jump=true;
 	      
       break;
     case 0xD2:
-      instruction=string("jp nc, ")  + dec2Hex(c*256+b);
+      instruction=string("jp nc, ")  + dec2Hex(c*256+b);absolute_jump=true;
 	      
       break;
     case 0xD4:
-      instruction=string("call nc, ")  + dec2Hex(c*256+b);
+      instruction=string("call nc, ")  + dec2Hex(c*256+b);absolute_jump=true;
 	      
       break;
     case 0xDA:
-      instruction=string("jp c, ")  + dec2Hex(c*256+b);
+      instruction=string("jp c, ")  + dec2Hex(c*256+b);absolute_jump=true;
 	      
       break;
     case 0xDC:
-      instruction=string("call c, ") + dec2Hex(c*256+b);
+      instruction=string("call c, ") + dec2Hex(c*256+b);absolute_jump=true;
       break;
       // IX INSTRUCTIONS
     case 0xDD:
@@ -3765,35 +3789,35 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c )
       break;
       
     case 0xE2:
-      instruction=string("jp po, ") + dec2Hex(c*256+b);
+      instruction=string("jp po, ") + dec2Hex(c*256+b);absolute_jump=true;
       ticks=10;
       break;
     case 0xE4:
-      instruction=string("call po, ") + dec2Hex(c*256+b);
+      instruction=string("call po, ") + dec2Hex(c*256+b); absolute_jump=true;
       ticks=17;
       break;
     case 0xEA:
-      instruction=string("jp pe, ") + dec2Hex(c*256+b);
+      instruction=string("jp pe, ") + dec2Hex(c*256+b);absolute_jump=true;
       ticks=10;
       break;
     case 0xEC:
-      instruction=string("call pe, ") + dec2Hex(c*256+b);
+      instruction=string("call pe, ") + dec2Hex(c*256+b);absolute_jump=true;
       ticks=17;
       break;
     case 0xF2:
-      instruction=string("jp p, ") + dec2Hex(c*256+b);
+      instruction=string("jp p, ") + dec2Hex(c*256+b);absolute_jump=true;
       ticks=10;
       break;
     case 0xF4:
-      instruction=string("call p, ") + dec2Hex(c*256+b);
+      instruction=string("call p, ") + dec2Hex(c*256+b);absolute_jump=true;
       ticks=17;
       break;
     case 0xFA:
-      instruction=string("jp m, ") + dec2Hex(c*256+b);
+      instruction=string("jp m, ") + dec2Hex(c*256+b);absolute_jump=true;
       ticks=10;
       break;
     case 0xFC:
-      instruction=string("call m, ") + dec2Hex(c*256+b);
+      instruction=string("call m, ") + dec2Hex(c*256+b);absolute_jump=true;
       ticks=17;
       break;
 
@@ -3926,6 +3950,8 @@ mneumonic::mneumonic( unsigned char a, unsigned char b )
   size=2;
   valid=true;
   bytes[0]=a; bytes[1]=b;
+  relative_jump=false;
+  absolute_jump=false;
   switch(a)
     {
     case 0x06:
@@ -3936,37 +3962,37 @@ mneumonic::mneumonic( unsigned char a, unsigned char b )
       instruction=string("ld c, ") + dec2Hex(b); ticks=7;
       break;
     case 0x10:
-      instruction=string("djnz ") + dec2Hex(b) + "; (relative: " + std::to_string(toTwosComp(b)) + ")"; ticks=13;
+      instruction=string("djnz ") + dec2Hex(b); ticks=13; relative_jump=true;
       break;
     case 0x16:
       instruction=string("ld d, ") + dec2Hex(b); ticks=7;
       break;
     case 0x18:
-      instruction=string("jr ") + dec2Hex(b) + "; (relative: " + std::to_string(toTwosComp(b)) + ")"; ticks=12;
+      instruction=string("jr ") + dec2Hex(b); ticks=12; relative_jump=true;
       break;
     case 0x1E:
       instruction=string("ld e, ") + dec2Hex(b); ticks=7;
       break;
     case 0x20:
-      instruction=string("jr nc, ") + dec2Hex(b) + "; (relative: " + std::to_string(toTwosComp(b)) + ")"; ticks=12;
+      instruction=string("jr nc, ") + dec2Hex(b); ticks=12; relative_jump=true;
       break;
     case 0x26:
       instruction=string("ld h, ") + dec2Hex(b); ticks=7;
       break;
     case 0x28:
-      instruction=string("jr z, ") + dec2Hex(b) + "; (relative: " + std::to_string(toTwosComp(b)) + ")"; ticks=12; 
+      instruction=string("jr z, ") + dec2Hex(b); ticks=12; relative_jump=true;
       break;
     case 0x2E:
       instruction=string("ld l, ") + dec2Hex(b); ticks=7;
       break;
     case 0x30:
-      instruction=string("jr nc, ") + dec2Hex(b) + "; (relative: " + std::to_string(toTwosComp(b)) + ")"; ticks=12;
+      instruction=string("jr nc, ") + dec2Hex(b); ticks=12; relative_jump=true;
       break;
     case 0x36:
       instruction=string("ld (hl), ") + dec2Hex(b); ticks=10;
       break;
     case 0x38:
-      instruction=string("jr c, ") + dec2Hex(b) + "; (relative: " + std::to_string(toTwosComp(b)) + ")";  ticks=12;
+      instruction=string("jr c, ") + dec2Hex(b); ticks=12; relative_jump=true;
       break;
     case 0x3E:
       instruction=string("ld a, ") + dec2Hex(b); ticks=7;
@@ -4972,7 +4998,7 @@ mneumonic::mneumonic( unsigned char a, unsigned char b )
 	  instruction=string("push ix"); ticks=15;
 	  break;
 	case 0xE9:
-	  instruction=string("jp (ix)"); ticks=8;
+	  instruction=string("jp (ix)"); ticks=8; absolute_jump=true;
 	  break;
 
 
@@ -5305,7 +5331,7 @@ mneumonic::mneumonic( unsigned char a, unsigned char b )
 	  instruction=string("push iy"); ticks=15;
 	  break;
 	case 0xE9:
-	  instruction=string("jp (iy)"); ticks=8;
+	  instruction=string("jp (iy)"); ticks=8; absolute_jump=true;
 	  break;
 
 	case 0xF9:
@@ -5342,6 +5368,9 @@ mneumonic::mneumonic( unsigned char a )
 #ifdef DEBUG
   cerr << "created mneumonic( " << std::hex << (int)a << " );" << endl;
 #endif
+  relative_jump=false;
+  absolute_jump=false;
+
   ticks=0;
   size=1;
   valid=true;
@@ -6110,7 +6139,7 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0xE9:
       instruction = string("jp (hl)");
-      
+      absolute_jump=true;
       break;
     case 0xEB:
       instruction = string("ex de,hl");
@@ -6170,7 +6199,7 @@ mneumonic::mneumonic( unsigned char a )
   
 int main(int argc, char *argv[])
 {
-
+  code_only=false;
   int header_end=76;
   int checksum_size=2;
   
@@ -6179,7 +6208,7 @@ int main(int argc, char *argv[])
 
   if(argc==1)
     {
-      cout << "usage:" << endl << argv[0] << " filename.8xp" << endl;
+      cerr << "usage:" << endl << argv[0] << " filename.8xp" << endl;
       exit(-1);
     }
   if(argc==3)
@@ -6187,6 +6216,10 @@ int main(int argc, char *argv[])
       if( strcmp(argv[2],"--raw") == 0 )
 	{
 	  header_end=0;  checksum_size=0;
+	}
+      if( strcmp(argv[2],"--codeonly") == 0)
+	{
+	  code_only=true;
 	}
 
     }
@@ -6258,7 +6291,9 @@ int main(int argc, char *argv[])
 	  m = new mneumonic();
 	  m->setData( raw_code[i] );
 	}
-      
+
+      m->setInstructionNumber(i);
+
       m->setAddress( memory_location );
       memory_location += m->getSize();
       
@@ -6271,9 +6306,9 @@ int main(int argc, char *argv[])
 
 
     }
-  cout << endl;
+  //cout << endl;
 
-  cout << "SIZE: " << mneumonics.size() << endl;
+  //cout << "SIZE: " << mneumonics.size() << endl;
   
   for( int j = 0; j<mneumonics.size(); j++ )
     {

@@ -6,6 +6,10 @@
 using namespace std;
 
 bool code_only;
+string bold_on=string("\e[1m");
+string bold_off=string("\e[0m");
+
+
 
 int toTwosComp( int x )
 {
@@ -118,23 +122,40 @@ string dec2Hex( int x, int digits = 2)
   
   retVal="0x"+retVal;
 
+  if (retVal.length() == 4) retVal=string("@") + retVal;
   return retVal;
 }
 
 class label
 {
 public:
+  ~label(){};
   label(){address=0;name=string("");};
   label(int a, string n)
   {
     address=a;
     name=n;
+#ifdef DEBUG
+    cerr << "creating label named: " << name << "\t" << address << endl;
+#endif
   }
-  
+  int getAddress(){ return address; };
+  void setAddress( int a ){ address=a; };
+  string getName(){ return name; };
+  void setName( string s ){ name = s; };
+
+  friend ostream &operator << (ostream &out, const label &l); 
+
 private:
   int address;
   string name;
 };
+
+ostream & operator << (ostream &out, const label &l) 
+{
+  out << l.name << ":\t\t\t;" << l.address << endl;
+  return out;
+}
 
 class mneumonic
 {
@@ -148,21 +169,33 @@ public:
   void print();
   bool isValid(){return valid;};
   string getInstruction(){return instruction;};
+  void setInstruction( string i ){ instruction=i; };
   int getSize(){return size;};
-  void setData( unsigned char a ){bytes[0]=a;size=1;instruction=string(".db ") + dec2Hex( a, 2 );valid=true;}
+  void setData( unsigned char a ){bytes_only=true; bytes[0]=a;size=1;instruction=string(".db ") + dec2Hex( a, 2 );valid=true;}
   void setAddress( int a ){ address = a; };
   void setInstructionNumber( int a ){ instruction_number=a; };
   int getInstructionNumber(){ return instruction_number; };
   int getAddress(){ return address; };
   
+  unsigned char byte(int i){ return bytes[i]; };
+  
+  int getJumpToAddress(){ return jump_to_address; };
+  
+  bool processLabel();
+  bool processAddress();
+  void setJumpToName( string n ){ jump_to_name = n; };
+
+  bool bytesOnly(){ return bytes_only; };
+  void bytesOnly(bool b){ bytes_only=b; };
 
   friend ostream &operator << (ostream &out, const mneumonic &m); 
-
 private:
+  bool bytes_only;
+  
   int instruction_number;
   int size;
   unsigned char bytes[4];
-  string label;
+  // string label;
   int address;
   int ticks;
   int ticks2; // for conditions that have 2 tick counts
@@ -170,8 +203,65 @@ private:
   bool valid;
   bool relative_jump;
   bool absolute_jump;
+  bool absolute_load;
+  string jump_to_name;
+  int jump_to_address;
 };
 
+bool mneumonic::processAddress()
+{
+  bool retVal=false;
+  if( relative_jump )
+    {
+      // replace 0x00 in instruction with %label_name
+      std::size_t found = instruction.find(string("@0x"));
+      if ( (found!=std::string::npos) && (jump_to_name != "" ) )
+	{
+#ifdef DEBUG
+	  cout << "replacing a @0xHH (relative jump) [" << instruction << "] --> [";
+#endif
+	  instruction.replace(instruction.find(string("@0x")),5,string("%")+jump_to_name);
+#ifdef DEBUG
+	  cout << instruction << "]" << endl;
+#endif
+	  retVal=true;
+	}
+    }
+  else if ( absolute_jump || absolute_load )
+    {
+      // replace 0x0000 in instruction with &label_name
+      std::size_t found = instruction.find(string("0x"));
+      if ( (found!=std::string::npos) && (jump_to_name != "" ) )
+	{
+#ifdef DEBUG
+	  cout << "replacing a @0xHHHH (absolute load/jump) [" << instruction << "] --> [";
+#endif
+	  instruction.replace(instruction.find(string("0x")),6,string("&")+jump_to_name);
+#ifdef DEBUG
+	  cout << instruction << "]" << endl;
+#endif
+
+	  retVal=true;
+	}
+    }
+  return retVal;
+}
+
+bool mneumonic::processLabel()
+{
+  bool retVal=false;
+  if( relative_jump )
+    {
+      jump_to_address=(address + 2 + (toTwosComp(bytes[1])));
+      retVal=true;
+    }
+  else if( absolute_jump || absolute_load )
+    {
+      jump_to_address = 256*bytes[size-1]+bytes[size-2];
+      retVal=true;
+    }
+  return retVal;
+}
 
 ostream & operator << (ostream &out, const mneumonic &m) 
 {
@@ -184,23 +274,19 @@ ostream & operator << (ostream &out, const mneumonic &m)
 	}
       for( int i=(4-m.size); i>0; i-- )
 	{
-	  out << " ---- |";
-	}
-      for( int i=0; i<m.size; i++ )
-	{
-	  if( m.bytes[i] > '0' && m.bytes[i] < 'z' )
-	    {
-	      // out << (char) m.bytes[i];
-	    }
+	  out << " ----- |";
 	}
       out << "| ";
     }
-  // out << "| " << std::dec << m.ticks << std::hex << " |";
+  if( code_only ) out << "\t";
   out << m.instruction;
-  if( m.relative_jump && !code_only )
+  if( (m.absolute_jump || m.relative_jump || m.absolute_load) && !code_only )
     {
-      out << "; [relative " << std::to_string(toTwosComp(m.bytes[1])) << "] --> ";
-      out << m.address + 2 + (toTwosComp(m.bytes[1]));
+      if( m.relative_jump ) out << "; [relative " << std::to_string(toTwosComp(m.bytes[1])) << "]";
+      if( m.absolute_jump ) out << "; [absolute]";
+      //out << ";] --> ";
+      //out << m.address + 2 + (toTwosComp(m.bytes[1]));
+      //out << m.jump_to_address;
     }
   out << endl;
   return out;
@@ -212,10 +298,14 @@ mneumonic::mneumonic()
 #ifdef DEBUG
   cerr << "creating an empty data byte" << endl;
 #endif
+  jump_to_address=0;
+  
+  jump_to_name=string("");
   ticks=0;
   size=0;
   instruction=string("");
   valid=false;
+  bytes_only=false;
 }
 
 // 4 BYTE OPCODES
@@ -224,12 +314,16 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c, unsigne
 #ifdef DEBUG
   cerr << "created mneumonic( " << (int)a << " , " << (int)b << " , " << (int)c << " , " << (int)d << " );" << endl;
 #endif
+  jump_to_address=0;
+  jump_to_name=string("");
+  bytes_only=false;
   ticks=0;
   size=4;
   valid=true;
   bytes[0]=a; bytes[1]=b; bytes[2]=c; bytes[3]=d;
   relative_jump=false;
   absolute_jump=false;
+  absolute_load=false;
 
   switch(a)
     {
@@ -239,14 +333,17 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c, unsigne
 	case 0x21:
 	  instruction=string("ld ix, ") + dec2Hex(d*256+c,4);
 	  ticks=14;
+	  //absolute_load=true;
 	  break;
 	case 0x22:
 	  instruction=string("ld (")+ dec2Hex(d*256+c,4) + "), ix";
 	  ticks=20;
+	  absolute_load=true;
 	  break;
 	case 0x2A:
 	  instruction=string("ld ix, (") + dec2Hex(d*256+c,4) + ")";
 	  ticks=20;
+	  absolute_load=true;
 	  break;
 	case 0x36:
 	  instruction=string("ld (ix+") + dec2Hex(c,2) + "), " + dec2Hex(d,2);
@@ -820,34 +917,43 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c, unsigne
 	case 0x43:
 	  instruction=string("ld (") + dec2Hex(d*256+c,4) + "), bc";
 	  ticks=20;
+	  absolute_load=true;
+	  
 	  break;
 	case 0x4B:
 	  instruction=string("ld bc, (") + dec2Hex(d*256+c,4) + ")";
 	  ticks=20;
+	  absolute_load=true;
 	  break;
 	case 0x53:
 	  instruction=string("ld (") + dec2Hex(d*256+c,4) + "), de";
 	  ticks=20;
+	  absolute_load=true;
 	  break;
 	case 0x5B:
 	  instruction=string("ld de, (") + dec2Hex(d*256+c,4) + ")";
 	  ticks=20;
+	  absolute_load=true;
 	  break;
 	case 0x63:
 	  instruction=string("ld (") + dec2Hex(d*256+c,4) + "), hl";
 	  ticks=20;
+	  absolute_load=true;
 	  break;
-	case 0x6B:
+	  case 0x6B:
 	  instruction=string("ld hl, (") + dec2Hex(d*256+c,4) + ")";
 	  ticks=20;
+	  absolute_load=true;
 	  break;
 	case 0x73:
 	  instruction=string("ld (") + dec2Hex(d*256+c,4) + "), sp";
 	  ticks=20;
+	  absolute_load=true;
 	  break;
 	case 0x7B:
 	  instruction=string("ld sp, (") + dec2Hex(d*256+c,4) + ")";
 	  ticks=20;
+	  absolute_load=true;
 	  break;
 	default:
 	  instruction="invalid";
@@ -863,17 +969,22 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c, unsigne
 	case 0x21:
 	  instruction=string("ld iy, ") + dec2Hex(d*256+c,4);
 	  ticks=14;
+	  //absolute_load=true;
+
 	  break;
 	case 0x22:
 	  instruction=string("ld (")+ dec2Hex(d*256+c,4) + "), iy";
 	  ticks=20;
+	  absolute_load=true;
 	  break;
 	case 0x2A:
 	  instruction=string("ld iy, (") + dec2Hex(d*256+c,4) + ")";
 	  ticks=20;
+	  absolute_load=true;
 	  break;
 	case 0x36:
 	  instruction=string("ld (iy+") + dec2Hex(c,2) + "), " + dec2Hex(d,2);
+	  ticks=19;
 	  break;
 	case 0xCB:
 	  switch(d)
@@ -1452,13 +1563,16 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c )
 #ifdef DEBUG
   cerr << "created mneumonic( " << (int)a << " , " << (int)b << " , " << (int)c << " );" << endl;
 #endif
+  jump_to_address=0;
+  jump_to_name=string("");
+  bytes_only=false;
   ticks=0;
   size=3;
   valid=true;
   bytes[0]=a; bytes[1]=b; bytes[2]=c;
   relative_jump=false;
   absolute_jump=false;
-
+  absolute_load=false;
   switch(a)
     {
 
@@ -3589,42 +3703,50 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c )
       // NON SYSTEM CALLS
     case 0x01:
       instruction=string("ld bc, ") + dec2Hex(c*256+b,4); 
-	      
+      absolute_load=true;
+      ticks=10;	      
       break;
     case 0x11:
       instruction=string("ld de, ")  + dec2Hex(c*256+b,4);
-	      
+      absolute_load=true;
+      ticks=10;
       break;
     case 0x21:
       instruction=string("ld hl, ")  + dec2Hex(c*256+b,4);
-	      
+      absolute_load=true;
+      ticks=10;
       break;
     case 0x22:
       instruction=string("ld (")+ dec2Hex(c*256+b,4) + "), hl";
-      
+      absolute_load=true;
+      ticks=16;
     case 0x2A:
       instruction=string("ld hl, (")  + dec2Hex(c*256+b,4) + ")";
-      
+      absolute_load=true;
+      ticks=16;
       break;
     case 0x31:
-      instruction=string("ld sp, ") + dec2Hex(c*256+b,4) + ")";
-      
+      instruction=string("ld sp, ") + dec2Hex(c*256+b,4);
+      ticks=10;
       break;
     case 0x32:
       instruction=string("ld (") + dec2Hex(c*256+b,4) + "), a";
-			 
+      ticks=13;
+      absolute_load=true;
+
       break;
     case 0x3A:
       instruction=string("ld a, (") + dec2Hex(c*256+b,4) + ")";
-	      
+      absolute_load=true;
+      ticks=13;
       break;
     case 0xC2:
       instruction=string("jp nz, ")  + dec2Hex(c*256+b,4); absolute_jump=true;
-	      
+      ticks=10;	      
       break;
     case 0xC3:
       instruction=string("jp ")  + dec2Hex(c*256+b,4);absolute_jump=true;
-	      
+      ticks=10;
       break;
     case 0xC4:
       instruction=string("call nz, ")  + dec2Hex(c*256+b,4); absolute_jump=true;
@@ -3946,12 +4068,16 @@ mneumonic::mneumonic( unsigned char a, unsigned char b )
 #ifdef DEBUG
   cerr << "created mneumonic( " << (int)a << " , " << (int)b << " );" << endl;
 #endif
+  jump_to_address=0;
+  jump_to_name=string("");
+  bytes_only=false;
   ticks=0;
   size=2;
   valid=true;
   bytes[0]=a; bytes[1]=b;
   relative_jump=false;
   absolute_jump=false;
+  absolute_load=false;
   switch(a)
     {
     case 0x06:
@@ -5368,9 +5494,13 @@ mneumonic::mneumonic( unsigned char a )
 #ifdef DEBUG
   cerr << "created mneumonic( " << std::hex << (int)a << " );" << endl;
 #endif
+  bytes_only=false;
+  jump_to_address=0;
+  jump_to_name=string("");
+
   relative_jump=false;
   absolute_jump=false;
-
+  absolute_load=false;
   ticks=0;
   size=1;
   valid=true;
@@ -6205,7 +6335,8 @@ int main(int argc, char *argv[])
   
   vector <mneumonic*> mneumonics;
   vector <unsigned char> raw_code;
-
+  vector <label*> labels;
+  
   if(argc==1)
     {
       cerr << "usage:" << endl << argv[0] << " filename.8xp" << endl;
@@ -6217,7 +6348,7 @@ int main(int argc, char *argv[])
 	{
 	  header_end=0;  checksum_size=0;
 	}
-      if( strcmp(argv[2],"--codeonly") == 0)
+      else if( strcmp(argv[2],"--codeonly") == 0)
 	{
 	  code_only=true;
 	}
@@ -6244,8 +6375,9 @@ int main(int argc, char *argv[])
 
   // parse them and create a vector of mneumonics
   // printout entire program as values
+#ifdef DEBUG
   cerr << "# of bytes read: " << std::dec << number_of_bytes << endl;
-
+#endif
   int memory_location = memory_start;
   for( int i=header_end; i<(number_of_bytes-checksum_size); i++ )
     {
@@ -6306,20 +6438,213 @@ int main(int argc, char *argv[])
 
 
     }
-  //cout << endl;
 
-  //cout << "SIZE: " << mneumonics.size() << endl;
+
+  // ===========================================================
+  int ln=0;
+
+  // Create a vector of all the addresses the mneumonics will jump to
+  // or load to/from
   
   for( int j = 0; j<mneumonics.size(); j++ )
     {
-      //cout << "#" << j << ": ";
-      cout << *mneumonics[j];
-      // mneumonics[j]->print();
+      // this returns true IF
+      //    the mneumonic is a relative jump
+      //    the mneumonic is an absolute jump
+      //    the mneumonic is an absolute load
+      //    processLabel() will also calculate and set the jump_to_address      
+      if( mneumonics[j]->processLabel() )
+	{
+	  
+	  label * l = new label( mneumonics[j]->getJumpToAddress(), string("label_")+std::to_string(ln++) );	  
+	  labels.push_back(l);
+	}
     }
+
+  // remove any labels that are "beyond the infinite"
+  int first_address = mneumonics[0]->getAddress();
+  int last_address =  mneumonics[mneumonics.size()-1]->getAddress();
+
+  
+  for( int j=0; j<labels.size(); j++ )
+    {
+      if( (labels[j]->getAddress() > last_address) || (labels[j]->getAddress() < first_address) )
+	{
+#ifdef DEBUG
+	  cerr << "Removing Label: " << *labels[j] << " [out of range]" << endl;
+#endif
+	  labels[j]->setName(string("out of range"));
+	  labels[j]->setAddress(-1);
+	  
+	}
+
+    }
+  
+
+  // look at each mneumonic in the vector
+  // if the jump_to_address is not zero, then
+  //    get the instruction as a string
+  //    change the instruction to use a label
+  //    instead of 0xHH (for relative) or
+  //    0xHHHH (for absolute)
+  for( int j = 0; j<mneumonics.size(); j++ )
+    {
+      if( mneumonics[j]->getJumpToAddress() > 0 )
+	{
+	  for( int k=0; k<labels.size(); k++ )
+	    {
+	      if( labels[k]->getAddress() == mneumonics[j]->getJumpToAddress() )
+		{
+		  mneumonics[j]->setJumpToName( labels[k]->getName() );
+		  mneumonics[j]->processAddress();
+		  k=labels.size()+1;
+		}
+	    }
+	}
+    }
+
+  
+  #ifdef DEBUG
+  // display all the labels
+  for( int j = 0; j<labels.size(); j++ )
+    {
+      cout << labels[j]->getAddress() << " : " << labels[j]->getName() << endl;
+    }
+  #endif
+
+  // again, iterate through the mneumonics
+  // if a label falls in the middle of the opcodes
+  // then set that mneumonic to be bytes only
+  // change it in a different loop
+  for( int j = 0; j<mneumonics.size(); j++ )
+    {
+     for( int k=0; k<labels.size(); k++ )
+	{
+	  int tmp_n = mneumonics[j]->getInstructionNumber();	  
+
+	  unsigned char a=mneumonics[j]->byte(0);
+	  unsigned char b=mneumonics[j]->byte(1);
+	  unsigned char c=mneumonics[j]->byte(2);
+	  unsigned char d=mneumonics[j]->byte(3);
+
+	  int mn_start = mneumonics[j]->getAddress();
+	  int mn_end = mneumonics[j]->getAddress() + mneumonics[j]->getSize() - 1;
+	  int lb_address = labels[k]->getAddress();
+
+	  int mn_size= mneumonics[j]->getSize();
+	  int s=mn_size;
+
+	  if( (lb_address > mn_start) && (lb_address <= mn_end) &&  !mneumonics[j]->bytesOnly() )
+	    {
+	      mneumonics[j]->bytesOnly(true);
+	      mneumonics.erase(mneumonics.begin() + j );
+	      
+	      if( s > 0 )
+		{
+		  mneumonic * m = new mneumonic();
+		  m->setData(a);
+		  m->setAddress(mn_start++);
+		  m->bytesOnly(true);
+		  if ( labels[k]->getAddress() == tmp_n ) m->setJumpToName( labels[k]->getName() );
+		  m->setInstructionNumber(tmp_n++);
+		  mneumonics.insert( mneumonics.begin()+j, m );
+		  //		  if( s == 1 ) cout << *labels[k];
+		 
+		}
+	      if( s > 1 )
+		{
+		  //if( labels[k]->getAddress()==mn_start + 1) cout << *labels[k];
+		  mneumonic * m = new mneumonic();
+		  m->setData(b);
+		  m->setAddress(mn_start++);
+		  m->bytesOnly(true);
+		  
+		  if ( labels[k]->getAddress() == tmp_n ) m->setJumpToName( labels[k]->getName() );
+		  m->setInstructionNumber(tmp_n++);
+
+		  mneumonics.insert( mneumonics.begin()+j+1, m );
+		  
+		  //if( s == 2 ) cout << *labels[k];
+		}
+	      if( s > 2 )
+		{
+		  //if( labels[k]->getAddress()==mn_start + 2) cout << *labels[k];
+
+		  mneumonic * m = new mneumonic();
+		  m->setData(c);
+		  m->setAddress(mn_start++);
+		  m->bytesOnly(true);
+
+		  if ( labels[k]->getAddress() == tmp_n ) m->setJumpToName( labels[k]->getName() );
+		  m->setInstructionNumber(tmp_n++);
+
+		  mneumonics.insert( mneumonics.begin()+j+2, m );
+		  //if( s == 3 ) cout << *labels[k];
+		}
+	      if( s > 3 )
+		{
+		  //if( labels[k]->getAddress()==mn_start + 3) cout << *labels[k];
+
+		  mneumonic * m = new mneumonic();
+		  m->setData(d);
+		  m->setAddress(mn_start++);
+		  m->bytesOnly(true);
+		  if ( labels[k]->getAddress() == tmp_n ) m->setJumpToName( labels[k]->getName() );
+		  m->setInstructionNumber(tmp_n++);
+		  mneumonics.insert( mneumonics.begin()+j+3, m );
+		  //if( s == 4 ) cout << *labels[k];
+
+		}
+
+	      
+	    }
+	  
+	}
+    }
+  
+  // print out the assembly
+  for( int j = 0; j<mneumonics.size(); j++ )
+    {
+      //cout << "mn_start: " <<  mneumonics[j]->getAddress()  << "\t\tmn_end: " << mneumonics[j]->getAddress() + mneumonics[j]->getSize() -1 << endl;
+      //cout << *mneumonics[j] << endl;
+      for( int k=0; k<labels.size(); k++ )
+	{
+	  unsigned char a=mneumonics[j]->byte(0);
+	  unsigned char b=mneumonics[j]->byte(1);
+	  unsigned char c=mneumonics[j]->byte(2);
+	  unsigned char d=mneumonics[j]->byte(3);
+	  
+	  int tmp_n = mneumonics[j]->getInstructionNumber();	  
+	  int mn_start = mneumonics[j]->getAddress();
+	  int mn_end = mneumonics[j]->getAddress() + mneumonics[j]->getSize() - 1;
+	  int mn_size= mneumonics[j]->getSize();
+	  int s=mn_size;
+
+	 
+	  //cout << "mn_start: " << mn_start << "\t\tmn_end: " << mn_end << "\t\tlabel: ";
+	  //if(  (labels[k]->getAddress()>mn_start) && (labels[k]->getAddress()<mn_end)) cout << bold_on;
+	  //cout << labels[k]->getAddress() << bold_off << "\t\tname: " << labels[k]->getName() << endl;
+	  
+	  if( labels[k]->getAddress()==mn_start )
+	    {
+	      // perfect hit
+	      //cout << ";;;\t\t\t\t\t*(*)* " << endl;
+	      cout << *labels[k];
+	      mneumonics[j]->setJumpToName( labels[k]->getName() );
+	      k=labels.size()+1;
+	    }
+	}
+      cout << *mneumonics[j];
+    }
+
+  for( int j = 0; j<labels.size(); j++ )
+    {
+      delete labels[j];
+    }
+  
   
   return 0;
 }
-// if( just_asm ) cout << "Size: " << lb+16*hb << endl << "Sum: " << dec << cs << endl << "Checksum: "  << hex <<  (cs & 0xFF00)/0xFF  <<  " " <<   (cs & 0xFF)  <<  endl;
 
 
 /* 
@@ -6356,5 +6681,3 @@ int main(int argc, char *argv[])
 //http://www.ticalc.org/archives/files/fileinfo/247/24750.html does a pretty good job detail this all. 
 
 
-
-// 2A 2A 54 49 38 33 46 2A 1A A 0 28 43 29 32 30 32 30 20 6D 20 70 65 6C 6C 65 67 72 69 6E 6F 20 6D 6B 70 65 6C 6C 65 67 2E 66 72 65 73 68 65 6C 6C 2E 6F 72 67 7E 2 D 0 6D 2 6 44 49 53 54 41 4E 43 45 0 0 2 FF 6B 2 BB 6D 21 29 9E 22 3 9E 21 5 9E 6 4 E5 2A 3 9E E5 EF A 45 E1 23 23 23 23 22 3 9E E1 CD 39 9E 54 5D E5 21 69 9F EF 83 41 E1 11 9 0 19 10 DC 21 20 9E E7 21 E 9E EF 80 41 EF 6F 40 EF 81 40 11 20 9E EF 83 41 21 17 9E E7 21 5 9E EF 80 41 EF 6F 40 EF 81 40 21 20 9E EF 80 41 F7 EF 9C 40 EF BF 4A 3E A EF 99 49 21 8E 84 EF A 45 C9 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 58 31 3E 0 59 31 3E 0 58 32 3E 0 59 32 3E 0 F5 C5 D5 E5 EF C4 45 21 F2 9F 22 F0 9F 1 0 A 36 0 23 10 FB 21 EF 9F 36 0 21 F2 9F 22 F0 9F 3A EF 9F FE A D2 E 9F EF 18 40 FE 0 28 F9 32 FD 9F FE 9 CA EC 9F FE 38 CA A4 9F FE 2 CA A4 9F FE 11 CA D2 9F FE B CA D2 9F FE 21 CA E6 9F FE 22 CA E6 9F FE 1A CA E6 9F FE 12 CA E6 9F FE 23 CA E6 9F FE 1B CA E6 9F FE 13 CA E6 9F FE 24 CA E6 9F FE 1C CA E6 9F FE 14 CA E6 9F FE 19 CA E6 9F 18 A4 F5 E5 3E 19 21 B8 9E 2B 77 E1 F1 C9 F5 E5 AF 0 21 B8 9E 2B 77 E1 F1 C9 F5 E5 3E B 21 81 9E 2B 77 3E 11 21 7C 9E 2B 77 E1 F1 C9 F5 E5 3E 0 21 81 9E 2B 77 3E 0 21 7C 9E 2B 77 E1 F1 C9 33 36 39 B0 FF FF FF 3A 32 35 38 FF FF FF FF 30 31 34 37 3A EF 9F FE 0 28 43 21 60 9F E7 D7 38 3 EF 51 43 3A EF 9F 26 0 6F EF 30 43 13 13 21 F2 9F 3A EF 9F 6 0 4F ED B0 21 60 9F 11 78 84 1 4 0 ED B0 EF 9B 4A 11 69 9F EF 83 41 21 60 9F E7 D7 EF 51 43 21 69 9F E7 EF 2E 45 EF BE 45 E1 D1 C1 F1 C9 3 5E 5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 F5 C5 E5 3A FD 9F E 12 91 4F 6 0 21 FB 9E 9 7E 2A F0 9F 77 FE B0 38 4 3E 2D 18 6 FE 3A 38 2 3E 2E EF 4 45 21 F0 9F 34 21 EF 9F 34 E1 C1 F1 C9 3A EF 9F FE 0 CA 59 9E 2A F0 9F 2B 36 0 22 F0 9F 3A EF 9F 3D 32 EF 9F 2A 4C 84 2B 22 4C 84 3E 20 EF 4 45 2A 4C 84 2B 22 4C 84 C3 59 9E AF 21 EF 9F 46 B8 DA 59 9E 3E 15 32 FD 9F CD 72 9F C3 59 9E CD 72 9F C3 59 9E C3 E 9F 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2D 13 

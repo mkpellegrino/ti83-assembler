@@ -5,11 +5,14 @@
 #include <string>
 using namespace std;
 
-bool code_only;
 string bold_on=string("\e[1m");
 string bold_off=string("\e[0m");
 
-
+bool code_only;
+bool show_instruction_number;
+bool show_address;
+bool show_opcodes;
+bool show_ticks;
 
 int toTwosComp( int x )
 {
@@ -265,21 +268,30 @@ bool mneumonic::processLabel()
 
 ostream & operator << (ostream &out, const mneumonic &m) 
 {
+  out << "\t";
   if( !code_only )
     {
-      out << std::dec << m.instruction_number << " " << std::hex << m.address << " ||";
-      for( int i=0; i<m.size; i++)
+      if( show_instruction_number ) out << std::dec << m.instruction_number << ": ";
+      if( show_address ) out << std::hex << m.address << " | ";
+      if( show_opcodes )
 	{
-	  out << " " << dec2Hex(m.bytes[i],2) << " |";
+	  //out << "| ";
+	  for( int i=0; i<m.size; i++)
+	    {
+	      out << std::hex << std::setfill('0') << std::setw(2) << (int)m.bytes[i] << " | ";
+	    }
+	  for( int i=(4-m.size); i>0; i-- )
+	    {
+	      out << "-- | ";
+	    }
 	}
-      for( int i=(4-m.size); i>0; i-- )
-	{
-	  out << " ----- |";
-	}
-      out << "| ";
+      if( show_ticks ) out << "(" << std::dec << std::setw(2) << m.ticks << std::hex << ") | ";
     }
+  
   if( code_only ) out << "\t";
+
   out << m.instruction;
+
   if( (m.absolute_jump || m.relative_jump || m.absolute_load) && !code_only )
     {
       if( m.relative_jump ) out << "; [relative " << std::to_string(toTwosComp(m.bytes[1])) << "]";
@@ -3750,19 +3762,20 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c )
       break;
     case 0xC4:
       instruction=string("call nz, ")  + dec2Hex(c*256+b,4); absolute_jump=true;
-	      
+      ticks=17;
+      ticks=10;
       break;
     case 0xCA:
       instruction=string("jp z, ")  + dec2Hex(c*256+b,4);absolute_jump=true;
-	      
+      ticks=10;
       break;
     case 0xCC:
       instruction=string("call z, ")  + dec2Hex(c*256+b,4);absolute_jump=true;
-	      
+      ticks=17; ticks2=10;
       break;
     case 0xCD:
       instruction=string("call ")  + dec2Hex(c*256+b,4);absolute_jump=true;
-	      
+      ticks=17;
       break;
     case 0xD2:
       instruction=string("jp nc, ")  + dec2Hex(c*256+b);absolute_jump=true;
@@ -4945,7 +4958,7 @@ mneumonic::mneumonic( unsigned char a, unsigned char b )
       instruction=string("out (") + dec2Hex(b) + "), a";
       break;
     case 0xD6:
-      instruction=string("sub a, ") + dec2Hex(b);
+      instruction=string("sub ") + dec2Hex(b) + "; sub a, *";
       break;
     case 0xDB:
       instruction=string("in a, (") + dec2Hex(b) + ")";
@@ -5075,10 +5088,10 @@ mneumonic::mneumonic( unsigned char a, unsigned char b )
 	  break;
 	  
 	case 0x94:
-	  instruction=string("sub a, ixh"); ticks=8;
+	  instruction=string("sub ixh"); ticks=8;
 	  break;
 	case 0x95:
-	  instruction=string("sub a, ixl"); ticks=8;
+	  instruction=string("sub ixl"); ticks=8;
 	  break;
 	case 0x9C:
 	  instruction=string("sbc a, ixh"); ticks=8;
@@ -5408,10 +5421,10 @@ mneumonic::mneumonic( unsigned char a, unsigned char b )
 	  break;
 	  
 	case 0x94:
-	  instruction=string("sub a, iyh"); ticks=8;
+	  instruction=string("sub iyh"); ticks=8;
 	  break;
 	case 0x95:
-	  instruction=string("sub a, iyl"); ticks=8;
+	  instruction=string("sub iyl"); ticks=8;
 	  break;
 	case 0x9C:
 	  instruction=string("sbc a, iyh"); ticks=8;
@@ -5873,22 +5886,26 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0x70:
       instruction = string("ld (hl), b");
-      
+      ticks=7;
       break;
     case 0x71:
       instruction = string("ld (hl), c");
+      ticks=7;
       
       break;
     case 0x72:
       instruction = string("ld (hl), d");
+      ticks=7;
       
       break;
     case 0x73:
       instruction = string("ld (hl), e");
+      ticks=7;
       
       break;
     case 0x74:
       instruction = string("ld (hl), h");
+      ticks=7;
       
       break;
     case 0x75:
@@ -5901,38 +5918,46 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0x77:
       instruction = string("ld (hl), a");
+      ticks=7;
       
       break;
     case 0x78:
       instruction = string("ld a, b");
-      
+      ticks=4;
       break;
     case 0x79:
       instruction = string("ld a, c");
+      ticks=4;
       
       break;
     case 0x7A:
       instruction = string("ld a, d");
+      ticks=4;
       
       break;
     case 0x7B:
       instruction = string("ld a, e");
+      ticks=4;
       
       break;
     case 0x7C:
       instruction = string("ld a, h");
+      ticks=4;
       
       break;
     case 0x7D:
       instruction = string("ld a, l");
+      ticks=4;
       
       break;
     case 0x7E:
       instruction = string("ld a, (hl)");
-      
+      ticks=7;
+
       break;
     case 0x7F:
       instruction = string("ld a, a");
+      ticks=4;
       
       break;
     case 0x80:
@@ -6000,35 +6025,35 @@ mneumonic::mneumonic( unsigned char a )
       
       break;
     case 0x90:
-      instruction = string("sub a, b");
+      instruction = string("sub b");
       
       break;
     case 0x91:
-      instruction = string("sub a, c");
+      instruction = string("sub c");
       
       break;
     case 0x92:
-      instruction = string("sub a, d");
+      instruction = string("sub d");
       
       break;
     case 0x93:
-      instruction = string("sub a, e");
+      instruction = string("sub e");
       
       break;
     case 0x94:
-      instruction = string("sub a, h");
+      instruction = string("sub h");
       
       break;
     case 0x95:
-      instruction = string("sub a, l");
+      instruction = string("sub l");
       
       break;
     case 0x96:
-      instruction = string("sub a, (hl)");
+      instruction = string("sub (hl)");
       
       break;
     case 0x97:
-      instruction = string("sub a, a");
+      instruction = string("sub a");
       
       break;
     case 0x98:
@@ -6197,10 +6222,11 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0xC1:
       instruction = string("pop bc");
-      
+      ticks=10;
+
       break;
     case 0xC5:
-      instruction = string("push bc");
+      instruction = string("push bc"); ticks=11;
       
       break;
     case 0xC8:
@@ -6209,7 +6235,7 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0xC9:
       instruction = string("ret");
-      
+      ticks=10;
       break;
     case 0xCF:
       instruction = string("rst 0x08");
@@ -6221,11 +6247,12 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0xD1:
       instruction = string("pop de");
-      
+            ticks=10;
+
       break;
     case 0xD5:
       instruction = string("push de");
-      
+      ticks=11;      
       break;
     case 0xD7:
       instruction = string("rst 0x10");
@@ -6249,7 +6276,7 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0xE1:
       instruction = string("pop hl");
-      
+      ticks=10;
       break;
     case 0xE3:
       instruction = string("ex (sp), hl");
@@ -6257,7 +6284,7 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0xE5:
       instruction = string("push hl");
-      
+      ticks=11;
       break;
     case 0xE7:
       instruction = string("rst 0x20");
@@ -6281,7 +6308,8 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0xF1:
       instruction = string("pop af");
-      
+            ticks=10;
+
       break;
     case 0xF3:
       instruction = string("di");
@@ -6289,7 +6317,7 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0xF5:
       instruction = string("push af");
-      
+       ticks=11;
       break;
     case 0xF7:
       instruction = string("rst 0x30");
@@ -6329,8 +6357,22 @@ mneumonic::mneumonic( unsigned char a )
   
 int main(int argc, char *argv[])
 {
+
+  // arguments --show n|a|b|t --raw --codeonly --help
+  // n - instruction number
+  // a - instruction address
+  // b - bytes
+  // t - ticks
+
   code_only=false;
+
+  show_instruction_number = false;
+  show_address = false;
+  show_opcodes = false;
+  show_ticks = false;
+  
   int header_end=76;
+  
   int checksum_size=2;
   
   vector <mneumonic*> mneumonics;
@@ -6342,22 +6384,79 @@ int main(int argc, char *argv[])
       cerr << "usage:" << endl << argv[0] << " filename.8xp" << endl;
       exit(-1);
     }
-  if(argc==3)
-    {
-      if( strcmp(argv[2],"--raw") == 0 )
-	{
-	  header_end=0;  checksum_size=0;
-	}
-      else if( strcmp(argv[2],"--codeonly") == 0)
-	{
-	  code_only=true;
-	}
-
-    }
+  bool error_condition=false;
   
   FILE *binary = fopen(argv[1], "rb");
-  unsigned char buffer;
+  if( binary == 0 )
+    {
+      cerr << "error: " << argv[1] << " not found" << endl;
+      error_condition=true;
+      exit(-1);
+    }
 
+  // process arguments
+  for( int i=1; i<argc; i++ )
+    {
+      string a=string(argv[i]);
+#ifdef DEBUG
+      cerr << "commabnd line arg: " << i << " " << a << endl;
+#endif
+      if( a == "--codeonly" ) code_only = true;
+      if( a == "--tickcount" )
+	{
+	  string b=string(argv[i+1]);
+	  string c=string(argv[i+2]);
+	  i+=2;
+	  // convert b and c to integers
+	  // process the file
+	  // at the end - count up the ticks
+	  // from the given start address
+	  // to the given ending address
+	}
+      if( a == "--raw" ){ header_end=0; checksum_size=0; }
+      if( a == "--show" )
+	{
+	  string b = string(argv[i+1]);
+	  for( int j=0; j<b.length(); j++ )
+	    {
+	      switch(b[j])
+		{
+		case 'n':
+		  show_instruction_number=true;
+		  break;
+		case 'a':
+		  show_address=true;
+		  break;
+		case 'b':
+		  show_opcodes=true;
+		  break;
+		case 't':
+		  show_ticks=true;
+		  break;
+		default:
+		  cerr << "error: unknown --show option: " << b[j] << endl;
+		  error_condition=true;
+		}
+	    }
+	  i++;
+	}
+      if( a == "--help" )
+	{
+	  cerr << "usage: " << endl << argv[0] << "filename.8xp [--codeonly|--raw] [--show n|a|b|t] --analyze start end" << endl << endl;
+	  cerr << "--codeonly\tshow only assembler with labels" << endl;
+	  cerr << "--raw\t\tdisregard TI header and checksum info" << endl;
+	  cerr << "--tickcount 0xSTART 0xEND **not yet implemented**" << endl;
+	  cerr << "--show n|a|b|t" << endl;
+	  cerr << "\tn: show instruction number in vector" << endl;
+	  cerr << "\ta: show instruction address on TI8x" << endl;
+	  cerr << "\tb: show opcodes" << endl;
+	  cerr << "\tt: show the clock ticks for each instruction" << endl;
+	  
+	}
+    }
+
+  unsigned char buffer;
+  
   cout << hex << uppercase;
   
   int number_of_bytes=0;

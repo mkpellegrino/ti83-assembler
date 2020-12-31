@@ -14,6 +14,78 @@ bool show_address;
 bool show_opcodes;
 bool show_ticks;
 
+int hexToInt( string h )
+{
+  int retVal = 0;
+  int exponent=0;
+  int l=h.length()-1;
+  for( int i = l; i >=0; i-- )
+    {
+      switch(h[i])
+	{
+	  //case '0':
+	  //retVal+= 0*pow(16,exponent);
+	  //break;
+	case '1':
+	  retVal+= pow(16,exponent);
+	  break;
+	case '2':
+	  retVal+= 2*pow(16,exponent);
+	  break;
+	case '3':
+	  retVal+= 3*pow(16,exponent);
+	  break;
+	case '4':
+	  retVal+= 4*pow(16,exponent);
+	  break;
+	case '5':
+	  retVal+= 5*pow(16,exponent);
+	  break;
+	case '6':
+	  retVal+= 6*pow(16,exponent);
+	  break;
+	case '7':
+	  retVal+= 7*pow(16,exponent);
+	  break;
+	case '8':
+	  retVal+= 8*pow(16,exponent);
+	  break;
+	case '9':
+	  retVal+= 9*pow(16,exponent);
+	  break;
+	case 'A':
+	  retVal+= 10*pow(16,exponent);
+	  break;
+	case 'B':
+	  retVal+= 11*pow(16,exponent);
+	  break;
+	case 'C':
+	  retVal+= 12*pow(16,exponent);
+	  break;
+	case 'D':
+	  retVal+= 13*pow(16,exponent);
+	  break;
+	case 'E':
+	  retVal+= 14*pow(16,exponent);
+	  break;
+	case 'F':
+	  retVal+= 15*pow(16,exponent);
+	  //break;
+	  //case 'x':
+	  //retVal+=0;
+	  
+	  //default:
+	}
+      exponent++;
+
+
+    }
+
+
+
+  return retVal;
+
+}
 int toTwosComp( int x )
 {
   int retVal=x;
@@ -6364,6 +6436,15 @@ int main(int argc, char *argv[])
   // b - bytes
   // t - ticks
 
+
+  unsigned char buffer;
+  
+  cout << hex << uppercase;
+  
+  int number_of_bytes=0;
+  int memory_start=40341;
+  int tick_start=40341;
+  int tick_stop=41365;
   code_only=false;
 
   show_instruction_number = false;
@@ -6391,7 +6472,6 @@ int main(int argc, char *argv[])
     {
       cerr << "error: " << argv[1] << " not found" << endl;
       error_condition=true;
-      exit(-1);
     }
 
   // process arguments
@@ -6399,22 +6479,40 @@ int main(int argc, char *argv[])
     {
       string a=string(argv[i]);
 #ifdef DEBUG
-      cerr << "commabnd line arg: " << i << " " << a << endl;
+      cerr << "command line arg: " << i << " " << a << endl;
 #endif
       if( a == "--codeonly" ) code_only = true;
-      if( a == "--tickcount" )
+      else if( a == "--tickcount" )
 	{
 	  string b=string(argv[i+1]);
 	  string c=string(argv[i+2]);
 	  i+=2;
-	  // convert b and c to integers
+
+	  if( b[1] == 'x' ){tick_start=hexToInt(b);}else{tick_start=std::stoi(b);}
+	  if( c[1] == 'x' ){tick_stop=hexToInt(c);}else{tick_stop=std::stoi(c);}
+	  
 	  // process the file
 	  // at the end - count up the ticks
 	  // from the given start address
 	  // to the given ending address
 	}
-      if( a == "--raw" ){ header_end=0; checksum_size=0; }
-      if( a == "--show" )
+      else if( a == "--memstart" )
+	{
+	  string ms=string( argv[i+1] );
+	  if( ms[1] == 'x' )
+	    {
+	      // given in hex
+	      memory_start=hexToInt( ms );
+	    }
+	  else
+	    {
+	      // given in decimal
+	      memory_start = std::stoi(ms);
+	    }
+	  i++;
+	}
+      else if( a == "--raw" ){ header_end=0; checksum_size=0; }
+      else if( a == "--show" )
 	{
 	  string b = string(argv[i+1]);
 	  for( int j=0; j<b.length(); j++ )
@@ -6440,27 +6538,21 @@ int main(int argc, char *argv[])
 	    }
 	  i++;
 	}
-      if( a == "--help" )
+      else if( a == "--help" )
 	{
 	  cerr << "usage: " << endl << argv[0] << "filename.8xp [--codeonly|--raw] [--show n|a|b|t] --analyze start end" << endl << endl;
+	  cerr << "--memstart\tstarting memory address (default: 0x9D95)\n\t\t{use: 0xNNNN for hexadecimal use: NNNNN for decimal}" << endl;
 	  cerr << "--codeonly\tshow only assembler with labels" << endl;
 	  cerr << "--raw\t\tdisregard TI header and checksum info" << endl;
-	  cerr << "--tickcount 0xSTART 0xEND **not yet implemented**" << endl;
+	  cerr << "--tickcount tick_addr_start tick_addr_end {**not yet implemented**}" << endl;
 	  cerr << "--show n|a|b|t" << endl;
 	  cerr << "\tn: show instruction number in vector" << endl;
 	  cerr << "\ta: show instruction address on TI8x" << endl;
 	  cerr << "\tb: show opcodes" << endl;
 	  cerr << "\tt: show the clock ticks for each instruction" << endl;
-	  
+	  exit(-1);
 	}
     }
-
-  unsigned char buffer;
-  
-  cout << hex << uppercase;
-  
-  int number_of_bytes=0;
-  int memory_start=40341;
   
   //if( just_asm ) cout << "idx\tmem\top\tdec\tmneumonic" << endl;
 

@@ -13,6 +13,7 @@ bool show_instruction_number;
 bool show_address;
 bool show_opcodes;
 bool show_ticks;
+bool tick_count;
 
 int hexToInt( string h )
 {
@@ -77,15 +78,10 @@ int hexToInt( string h )
 	  //default:
 	}
       exponent++;
-
-
     }
-
-
-
   return retVal;
-
 }
+
 int toTwosComp( int x )
 {
   int retVal=x;
@@ -5555,6 +5551,7 @@ mneumonic::mneumonic( unsigned char a, unsigned char b )
 	  valid=false;
 	  instruction=string("invalid");
 	  size=0;
+	  ticks=0;
 	  
 	}
       
@@ -5563,6 +5560,7 @@ mneumonic::mneumonic( unsigned char a, unsigned char b )
       
     case 0xFE:
       instruction=string("cp ") + dec2Hex(b);
+      ticks=7;
       break;
     default:
       instruction = string("invalid");
@@ -6034,262 +6032,326 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0x80:
       instruction = string("add a, b");
-      
+      ticks=4;
       break;
     case 0x81:
       instruction = string("add a, c");
+      ticks=4;
       
       break;
     case 0x82:
       instruction = string("add a, d");
+      ticks=4;
       
       break;
     case 0x83:
       instruction = string("add a, e");
+      ticks=4;
       
       break;
     case 0x84:
       instruction = string("add a, h");
+      ticks=4;
       
       break;
     case 0x85:
       instruction = string("add a, l");
+      ticks=4;
       
       break;
     case 0x86:
       instruction = string("add a, (hl)");
+      ticks=7;
       
       break;
     case 0x87:
       instruction = string("add a, a");
-      
+            ticks=4;
+
       break;
     case 0x88:
       instruction = string("adc a, b");
+      ticks=4;
       
       break;
     case 0x89:
       instruction = string("adc a, c");
+      ticks=4;
       
       break;
     case 0x8A:
       instruction = string("adc a, d");
+      ticks=4;
       
       break;
     case 0x8B:
       instruction = string("adc a, e");
+      ticks=4;
       
       break;
     case 0x8C:
       instruction = string("adc a, h");
+      ticks=4;
       
       break;
     case 0x8D:
       instruction = string("adc a, l");
+      ticks=4;
       
       break;
     case 0x8E:
       instruction = string("adc a, (hl)");
+      ticks=7;
       
       break;
     case 0x8F:
       instruction = string("adc a, a");
       
+      ticks=4;
       break;
     case 0x90:
       instruction = string("sub b");
+      ticks=4;
       
       break;
     case 0x91:
       instruction = string("sub c");
+      ticks=4;
       
       break;
     case 0x92:
       instruction = string("sub d");
+      ticks=4;
       
       break;
     case 0x93:
       instruction = string("sub e");
+      ticks=4;
       
       break;
     case 0x94:
       instruction = string("sub h");
+      ticks=4;
       
       break;
     case 0x95:
       instruction = string("sub l");
+      ticks=4;
       
       break;
     case 0x96:
       instruction = string("sub (hl)");
+      ticks=7;
       
       break;
     case 0x97:
       instruction = string("sub a");
-      
+      ticks=4;
+
       break;
     case 0x98:
       instruction = string("sbc a, b");
-      
+            ticks=4;
+
       break;
     case 0x99:
       instruction = string("sbc a, c");
+      ticks=4;
       
       break;
     case 0x9A:
       instruction = string("sbc a, d");
+      ticks=4;
       
       break;
     case 0x9B:
       instruction = string("sbc a, e");
+      ticks=4;
       
       break;
     case 0x9C:
       instruction = string("sbc a, h");
+      ticks=4;
       
       break;
     case 0x9D:
       instruction = string("sbc a, l");
+      ticks=4;
       
       break;
     case 0x9E:
       instruction = string("sbc a, (hl)");
+      ticks=7;
       
       break;
     case 0x9F:
       instruction = string("sbc a, a");
-      
+            ticks=4;
+
       break;
     case 0xA0:
       instruction = string("and b");
+      ticks=4;
       
       break;
     case 0xA1:
       instruction = string("and c");
+      ticks=4;
       
       break;
     case 0xA2:
       instruction = string("and d");
+      ticks=4;
       
       break;
     case 0xA3:
       instruction = string("and e");
+      ticks=4;
       
       break;
     case 0xA4:
       instruction = string("and h");
+      ticks=4;
       
       break;
     case 0xA5:
       instruction = string("and l");
+      ticks=4;
       
       break;
     case 0xA6:
       instruction = string("and (hl)");
+      ticks=7;
       
       break;
     case 0xA7:
       instruction = string("and a");
-      
+            ticks=4;
+
       break;
     case 0xA8:
       instruction = string("xor b");
+      ticks=4;
       
       break;
     case 0xA9:
       instruction = string("xor c");
+      ticks=4;
       
       break;
     case 0xAA:
       instruction = string("xor d");
+      ticks=4;
       
       break;
     case 0xAB:
       instruction = string("xor e");
+      ticks=4;
       
       break;
     case 0xAC:
       instruction = string("xor h");
+      ticks=4;
       
       break;
     case 0xAD:
       instruction = string("xor l");
+      ticks=4;
       
       break;
     case 0xAE:
       instruction = string("xor (hl)");
+      ticks=7;
       
       break;
     case 0xAF:
       instruction = string("xor a");
-      
+            ticks=4;
+
       break;
     case 0xB0:
       instruction = string("or b");
+      ticks=4;
       
       break;
     case 0xB1:
       instruction = string("or c");
+      ticks=4;
       
       break;
     case 0xB2:
       instruction = string("or d");
+      ticks=4;
       
       break;
     case 0xB3:
       instruction = string("or e");
+      ticks=4;
       
       break;
     case 0xB4:
       instruction = string("or h");
+      ticks=4;
       
       break;
     case 0xB5:
       instruction = string("or l");
+      ticks=4;
       
       break;
     case 0xB6:
       instruction = string("or (hl)");
+      ticks=7;
       
       break;
     case 0xB7:
       instruction = string("or a");
-      
+            ticks=4;
+
       break;
     case 0xB8:
       instruction = string("cp b");
+      ticks=4;
       
       break;
     case 0xB9:
       instruction = string("cp c");
+      ticks=4;
       
       break;
     case 0xBA:
       instruction = string("cp d");
+      ticks=4;
       
       break;
     case 0xBB:
       instruction = string("cp e");
+      ticks=4;
       
       break;
     case 0xBC:
       instruction = string("cp h");
+      ticks=4;
       
       break;
     case 0xBD:
       instruction = string("cp l");
+      ticks=4;
       
       break;
     case 0xBE:
       instruction = string("cp (hl)");
+      ticks=7;
       
       break;
     case 0xBF:
       instruction = string("cp a");
-      
+            ticks=4;
+
       break;
     case 0xC0:
       instruction = string("ret nz");
+      ticks=11; ticks2=5;
       
       break;
     case 0xC1:
@@ -6303,7 +6365,7 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0xC8:
       instruction = string("ret z");
-      
+      ticks=11;ticks2=5;
       break;
     case 0xC9:
       instruction = string("ret");
@@ -6311,10 +6373,12 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0xCF:
       instruction = string("rst 0x08");
-      
+            ticks=11;
+
       break;
     case 0xD0:
       instruction = string("ret nc");
+      ticks=11;ticks2=5;
       
       break;
     case 0xD1:
@@ -6328,23 +6392,26 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0xD7:
       instruction = string("rst 0x10");
-      
+      ticks=11;
       break;
     case 0xD8:
       instruction = string("ret c");
+      ticks=11;ticks2=5;
       
       break;
     case 0xD9:
       instruction = string("exx");
-      
+      ticks=4;      
       break;
     case 0xDF:
       instruction = string("rst 0x18");
-      
+            ticks=11;
+
       break;
     case 0xE0:
       instruction = string("ret po");
-      
+      ticks=11;ticks2=5;
+
       break;
     case 0xE1:
       instruction = string("pop hl");
@@ -6352,7 +6419,7 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0xE3:
       instruction = string("ex (sp), hl");
-      
+      ticks=19;
       break;
     case 0xE5:
       instruction = string("push hl");
@@ -6360,23 +6427,26 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0xE7:
       instruction = string("rst 0x20");
-      
+         ticks=11;
+   
       break;
     case 0xE8:
       instruction = string("ret pe");
-      
+      ticks=11;ticks2=5;
       break;
     case 0xE9:
       instruction = string("jp (hl)");
       absolute_jump=true;
+      ticks=4;
       break;
     case 0xEB:
       instruction = string("ex de,hl");
-      
+      ticks=4;
       break;
     case 0xF0:
       instruction = string("ret p");
-      
+      ticks=11;ticks2=5;
+
       break;
     case 0xF1:
       instruction = string("pop af");
@@ -6385,7 +6455,7 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0xF3:
       instruction = string("di");
-      
+      ticks=4;
       break;
     case 0xF5:
       instruction = string("push af");
@@ -6393,22 +6463,26 @@ mneumonic::mneumonic( unsigned char a )
       break;
     case 0xF7:
       instruction = string("rst 0x30");
-      
+            ticks=11;
+
       break;
     case 0xF8:
       instruction = string("ret m");
-      
+            ticks=11;ticks2=5;
+
       break;
     case 0xF9:
       instruction = string("ld sp,hl");
-      
+      ticks=6;
       break;
     case 0xFB:
       instruction = string("ei");
-      
+      ticks=4;
       break;
     case 0xFF:
       instruction = string("rst 0x38");
+            ticks=11;
+
       break;
       //case 0xEF:
       //instruction=string("rst 0x28");
@@ -6416,7 +6490,7 @@ mneumonic::mneumonic( unsigned char a )
 
     default:
       instruction = string("invalid");
-
+      ticks=0;ticks2=0;
       valid=false;
       size=0;
       break;
@@ -6484,6 +6558,7 @@ int main(int argc, char *argv[])
       if( a == "--codeonly" ) code_only = true;
       else if( a == "--tickcount" )
 	{
+	  tick_count=true;
 	  string b=string(argv[i+1]);
 	  string c=string(argv[i+2]);
 	  i+=2;
@@ -6502,7 +6577,7 @@ int main(int argc, char *argv[])
 	  if( ms[1] == 'x' )
 	    {
 	      // given in hex
-	      memory_start=hexToInt( ms );
+	      memory_start=hexToInt(ms);
 	    }
 	  else
 	    {

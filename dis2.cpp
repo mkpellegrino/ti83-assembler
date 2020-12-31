@@ -259,6 +259,7 @@ public:
   bool bytesOnly(){ return bytes_only; };
   void bytesOnly(bool b){ bytes_only=b; };
 
+  int getTicks(){ return ticks; };
   friend ostream &operator << (ostream &out, const mneumonic &m); 
 private:
   bool bytes_only;
@@ -6559,6 +6560,8 @@ int main(int argc, char *argv[])
       else if( a == "--tickcount" )
 	{
 	  tick_count=true;
+	  show_ticks=true;
+	  show_address=true;
 	  string b=string(argv[i+1]);
 	  string c=string(argv[i+2]);
 	  i+=2;
@@ -6745,8 +6748,19 @@ int main(int argc, char *argv[])
 	}
 
     }
+  int tcount=0;
+  if( tick_count )
+    {
+      for( int j=0; j<mneumonics.size(); j++ )
+	{
+	  if( ( mneumonics[j]->getAddress() >= tick_start ) && ( mneumonics[j]->getAddress() <= tick_stop ) )
+	    {
+	      tcount+= mneumonics[j]->getTicks();
+	    }
+	}
+      //  cerr << "Tick Count from: " << std::hex << tick_start << " to " << tick_stop << ": " << std::dec << tcount << std::hex << endl;
+    }
   
-
   // look at each mneumonic in the vector
   // if the jump_to_address is not zero, then
   //    get the instruction as a string
@@ -6895,11 +6909,21 @@ int main(int argc, char *argv[])
 	    {
 	      // perfect hit
 	      //cout << ";;;\t\t\t\t\t*(*)* " << endl;
+	      if( tick_count )
+		{
+		  if( (mneumonics[j]->getAddress() >= tick_start) && (mneumonics[j]->getAddress() <= tick_stop)) cout << *labels[k];
+		}
+	      else
 	      cout << *labels[k];
 	      mneumonics[j]->setJumpToName( labels[k]->getName() );
 	      k=labels.size()+1;
 	    }
 	}
+      if( tick_count )
+	{
+	  if( (mneumonics[j]->getAddress() >= tick_start) && (mneumonics[j]->getAddress() <= tick_stop)) cout << *mneumonics[j];
+	}
+      else
       cout << *mneumonics[j];
     }
 
@@ -6908,7 +6932,8 @@ int main(int argc, char *argv[])
       delete labels[j];
     }
   
-  
+  if( tick_count ) cerr << bold_on << ";;; tick count from: " << std::uppercase << std::hex << "0x" << tick_start << " to 0x" << tick_stop << ": " << std::dec << tcount << std::hex << bold_off << endl;
+
   return 0;
 }
 

@@ -39,6 +39,10 @@ lexer:	lexer.cpp
 	$(value CXX) lexer.cpp $(DEBUG) $(CPPFLAGS) $(INCLUDE) -o lexer-debug
 	strip -no_uuid -A -u -S -X -N -x lexer
 
+decks: deckcard.asm decktiny.asm
+	./tias deckcard.asm deckcard.8xp
+	./tias decktiny.asm decktiny.8xp
+
 formulas: formulas.asm
 	./tias formulas.asm formulas.8xp formulas.mem
 

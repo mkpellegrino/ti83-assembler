@@ -1,4 +1,4 @@
-.name deck4
+.name tinydeck
 
  	call &shuffle	
  	call &show_deck

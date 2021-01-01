@@ -1,4 +1,4 @@
-.name deck
+.name carddeck
 	bCall(RunIndicOff)
 	;bCall( _RandInit )     ; Seed the Random Number Generator
 begin:	

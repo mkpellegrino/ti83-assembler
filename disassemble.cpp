@@ -286,6 +286,9 @@ bool mneumonic::processAddress()
   if( relative_jump )
     {
       // replace 0x00 in instruction with %label_name
+      // 2021 01 02 - ONLY IF IT's NOT TOO FAR
+      // if the jump is too far, then make it a data byte
+      
       std::size_t found = instruction.find(string("@0x"));
       if ( (found!=std::string::npos) && (jump_to_name != "" ) )
 	{
@@ -3801,6 +3804,7 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c )
       instruction=string("ld (")+ dec2Hex(c*256+b,4) + "), hl";
       absolute_load=true;
       ticks=16;
+      break;
     case 0x2A:
       instruction=string("ld hl, (")  + dec2Hex(c*256+b,4) + ")";
       absolute_load=true;

@@ -6,6 +6,9 @@ There is no need for any kind of conversion program or special shell to be runni
 compile asm source with:
 tias input.asm output.8xp
 
+disassemble 8xp files with:
+disassemble input.8xp --help (for options)
+
 there are some built-in macros:
 loop
 user_input

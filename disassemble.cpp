@@ -4186,7 +4186,7 @@ mneumonic::mneumonic( unsigned char a, unsigned char b )
       instruction=string("ld e, ") + dec2Hex(b); ticks=7;
       break;
     case 0x20:
-      instruction=string("jr nc, ") + dec2Hex(b); ticks=12; relative_jump=true;
+      instruction=string("jr nz, ") + dec2Hex(b); ticks=12; relative_jump=true;
       break;
     case 0x26:
       instruction=string("ld h, ") + dec2Hex(b); ticks=7;

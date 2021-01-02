@@ -228,15 +228,15 @@ ostream & operator << (ostream &out, const label &l)
   return out;
 }
 
-class mneumonic
+class mnemonic
 {
 public:
-  ~mneumonic(){};
-  mneumonic( unsigned char a, unsigned char b, unsigned char c, unsigned char d );
-  mneumonic( unsigned char a, unsigned char b, unsigned char c );
-  mneumonic( unsigned char a, unsigned char b );
-  mneumonic( unsigned char a );
-  mneumonic();
+  ~mnemonic(){};
+  mnemonic( unsigned char a, unsigned char b, unsigned char c, unsigned char d );
+  mnemonic( unsigned char a, unsigned char b, unsigned char c );
+  mnemonic( unsigned char a, unsigned char b );
+  mnemonic( unsigned char a );
+  mnemonic();
   void print();
   bool isValid(){return valid;};
   string getInstruction(){return instruction;};
@@ -260,7 +260,7 @@ public:
   void bytesOnly(bool b){ bytes_only=b; };
 
   int getTicks(){ return ticks; };
-  friend ostream &operator << (ostream &out, const mneumonic &m); 
+  friend ostream &operator << (ostream &out, const mnemonic &m); 
 private:
   bool bytes_only;
   
@@ -280,7 +280,7 @@ private:
   int jump_to_address;
 };
 
-bool mneumonic::processAddress()
+bool mnemonic::processAddress()
 {
   bool retVal=false;
   if( relative_jump )
@@ -322,7 +322,7 @@ bool mneumonic::processAddress()
   return retVal;
 }
 
-bool mneumonic::processLabel()
+bool mnemonic::processLabel()
 {
   bool retVal=false;
   if( relative_jump )
@@ -338,7 +338,7 @@ bool mneumonic::processLabel()
   return retVal;
 }
 
-ostream & operator << (ostream &out, const mneumonic &m) 
+ostream & operator << (ostream &out, const mnemonic &m) 
 {
   out << "\t";
   if( !code_only )
@@ -377,7 +377,7 @@ ostream & operator << (ostream &out, const mneumonic &m)
 }
 
 
-mneumonic::mneumonic()
+mnemonic::mnemonic()
 {
 #ifdef DEBUG
   cerr << "creating an empty data byte" << endl;
@@ -393,10 +393,10 @@ mneumonic::mneumonic()
 }
 
 // 4 BYTE OPCODES
-mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c, unsigned char d )
+mnemonic::mnemonic( unsigned char a, unsigned char b, unsigned char c, unsigned char d )
 {
 #ifdef DEBUG
-  cerr << "created mneumonic( " << (int)a << " , " << (int)b << " , " << (int)c << " , " << (int)d << " );" << endl;
+  cerr << "created mnemonic( " << (int)a << " , " << (int)b << " , " << (int)c << " , " << (int)d << " );" << endl;
 #endif
   jump_to_address=0;
   jump_to_name=string("");
@@ -1642,10 +1642,10 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c, unsigne
 }
 
 // 3 BYTE OPCODES
-mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c )
+mnemonic::mnemonic( unsigned char a, unsigned char b, unsigned char c )
 {
 #ifdef DEBUG
-  cerr << "created mneumonic( " << (int)a << " , " << (int)b << " , " << (int)c << " );" << endl;
+  cerr << "created mnemonic( " << (int)a << " , " << (int)b << " , " << (int)c << " );" << endl;
 #endif
   jump_to_address=0;
   jump_to_name=string("");
@@ -4149,10 +4149,10 @@ mneumonic::mneumonic( unsigned char a, unsigned char b, unsigned char c )
 }
 
 // 2 BYTE OPCODES
-mneumonic::mneumonic( unsigned char a, unsigned char b )
+mnemonic::mnemonic( unsigned char a, unsigned char b )
 {
 #ifdef DEBUG
-  cerr << "created mneumonic( " << (int)a << " , " << (int)b << " );" << endl;
+  cerr << "created mnemonic( " << (int)a << " , " << (int)b << " );" << endl;
 #endif
   jump_to_address=0;
   jump_to_name=string("");
@@ -5577,10 +5577,10 @@ mneumonic::mneumonic( unsigned char a, unsigned char b )
 }
 
 // 1 BYTE OPCODES
-mneumonic::mneumonic( unsigned char a )
+mnemonic::mnemonic( unsigned char a )
 {
 #ifdef DEBUG
-  cerr << "created mneumonic( " << std::hex << (int)a << " );" << endl;
+  cerr << "created mnemonic( " << std::hex << (int)a << " );" << endl;
 #endif
   bytes_only=false;
   jump_to_address=0;
@@ -6535,7 +6535,7 @@ int main(int argc, char *argv[])
   
   int checksum_size=2;
   
-  vector <mneumonic*> mneumonics;
+  vector <mnemonic*> mnemonics;
   vector <unsigned char> raw_code;
   vector <label*> labels;
   
@@ -6646,7 +6646,7 @@ int main(int argc, char *argv[])
       number_of_bytes++;
     }
 
-  // parse them and create a vector of mneumonics
+  // parse them and create a vector of mnemonics
   // printout entire program as values
 #ifdef DEBUG
   cerr << "# of bytes read: " << std::dec << number_of_bytes << endl;
@@ -6655,25 +6655,25 @@ int main(int argc, char *argv[])
   for( int i=header_end; i<(number_of_bytes-checksum_size); i++ )
     {
       //cout << std::hex << (int) raw_code[i] << " ";;
-      mneumonic * m = new mneumonic(raw_code[i]);
+      mnemonic * m = new mnemonic(raw_code[i]);
       // if the one-byte opcode doesn't create a full
       // instruction, then try a two-byte opcode
       if (!m->isValid())
 	{
 	  delete m;
 #ifdef DEBUG
-	  cerr << "[1 Byte Mneumonic is not valid - trying 2]" << endl;
+	  cerr << "[1 Byte Mnemonic is not valid - trying 2]" << endl;
 #endif
-	  m = new mneumonic(raw_code[i], raw_code[i+1]);
+	  m = new mnemonic(raw_code[i], raw_code[i+1]);
 	}
       // or maybe it's a three
       if (!m->isValid())
 	{
 	  delete m;
 #ifdef DEBUG
-	  cerr << "[2 Byte Mneumonic is not valid - trying 3]" << endl;
+	  cerr << "[2 Byte Mnemonic is not valid - trying 3]" << endl;
 #endif
-	  m = new mneumonic(raw_code[i], raw_code[i+1], raw_code[i+2]);
+	  m = new mnemonic(raw_code[i], raw_code[i+1], raw_code[i+2]);
 	}
 
       // maybe a 4?  If not - it's got to be data
@@ -6681,9 +6681,9 @@ int main(int argc, char *argv[])
 	{
 	  delete m;
 #ifdef DEBUG
-	  cerr << "[3 Byte Mneumonic is not valid - trying 4]" << endl;
+	  cerr << "[3 Byte Mnemonic is not valid - trying 4]" << endl;
 #endif
-	  m = new mneumonic(raw_code[i], raw_code[i+1], raw_code[i+2], raw_code[i+3]);
+	  m = new mnemonic(raw_code[i], raw_code[i+1], raw_code[i+2], raw_code[i+3]);
 	}
       
       // if it's STILL NOT VALID then just do one byte.
@@ -6691,9 +6691,9 @@ int main(int argc, char *argv[])
 	{
 	  delete m;
 #ifdef DEBUG
-	  cerr << "[4 Byte Mneumonic is not valid - must be data]" << endl;
+	  cerr << "[4 Byte Mnemonic is not valid - must be data]" << endl;
 #endif
-	  m = new mneumonic();
+	  m = new mnemonic();
 	  m->setData( raw_code[i] );
 	}
 
@@ -6702,11 +6702,11 @@ int main(int argc, char *argv[])
       m->setAddress( memory_location );
       memory_location += m->getSize();
       
-      mneumonics.push_back(m);
+      mnemonics.push_back(m);
       i+=(m->getSize()-1);
 
 #ifdef DEBUG
-      cerr << "size of mneumonic is: " << m->getSize() << endl;
+      cerr << "size of mnemonic is: " << m->getSize() << endl;
 #endif
 
 
@@ -6716,27 +6716,27 @@ int main(int argc, char *argv[])
   // ===========================================================
   int ln=0;
 
-  // Create a vector of all the addresses the mneumonics will jump to
+  // Create a vector of all the addresses the mnemonics will jump to
   // or load to/from
   
-  for( int j = 0; j<mneumonics.size(); j++ )
+  for( int j = 0; j<mnemonics.size(); j++ )
     {
       // this returns true IF
-      //    the mneumonic is a relative jump
-      //    the mneumonic is an absolute jump
-      //    the mneumonic is an absolute load
+      //    the mnemonic is a relative jump
+      //    the mnemonic is an absolute jump
+      //    the mnemonic is an absolute load
       //    processLabel() will also calculate and set the jump_to_address      
-      if( mneumonics[j]->processLabel() )
+      if( mnemonics[j]->processLabel() )
 	{
 	  
-	  label * l = new label( mneumonics[j]->getJumpToAddress(), string("label_")+std::to_string(ln++) );	  
+	  label * l = new label( mnemonics[j]->getJumpToAddress(), string("label_")+std::to_string(ln++) );	  
 	  labels.push_back(l);
 	}
     }
 
   // remove any labels that are "beyond the infinite"
-  int first_address = mneumonics[0]->getAddress();
-  int last_address =  mneumonics[mneumonics.size()-1]->getAddress();
+  int first_address = mnemonics[0]->getAddress();
+  int last_address =  mnemonics[mnemonics.size()-1]->getAddress();
 
   
   for( int j=0; j<labels.size(); j++ )
@@ -6755,32 +6755,32 @@ int main(int argc, char *argv[])
   int tcount=0;
   if( tick_count )
     {
-      for( int j=0; j<mneumonics.size(); j++ )
+      for( int j=0; j<mnemonics.size(); j++ )
 	{
-	  if( ( mneumonics[j]->getAddress() >= tick_start ) && ( mneumonics[j]->getAddress() <= tick_stop ) )
+	  if( ( mnemonics[j]->getAddress() >= tick_start ) && ( mnemonics[j]->getAddress() <= tick_stop ) )
 	    {
-	      tcount+= mneumonics[j]->getTicks();
+	      tcount+= mnemonics[j]->getTicks();
 	    }
 	}
       //  cerr << "Tick Count from: " << std::hex << tick_start << " to " << tick_stop << ": " << std::dec << tcount << std::hex << endl;
     }
   
-  // look at each mneumonic in the vector
+  // look at each mnemonic in the vector
   // if the jump_to_address is not zero, then
   //    get the instruction as a string
   //    change the instruction to use a label
   //    instead of 0xHH (for relative) or
   //    0xHHHH (for absolute)
-  for( int j = 0; j<mneumonics.size(); j++ )
+  for( int j = 0; j<mnemonics.size(); j++ )
     {
-      if( mneumonics[j]->getJumpToAddress() > 0 )
+      if( mnemonics[j]->getJumpToAddress() > 0 )
 	{
 	  for( int k=0; k<labels.size(); k++ )
 	    {
-	      if( labels[k]->getAddress() == mneumonics[j]->getJumpToAddress() )
+	      if( labels[k]->getAddress() == mnemonics[j]->getJumpToAddress() )
 		{
-		  mneumonics[j]->setJumpToName( labels[k]->getName() );
-		  mneumonics[j]->processAddress();
+		  mnemonics[j]->setJumpToName( labels[k]->getName() );
+		  mnemonics[j]->processAddress();
 		  k=labels.size()+1;
 		}
 	    }
@@ -6796,49 +6796,49 @@ int main(int argc, char *argv[])
     }
   #endif
 
-  // again, iterate through the mneumonics
+  // again, iterate through the mnemonics
   // if a label falls in the middle of the opcodes
-  // then set that mneumonic to be bytes only
+  // then set that mnemonic to be bytes only
   // change it in a different loop
-  for( int j = 0; j<mneumonics.size(); j++ )
+  for( int j = 0; j<mnemonics.size(); j++ )
     {
      for( int k=0; k<labels.size(); k++ )
 	{
-	  int tmp_n = mneumonics[j]->getInstructionNumber();	  
+	  int tmp_n = mnemonics[j]->getInstructionNumber();	  
 
-	  unsigned char a=mneumonics[j]->byte(0);
-	  unsigned char b=mneumonics[j]->byte(1);
-	  unsigned char c=mneumonics[j]->byte(2);
-	  unsigned char d=mneumonics[j]->byte(3);
+	  unsigned char a=mnemonics[j]->byte(0);
+	  unsigned char b=mnemonics[j]->byte(1);
+	  unsigned char c=mnemonics[j]->byte(2);
+	  unsigned char d=mnemonics[j]->byte(3);
 
-	  int mn_start = mneumonics[j]->getAddress();
-	  int mn_end = mneumonics[j]->getAddress() + mneumonics[j]->getSize() - 1;
+	  int mn_start = mnemonics[j]->getAddress();
+	  int mn_end = mnemonics[j]->getAddress() + mnemonics[j]->getSize() - 1;
 	  int lb_address = labels[k]->getAddress();
 
-	  int mn_size= mneumonics[j]->getSize();
+	  int mn_size= mnemonics[j]->getSize();
 	  int s=mn_size;
 
-	  if( (lb_address > mn_start) && (lb_address <= mn_end) &&  !mneumonics[j]->bytesOnly() )
+	  if( (lb_address > mn_start) && (lb_address <= mn_end) &&  !mnemonics[j]->bytesOnly() )
 	    {
-	      mneumonics[j]->bytesOnly(true);
-	      mneumonics.erase(mneumonics.begin() + j );
+	      mnemonics[j]->bytesOnly(true);
+	      mnemonics.erase(mnemonics.begin() + j );
 	      
 	      if( s > 0 )
 		{
-		  mneumonic * m = new mneumonic();
+		  mnemonic * m = new mnemonic();
 		  m->setData(a);
 		  m->setAddress(mn_start++);
 		  m->bytesOnly(true);
 		  if ( labels[k]->getAddress() == tmp_n ) m->setJumpToName( labels[k]->getName() );
 		  m->setInstructionNumber(tmp_n++);
-		  mneumonics.insert( mneumonics.begin()+j, m );
+		  mnemonics.insert( mnemonics.begin()+j, m );
 		  //		  if( s == 1 ) cout << *labels[k];
 		 
 		}
 	      if( s > 1 )
 		{
 		  //if( labels[k]->getAddress()==mn_start + 1) cout << *labels[k];
-		  mneumonic * m = new mneumonic();
+		  mnemonic * m = new mnemonic();
 		  m->setData(b);
 		  m->setAddress(mn_start++);
 		  m->bytesOnly(true);
@@ -6846,7 +6846,7 @@ int main(int argc, char *argv[])
 		  if ( labels[k]->getAddress() == tmp_n ) m->setJumpToName( labels[k]->getName() );
 		  m->setInstructionNumber(tmp_n++);
 
-		  mneumonics.insert( mneumonics.begin()+j+1, m );
+		  mnemonics.insert( mnemonics.begin()+j+1, m );
 		  
 		  //if( s == 2 ) cout << *labels[k];
 		}
@@ -6854,7 +6854,7 @@ int main(int argc, char *argv[])
 		{
 		  //if( labels[k]->getAddress()==mn_start + 2) cout << *labels[k];
 
-		  mneumonic * m = new mneumonic();
+		  mnemonic * m = new mnemonic();
 		  m->setData(c);
 		  m->setAddress(mn_start++);
 		  m->bytesOnly(true);
@@ -6862,20 +6862,20 @@ int main(int argc, char *argv[])
 		  if ( labels[k]->getAddress() == tmp_n ) m->setJumpToName( labels[k]->getName() );
 		  m->setInstructionNumber(tmp_n++);
 
-		  mneumonics.insert( mneumonics.begin()+j+2, m );
+		  mnemonics.insert( mnemonics.begin()+j+2, m );
 		  //if( s == 3 ) cout << *labels[k];
 		}
 	      if( s > 3 )
 		{
 		  //if( labels[k]->getAddress()==mn_start + 3) cout << *labels[k];
 
-		  mneumonic * m = new mneumonic();
+		  mnemonic * m = new mnemonic();
 		  m->setData(d);
 		  m->setAddress(mn_start++);
 		  m->bytesOnly(true);
 		  if ( labels[k]->getAddress() == tmp_n ) m->setJumpToName( labels[k]->getName() );
 		  m->setInstructionNumber(tmp_n++);
-		  mneumonics.insert( mneumonics.begin()+j+3, m );
+		  mnemonics.insert( mnemonics.begin()+j+3, m );
 		  //if( s == 4 ) cout << *labels[k];
 
 		}
@@ -6887,21 +6887,21 @@ int main(int argc, char *argv[])
     }
   
   // print out the assembly
-  for( int j = 0; j<mneumonics.size(); j++ )
+  for( int j = 0; j<mnemonics.size(); j++ )
     {
-      //cout << "mn_start: " <<  mneumonics[j]->getAddress()  << "\t\tmn_end: " << mneumonics[j]->getAddress() + mneumonics[j]->getSize() -1 << endl;
-      //cout << *mneumonics[j] << endl;
+      //cout << "mn_start: " <<  mnemonics[j]->getAddress()  << "\t\tmn_end: " << mnemonics[j]->getAddress() + mnemonics[j]->getSize() -1 << endl;
+      //cout << *mnemonics[j] << endl;
       for( int k=0; k<labels.size(); k++ )
 	{
-	  unsigned char a=mneumonics[j]->byte(0);
-	  unsigned char b=mneumonics[j]->byte(1);
-	  unsigned char c=mneumonics[j]->byte(2);
-	  unsigned char d=mneumonics[j]->byte(3);
+	  unsigned char a=mnemonics[j]->byte(0);
+	  unsigned char b=mnemonics[j]->byte(1);
+	  unsigned char c=mnemonics[j]->byte(2);
+	  unsigned char d=mnemonics[j]->byte(3);
 	  
-	  int tmp_n = mneumonics[j]->getInstructionNumber();	  
-	  int mn_start = mneumonics[j]->getAddress();
-	  int mn_end = mneumonics[j]->getAddress() + mneumonics[j]->getSize() - 1;
-	  int mn_size= mneumonics[j]->getSize();
+	  int tmp_n = mnemonics[j]->getInstructionNumber();	  
+	  int mn_start = mnemonics[j]->getAddress();
+	  int mn_end = mnemonics[j]->getAddress() + mnemonics[j]->getSize() - 1;
+	  int mn_size= mnemonics[j]->getSize();
 	  int s=mn_size;
 
 	 
@@ -6915,20 +6915,20 @@ int main(int argc, char *argv[])
 	      //cout << ";;;\t\t\t\t\t*(*)* " << endl;
 	      if( tick_count )
 		{
-		  if( (mneumonics[j]->getAddress() >= tick_start) && (mneumonics[j]->getAddress() <= tick_stop)) cout << *labels[k];
+		  if( (mnemonics[j]->getAddress() >= tick_start) && (mnemonics[j]->getAddress() <= tick_stop)) cout << *labels[k];
 		}
 	      else
 	      cout << *labels[k];
-	      mneumonics[j]->setJumpToName( labels[k]->getName() );
+	      mnemonics[j]->setJumpToName( labels[k]->getName() );
 	      k=labels.size()+1;
 	    }
 	}
       if( tick_count )
 	{
-	  if( (mneumonics[j]->getAddress() >= tick_start) && (mneumonics[j]->getAddress() <= tick_stop)) cout << *mneumonics[j];
+	  if( (mnemonics[j]->getAddress() >= tick_start) && (mnemonics[j]->getAddress() <= tick_stop)) cout << *mnemonics[j];
 	}
       else
-      cout << *mneumonics[j];
+      cout << *mnemonics[j];
     }
 
   for( int j = 0; j<labels.size(); j++ )

@@ -1,4 +1,5 @@
-	.name tobinary
+.name tobinhex
+	bCall(RunIndicOff)
 	ld hl, &prompt
 	bCall(PutS)
 	call &dont_check_for_decimal_points
@@ -18,8 +19,7 @@
 	ld hl, &binary_text
 	bCall(PutS)
 	bCall(NewLine)
-	ld hl, &header
-	bCall(PutS)
+
 	ld hl, &binary_string
 	bCall(PutS)
 	ld hl, &footer
@@ -29,6 +29,7 @@
 	ld hl, &hex_string_0x
 	bCall(PutS)
 	bCall(NewLine)
+	bCall(RunIndicOn)
 	ret
 
 
@@ -76,10 +77,8 @@ binary_string_h:
 binary_string_l:
 .chars "00000000"
 .db 0x00
-header:
-.str "vvvv    vvvv    "
 footer:
-.str "    ^^^^    ^^^^"
+.str "----^^^^----^^^^"
 prompt:
 .str "Enter a decimal:"
 binary_text:
@@ -94,7 +93,10 @@ toHex:
 	
 	ld (&value), hl
 	ld de, &hex_string
+
+	ld b, @0x02	
 	ld a, h
+toHexLoop0:
 	and @0xF0
 	rrca
 	rrca
@@ -106,17 +108,21 @@ toHex:
 	and @0x0F
 	ld (de), a
 	inc de
+	
 	ld a, l
-	and @0xF0
-	rrca
-	rrca
-	rrca
-	rrca
-	ld (de), a
-	inc de
-	ld a, l
-	and @0x0F
-	ld (de), a
+	ld h, l
+	djnz %toHexLoop0
+
+;;; 	and @0xF0
+;;; 	rrca
+;;; 	rrca
+;;; 	rrca
+;;; 	rrca
+;;; 	ld (de), a
+;;; 	inc de
+;;; 	ld a, l
+;;; 	and @0x0F
+;;; 	ld (de), a
 	
 ;;; go through each byte and create an ASCII
 ;;; character out of it

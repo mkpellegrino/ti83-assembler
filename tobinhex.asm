@@ -10,12 +10,14 @@
         bCall(Mov9ToOP1)
 	
 	call &convop1b
-	
+
+;;;  this one is the parameter for the hex
 	push de
+;;; and this one is the parameter for the bin
 	push de
 	
 	call &toBinary
-
+	
 	ld hl, &binary_text
 	bCall(PutS)
 	bCall(NewLine)
@@ -26,6 +28,7 @@
 	bCall(PutS)
 	
 	call &toHex
+	
 	ld hl, &hex_string_0x
 	bCall(PutS)
 	bCall(NewLine)
@@ -91,57 +94,39 @@ toHex:
 ;;; take the 4 digits and put them into the
 ;;; location of the string as a byte each
 	
-	ld (&value), hl
 	ld de, &hex_string
-
+	
 	ld b, @0x02	
 	ld a, h
 toHexLoop0:
-	and @0xF0
 	rrca
 	rrca
 	rrca
 	rrca
-	ld (de), a
-	inc de
-	ld a, h
+
+	push bc
+	ld b, @0x02
+
+hexAgain:
 	and @0x0F
-	ld (de), a
-	inc de
-	
-	ld a, l
-	ld h, l
-	djnz %toHexLoop0
-
-;;; 	and @0xF0
-;;; 	rrca
-;;; 	rrca
-;;; 	rrca
-;;; 	rrca
-;;; 	ld (de), a
-;;; 	inc de
-;;; 	ld a, l
-;;; 	and @0x0F
-;;; 	ld (de), a
-	
-;;; go through each byte and create an ASCII
-;;; character out of it
-
-	ld hl, &hex_string
-
-	ld b, @0x04
-toHexLoop:
-	ld a, (hl)
-		
 	cp @0x0A
 	jr c, %no_add
 	add a, @0x07	
 no_add:
 	add a, @0x30
-	ld (hl), a
-	inc hl
-	djnz %toHexLoop
 	
+	ld (de), a
+	inc de
+	
+	ld a, h
+	
+	djnz %hexAgain
+	pop bc
+	
+	ld a, l
+	ld h, l
+	djnz %toHexLoop0
+		
 	ret
 
 hex_string_0x:

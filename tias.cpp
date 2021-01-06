@@ -103,6 +103,7 @@ int function_loop=0;
 int store_op1=0;
 int disp_op1=0;
 int degree_mode=0;
+int hex_to_string=0;
 int radian_mode=0;
 int convop1b=0;
 int fully_clear_screen=0;
@@ -110,6 +111,7 @@ string name;
 int line_number=0;
 
 int add_degree_mode=0;
+int add_hex_to_string=0;
 int add_loop=0;
 int add_mem_clear=0;
 int add_input=0;
@@ -3105,6 +3107,50 @@ void function_user_input()
   
 }
 
+// 2021 01 05 - hex_to_string
+void function_hex_to_string()
+{
+  if(hex_to_string == 1) return;
+  hex_to_string=1;
+  addLabel("hex_to_string");
+  a("pop de");
+  a("pop hl");
+  a("push de");
+  a("ld de, **"); addAddress("function_hex_to_string_hex_string");
+  a("ld b, *"); addByte(0x02);
+  a("ld a, h");
+  addLabel("function_hex_to_string_toHexLoop0");
+  a("rrca");  a("rrca");  a("rrca");  a("rrca");
+  a("push bc");
+  a("ld b, *"); addByte(0x02);
+  addLabel("function_hex_to_string_hexAgain");
+  a("and *"); addByte(0x0F);
+  a("cp *"); addByte(0x0A);
+  a("jr c, *"); addOffset("function_hex_to_string_no_add");
+  a("add a, *"); addByte(0x07);
+  addLabel("function_hex_to_string_no_add");
+  a("add a, *"); addByte(0x30);
+  a("ld (de), a");
+  a("inc de");
+  a("ld a, h");
+  a("djnz *"); addOffset("function_hex_to_string_hexAgain");
+  a("pop bc");
+  a("ld a, l");
+  a("ld h, l");
+  a("djnz *"); addOffset("function_hex_to_string_toHexLoop0");
+  a("ld hl, **"); addAddress("function_hex_to_string_hex_string");
+  a("pop de");
+  a("push hl");
+  a("push de" );
+  a("ret");
+  addLabel("function_hex_to_string_hex_string" );
+  addByte( 0x30 );
+  addByte( 0x30 );
+  addByte( 0x30 );
+  addByte( 0x30 );
+  addByte( 0x00 );
+}
+
 void function_degree_mode()
 {
   if(degree_mode == 1) return;
@@ -3689,6 +3735,14 @@ int main(int argc, char *argv[])
 
 	    }
 
+	  // creates an ascii string of a hex #
+	  else if( line == "call &hex_to_string")
+	    {
+	      add_hex_to_string=1;
+	      a("call **"); addAddress("hex_to_string");
+
+	    }
+
 	  // puts calc into degree mode
 	  else if( line == "call &degree_mode")
 	    {
@@ -3867,13 +3921,14 @@ int main(int argc, char *argv[])
 
   // ================================================================================================================================================================================================
   if( add_loop==1 ) loop();
-      if( add_input==1 ) function_user_input();
-      if( add_store_op1==1 ) function_store_op1();
-      if( add_degree_mode==1 ) function_degree_mode();
-      if( add_disp_op1==1 ) function_disp_op1();
-      if( add_convop1b==1 ) function_convop1b();
-      if( add_fully_clear_screen==1 ) function_fully_clear_screen();
-      if( add_mem_clear==1 ) function_mem_clear();
+  if( add_input==1 ) function_user_input();
+  if( add_store_op1==1 ) function_store_op1();
+  if( add_degree_mode==1 ) function_degree_mode();
+  if( add_disp_op1==1 ) function_disp_op1();
+  if( add_convop1b==1 ) function_convop1b();
+  if( add_fully_clear_screen==1 ) function_fully_clear_screen();
+  if( add_mem_clear==1 ) function_mem_clear();
+  if( add_hex_to_string ==1) function_hex_to_string();
 
 
   

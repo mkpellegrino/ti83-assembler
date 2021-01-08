@@ -2608,9 +2608,12 @@ void loop()
   addLabel("function_loop");  
 
   // pop the return address off of the stack and save it!
-  a("pop hl");
-  a("ld (**), hl");addAddress("function_loop_ret_addr");
-
+  //a("pop hl");
+  //a("ld (**), hl");addAddress("function_loop_ret_addr");
+  // 2021 01 06 - made the saving of the return address a little more
+  // efficient
+  a("pop de");
+  
   // next should be the count limit for the loop (save it also)
   a("pop hl");
   a("ld (**), hl");addAddress("function_loop_count");
@@ -2619,7 +2622,7 @@ void loop()
   // the address of the commands we want looped
   a("pop hl");
   a("ld (**), hl");addAddress("function_loop_cmd_adr");
-  
+  a("push de"); // 2021 01 06 (see above)
   pushall();
  
   a("ld hl, (**)");addAddress("function_loop_count");
@@ -2645,9 +2648,9 @@ void loop()
   popall();
 
   // restore the return address back to the stack
-  a("ld hl, (**)");addAddress("function_loop_ret_addr");
-  a("push hl");
-
+  //a("ld hl, (**)");addAddress("function_loop_ret_addr");
+  //a("push hl");
+  // 2021 01 06 - already done (see above)
   // 
   a("ret");
   
@@ -2662,6 +2665,9 @@ void addToListFile(int mem_loc, string loc)
 
 void function_mem_clear()
 {
+  // 2021 01 07
+  // this should _really_ use the stack to pass in parameters
+  
   // mkpellegrino - 2020 11 29
   // function_mem_clear_address: word
   // function_mem_clear_bytes: 
@@ -2676,10 +2682,12 @@ void function_mem_clear()
   addLabel("function_mem_clear_address");   
   addWord(0x0000);
   a("ld bc, **");
+  // 2021 01 07 - swapped the H & L below
+  addLabel("function_mem_clear_number_of_word");
+  addLabel("function_mem_clear_number_of_bytesH");
+  addByte(0x00);
   addLabel("function_mem_clear_number_of_bytes");
   addLabel("function_mem_clear_number_of_bytesL");
-  addByte(0x00);
-  addLabel("function_mem_clear_number_of_bytesH");
   addByte(0x00);
   a("xor a");
 

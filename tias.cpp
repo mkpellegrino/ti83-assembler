@@ -3304,44 +3304,40 @@ void function_store_op1()
   //
   
   addLabel("store_op1");
-  // todo push all registers
   pushall();
+  // ============================
+  // mkpellegrino - 2021 01 08
+  // re-written
 
-  // mkpellegrino - 2020 11 28
-  a("ld de, **"); addAddress("variabledata");
+  //a( "ld hl, **"); addAddress("OP1");
+  a( "ld de, **"); addAddress("function_store_op1_variabledata");
   sysCall("MovFrOP1");
   
-  // a("ld hl, **"); addWord( _OP1 );
-  //a("ld de, **"); addAddress("variabledata");
-  //a("ld bc, **"); addWord(0x0009);
-  //a("ldir");
- 
-  a("ld hl, **"); addAddress("variablename");
+  a("ld hl, **"); addAddress("function_store_op1_variablename");
   sysCall("Mov9ToOP1");
   sysCall("FindSym");
-  a("jr c, *"); addOffset("storeVAR");
+  a("jr c, *"); addOffset("function_store_op1_storeVAR");
   sysCall("DelVar");  
-  addLabel("storeVAR");
+  addLabel("function_store_op1_storeVAR");
+  a( "ld hl, **" ); addWord( 0x0009 );
   
-  sysCall("FindSym");
   sysCall("CreateReal");
+  a( "ld hl, **" ); addAddress( "function_store_op1_variabledata" );
+  a( "ld bc, **" ); addWord( 0x0009 );
+  a( "ldir" );
 
-  // mkpellegrino -- 2020 11 28
-  sysCall("Mov9ToOP1");
-  // a("ld hl, **");addAddress("variabledata");
-  //a("ld bc, **");addWord( 0x0009 );
-  //a("ldir");
-
-  // todo pop all registers
+  a( "xor a");
+  a( "ld (**), a"); addAddress( "function_store_op1_variablename" );
   popall();
   a("ret");
 
-  addLabel("variablename");
+  addLabel("function_store_op1_variablename");
   addByte( RealObj );
-  addLabel("variabletoken");
+  addLabel("function_store_op1_variabletoken");
   addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );
-  addLabel("variabledata");
+  addLabel("function_store_op1_variabledata");
   addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );addByte( 0x00 );
+  
 }
 
 int stringToHexValue( string s )

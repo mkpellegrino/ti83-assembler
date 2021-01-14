@@ -12,6 +12,7 @@ disassemble input.8xp --help (for options)
 there are some built-in macros:
 loop
 user_input
+hex_input
 degree_mode
 radian_mode
 disp_op1 (a 'better' routine than the built-in one)

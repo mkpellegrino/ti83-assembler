@@ -55,7 +55,7 @@ start_addr:
 	
 title:
 ;;;;; 123456789ABCDEF-123456789ABCDEF-123456789ABCDEF-123456789ABCDEF
-	.str "    dump v2     by: m pellegrino----------------addr:"
+.str "    byte dump   by: m pellegrino----------------addr:"
 instr:
 	.str " :clear: to end "
 	

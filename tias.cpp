@@ -99,6 +99,7 @@ int start_counting=0;
 int program_index=0;
 int function_mem_clr=0;
 int function_ui=0;
+int function_hi=0;
 int function_loop=0;
 int store_op1=0;
 int disp_op1=0;
@@ -109,7 +110,7 @@ int convop1b=0;
 int fully_clear_screen=0;
 string name;
 int line_number=0;
-
+int add_hex_input=0;
 int add_degree_mode=0;
 int add_hex_to_string=0;
 int add_loop=0;
@@ -2711,6 +2712,190 @@ void function_mem_clear()
   return;
 }
 
+void function_hex_input()
+{
+  if( function_hi == 1 ) return;
+  function_hi=1;
+
+  
+  addLabel("hex_input");
+  pushall();
+  a("ld a, (**)");addAddress("CurCol");
+  a("ld (**), a");addAddress("function_hex_input_mycol");
+  a("ld hl, **");addAddress("function_hex_input_hexdata");
+  a("ld (**), hl");addAddress("function_hex_input_hex_pointer");
+  a("ld b, *");addByte(0x04);
+  a("ld hl, **");addAddress("function_hex_input_hexdata");
+  a("xor a");
+  addLabel("function_hex_input_clear_out");
+  a("ld (hl), a");
+  a("djnz *");addOffset("function_hex_input_clear_out");
+  addLabel("function_hex_input_getkey");
+  a("xor a");
+  sysCall("GetCSC");
+  a("cp *");addByte(0x00);
+  a("jr z, *");addOffset("function_hex_input_getkey");
+  a("ld hl, **");addAddress("function_hex_input_valid_inputs");
+  a("ld bc, **");addWord(0x0012);
+  a("cpir");
+  a("jr nz, *");addOffset("function_hex_input_bottom");
+  a("ld (**), a");addAddress("function_hex_input_scan_code");
+  a("ld a, *");addByte(0x11);
+  a("sub c");
+  a("ld (**), a");addAddress("function_hex_input_scan_value");
+  a("cp *");addByte(0x0A);
+
+  a("jr c, *");addOffset("function_hex_input_is_number");
+  a("cp *");addByte(0x10);
+  a("jr c, *");addOffset("function_hex_input_is_letter");
+  a("jr z, *");addOffset("function_hex_input_isCR");
+  a("cp *");addByte(0x12);
+  a("jr c, *");addOffset("function_hex_input_isDelete");
+  addLabel("function_hex_input_bottom");
+  a("ld a, (**)");addAddress("function_hex_input_mycol");
+  a("ld (**), a");addAddress("CurCol");
+  a("ld hl, **");addAddress("function_hex_input_blank_text");
+  sysCall("PutS");
+  a("ld a, (**)");addAddress("function_hex_input_mycol");
+  a("ld (**), a");addAddress("CurCol");
+  a("ld hl, **");addAddress("function_hex_input_hexdata");
+  sysCall("PutS");
+  a("call **");addAddress("function_hex_input_setcol");
+  a("ld a, (**)");addAddress("function_hex_input_scan_code");
+  a("cp *");addByte(0x09);
+  a("jr z, *");addOffset("function_hex_input_return_branch");
+  a("jr *");addOffset("function_hex_input_getkey");
+  addLabel("function_hex_input_return_branch");
+  popall();
+  a("pop de");
+  a("ld hl, (**)");addAddress("function_hex_input_total_value");
+  a("push hl");
+  a("push de");
+  sysCall("NewLine");
+  a("ret");
+  addLabel("function_hex_input_is_letter");
+  a("ld e, *");addByte(0x07);
+  a("add a, e");
+  addLabel("function_hex_input_is_number");
+  a("ld e, *");addByte(0x30);
+  a("add a, e");
+  a("ld (**), a");addAddress("function_hex_input_ascii_value");
+  a("call **");addAddress("function_hex_input_addByte");
+  a("jr *");addOffset("function_hex_input_bottom");
+  addLabel("function_hex_input_isCR");
+  a("jr *");addOffset("function_hex_input_bottom");
+  addLabel("function_hex_input_isDelete");
+  a("call **");addAddress("function_hex_input_delByte");
+  a("jr *");addOffset("function_hex_input_bottom");
+  addLabel("function_hex_input_addByte");
+  pushall();
+  a("ld a, (**)");addAddress("function_hex_input_input_size");
+  a("cp *");addByte(0x04);
+  a("jr z, *");addOffset("function_hex_input_addByte_dont_add");
+  a("ld a, (**)");addAddress("function_hex_input_ascii_value");
+  a("ld hl, (**)");addAddress("function_hex_input_hex_pointer");
+  a("ld (hl), a");
+  a("inc hl");
+  a("ld (**), hl");addAddress("function_hex_input_hex_pointer");
+  a("ld a, (**)");addAddress("function_hex_input_input_size");
+  a("inc a");
+  a("ld (**), a");addAddress("function_hex_input_input_size");
+  a("ld hl, (**)");addAddress("function_hex_input_total_value");
+  a("ld b, *");addByte(0x04);
+  addLabel("function_hex_input_shift");
+  a("sla l");
+  a("rl h");
+  a("djnz *");addOffset("function_hex_input_shift");
+  a("ld a, (**)");addAddress("function_hex_input_scan_value");
+  a("ld c, a");
+  a("ld b, *");addByte(0x00);
+  a("add hl, bc");
+  a("ld (**), hl");addAddress("function_hex_input_total_value");
+  a("ld a, (**)");addAddress("function_hex_input_scan_value");
+  addLabel("function_hex_input_addByte_dont_add");
+  popall();
+  a("ret");
+  addLabel("function_hex_input_delByte");
+  pushall();
+  a("ld a, (**)");addAddress("function_hex_input_input_size");
+  a("cp *");addByte(0x00);
+  a("jr z, *");addOffset("function_hex_input_delByte_dont_del");
+  a("ld hl, (**)");addAddress("function_hex_input_hex_pointer");
+  a("dec hl");
+  a("ld (hl), *");addByte(0x20);
+  a("ld (**), hl");addAddress("function_hex_input_hex_pointer");
+  a("inc hl");
+  a("ld (hl), *");addByte(0x00);
+  a("ld a, (**)");addAddress("function_hex_input_input_size");
+  a("dec a");
+  a("ld (**), a");addAddress("function_hex_input_input_size");
+  addLabel("function_hex_input_delByte_dont_del");
+  popall();
+  a("ret");
+  addLabel("function_hex_input_setcol");
+  pushall();
+  a("ld a, (**)");addAddress("function_hex_input_mycol");
+  a("ld b, a");
+  a("ld a, (**)");addAddress("function_hex_input_input_size");
+  a("add a, b");
+  a("ld (**), a");addAddress("CurCol");
+  popall();
+  a("ret");
+  addLabel("function_hex_input_scan_code");
+  addByte(0x00);
+  addLabel("function_hex_input_scan_value");
+  addByte(0x00);
+  addLabel("function_hex_input_ascii_value");
+  addByte(0x00);
+  addLabel("function_hex_input_input_size");
+  addByte(0x00);
+  addLabel("function_hex_input_valid_inputs");
+  addLabel("function_hex_input_nb");
+  
+  addByte(0x21);
+  addByte(0x22);
+  addByte(0x1A);
+  addByte(0x12);
+  addByte(0x23);
+  addByte(0x1B);
+  addByte(0x13);
+  addByte(0x24);
+  addByte(0x1C);
+  addByte(0x14);
+
+  addLabel("function_hex_input_lt");
+  addByte(0x2F);
+  addByte(0x27);
+  addByte(0x1F);
+  addByte(0x2E);
+  addByte(0x26);
+  addByte(0x1E);
+
+  addLabel("function_hex_input_cr");
+  addByte(0x09);
+  addLabel("function_hex_input_dl");
+  addByte(0x02);addByte(0x38);
+  addLabel("function_hex_input_mycol");
+  addByte(0x00);
+  addLabel("function_hex_input_total_value");
+  addWord(0x0000);
+  addLabel("function_hex_input_hex_pointer");
+  addWord(0x0000);
+  addLabel("function_hex_input_hex_string");
+  // the characters "0x"
+  addByte(0x30); // 0 (ascii)
+  addByte(0x78);
+  addLabel("function_hex_input_hexdata");
+  addByte(0x00);addByte(0x00);addByte(0x00);addByte(0x00);addByte(0x00);
+  addLabel("function_hex_input_blank_text");
+  addByte(0x20);
+  addByte(0x20);
+  addByte(0x20);
+  addByte(0x20);
+  addByte(0x20);
+  addByte(0x00);
+}
+ 
 void function_user_input()
 {
   // returns value in: OP1 and FP_user_input
@@ -2736,13 +2921,18 @@ void function_user_input()
   //a("xor a");
   //sysCall("MemSet");
   // Store a zero at hl
-  a("ld (hl), *"); addByte(0x00);
+  a("xor a");// put back in  on 2021 01 13 - mkpellegrino
+  a("ld (hl), a");// addByte(0x00);
   a("inc hl");
   a("djnz *"); addOffset("functionUI_clear_bfr_top"); // do this 10 times
 
 
   a("ld hl, **"); addAddress("functionUI_text_bfr_size");
-  a("ld (hl), *"); addByte( 0x00 ); // Store a Zero as the buffer size
+
+  // 2021 01 13 - mkpellegrino
+  // since a is still 0
+  a("ld (hl), a");// addByte( 0x00 ); // Store a Zero as the buffer size
+  //a("ld (hl), *"); addByte( 0x00 ); // Store a Zero as the buffer size
 
   // store the address of the buffer
   a("ld hl, **"); addAddress("functionUI_text_bfr_start");
@@ -2770,7 +2960,9 @@ void function_user_input()
   a("ld (**), a"); addAddress("functionUI_key");
   
   a("cp *"); addByte( 0x09 ); // kEnter
-  a("jp z, **");addAddress("functionUI_cr");
+  // mkpellegrino - 2021 01 13
+  //a("jp z, **");addAddress("functionUI_cr");
+  a("jp z, **");addAddress("functionUI_return");
   a("cp *"); addByte( 0x38 ); // Del
   a("jp z, **");addAddress("functionUI_delete");
   a("cp *"); addByte( 0x02 ); // kLeft
@@ -2903,7 +3095,12 @@ void function_user_input()
 
   // =========================================================
   addLabel("functionUI_return");
+  // mkpellegrino 2021 01 13
+  // print out a space to remove that dark space
+  a("ld a, *"); addByte(0x20);
+  sysCall("PutC");
 
+  
   // if the user didn't enter anything, then don't convert anything into anything!
   a("ld a, (**)"); addAddress("functionUI_text_bfr_size");
   a("cp *"); addByte( 0x00 );
@@ -3049,24 +3246,33 @@ void function_user_input()
   a("ld hl, (**)"); addAddress("functionUI_text_bfr_ptr");
   
   a("dec hl"); // move back one element
-  a("ld (hl), *"); addByte( 0x00 ); // Store a in the buffer
+  a("ld (hl), *"); addByte( 0x00 ); // Store a 0 in the buffer
   a("ld (**), hl"); addAddress("functionUI_text_bfr_ptr");
   
   // update the length of the entered string
-  a("ld a, (**)"); addAddress("functionUI_text_bfr_size");
-  a("dec a");
-  a("ld (**), a"); addAddress("functionUI_text_bfr_size");
-
+  //a("ld a, (**)"); addAddress("functionUI_text_bfr_size");
+  //a("dec a");
+  //a("ld (**), a"); addAddress("functionUI_text_bfr_size");
+  // 2021 01 13 - mkpellegrino
+  a("ld hl, **"); addAddress("functionUI_text_bfr_size");
+  a("dec (hl)");
   
   // todo erase the previously typed character on the screen
-  a("ld hl, (**)"); addWord( _CurCol );
-  a("dec hl");
-  a("ld (**), hl"); addWord( _CurCol );
+  //a("ld hl, (**)"); addWord( _CurCol );
+  //a("dec hl");
+  //a("ld (**), hl"); addWord( _CurCol );
+  // mkpellegrino - 2021 01 13
+  a("ld hl, **"); addWord( _CurCol );
+  a("dec (hl)");
+  
   a("ld a, *"); addByte( ' ' );
   sysCall("PutC");
-  a("ld hl, (**)"); addWord( _CurCol );
-  a("dec hl");
-  a("ld (**), hl"); addWord( _CurCol );
+  //a("ld hl, (**)"); addWord( _CurCol );
+  //a("dec hl");
+  //a("ld (**), hl"); addWord( _CurCol );
+  // mkpellegrino - 2021 01 13
+  a("ld hl, **"); addWord( _CurCol );
+  a("dec (hl)");
   
 
   //sysCall("DispHL");
@@ -3099,11 +3305,10 @@ void function_user_input()
 
   
   //=====================================================================
-  addLabel("functionUI_cr");
-
+  //addLabel("functionUI_cr");
   
   
-  a("jp **"); addAddress("functionUI_return");  
+  //a("jp **"); addAddress("functionUI_return");  
   //=====================================================================
   addLabel("functionUI_text_bfr_size"); addByte( 0x00 );
   addLabel("functionUI_text_bfr_ptr"); addWord( 0x0000 );
@@ -3226,9 +3431,7 @@ void function_convop1b()
   a("push hl");
 
   // mkpellegrino - 2020 11 16
-  //a("ld hl, **"); addAddress("OP1");
   a("ld de, **"); addAddress("FP_convop1_input");
-  //sysCall("Mov9B");
   sysCall("MovFrOP1");
   a("ld hl, **"); addAddress("convop1b_max_float");
   sysCall("Mov9ToOP2");
@@ -3709,6 +3912,12 @@ int main(int argc, char *argv[])
 	      a("pop bc");
 	      a("pop af");
 	    }
+	  else if( line == "call &hex_input")
+	    {
+	      //listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
+	      add_hex_input=1;
+	      a("call **"); addAddress("hex_input");
+	    }
 	  else if( line == "call &mem_clear")
 	    {
 	      //listfile << std::uppercase << std::hex << memorylocation << ": " << line << endl;
@@ -3925,6 +4134,7 @@ int main(int argc, char *argv[])
 
   // ================================================================================================================================================================================================
   if( add_loop==1 ) loop();
+  if( add_hex_input==1) function_hex_input();
   if( add_input==1 ) function_user_input();
   if( add_store_op1==1 ) function_store_op1();
   if( add_degree_mode==1 ) function_degree_mode();

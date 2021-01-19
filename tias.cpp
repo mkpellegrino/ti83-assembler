@@ -1323,38 +1323,6 @@ void a( string s )
   else if( s == "ld a, l"){addByte(0x7D);}
   else if( s == "ld a, (hl)"){addByte(0x7E);}
   else if( s == "ld a, a"){addByte(0x7F);}
-  else if( s == "add a,b"){addByte(0x80);}
-  else if( s == "add a,c"){addByte(0x81);}
-  else if( s == "add a,d"){addByte(0x82);}
-  else if( s == "add a,e"){addByte(0x83);}
-  else if( s == "add a,h"){addByte(0x84);}
-  else if( s == "add a,l"){addByte(0x85);}
-  else if( s == "add a,(hl)"){addByte(0x86);}
-  else if( s == "add a,a"){addByte(0x87);}
-  else if( s == "adc a,b"){addByte(0x88);}
-  else if( s == "adc a,c"){addByte(0x89);}
-  else if( s == "adc a,d"){addByte(0x8A);}
-  else if( s == "adc a,e"){addByte(0x8B);}
-  else if( s == "adc a,h"){addByte(0x8C);}
-  else if( s == "adc a,l"){addByte(0x8D);}
-  else if( s == "adc a,(hl)"){addByte(0x8E);}
-  else if( s == "adc a,a"){addByte(0x8F);}
-  else if( s == "subb"){addByte(0x90);}
-  else if( s == "subc"){addByte(0x91);}
-  else if( s == "subd"){addByte(0x92);}
-  else if( s == "sube"){addByte(0x93);}
-  else if( s == "subh"){addByte(0x94);}
-  else if( s == "subl"){addByte(0x95);}
-  else if( s == "sub(hl)"){addByte(0x96);}
-  else if( s == "suba"){addByte(0x97);}
-  else if( s == "sbc a,b"){addByte(0x98);}
-  else if( s == "sbc a,c"){addByte(0x99);}
-  else if( s == "sbc a,d"){addByte(0x9A);}
-  else if( s == "sbc a,e"){addByte(0x9B);}
-  else if( s == "sbc a,h"){addByte(0x9C);}
-  else if( s == "sbc a,l"){addByte(0x9D);}
-  else if( s == "sbc a,(hl)"){addByte(0x9E);}
-  else if( s == "sbc a,a"){addByte(0x9F);}
   else if( s == "add a, b"){addByte(0x80);}
   else if( s == "add a, c"){addByte(0x81);}
   else if( s == "add a, d"){addByte(0x82);}
@@ -1371,14 +1339,7 @@ void a( string s )
   else if( s == "adc a, l"){addByte(0x8D);}
   else if( s == "adc a, (hl)"){addByte(0x8E);}
   else if( s == "adc a, a"){addByte(0x8F);}
-  else if( s == "sub b"){addByte(0x90);}
-  else if( s == "sub c"){addByte(0x91);}
-  else if( s == "sub d"){addByte(0x92);}
-  else if( s == "sub e"){addByte(0x93);}
-  else if( s == "sub h"){addByte(0x94);}
-  else if( s == "sub l"){addByte(0x95);}
-  else if( s == "sub (hl)"){addByte(0x96);}
-  else if( s == "sub a"){addByte(0x97);}
+
   else if( s == "sbc a, b"){addByte(0x98);}
   else if( s == "sbc a, c"){addByte(0x99);}
   else if( s == "sbc a, d"){addByte(0x9A);}
@@ -1387,6 +1348,16 @@ void a( string s )
   else if( s == "sbc a, l"){addByte(0x9D);}
   else if( s == "sbc a, (hl)"){addByte(0x9E);}
   else if( s == "sbc a, a"){addByte(0x9F);}
+
+  else if( s == "sub b"){addByte(0x90);}
+  else if( s == "sub c"){addByte(0x91);}
+  else if( s == "sub d"){addByte(0x92);}
+  else if( s == "sub e"){addByte(0x93);}
+  else if( s == "sub h"){addByte(0x94);}
+  else if( s == "sub l"){addByte(0x95);}
+  else if( s == "sub (hl)"){addByte(0x96);}
+  else if( s == "sub a"){addByte(0x97);}
+
   else if( s == "and b"){addByte(0xA0);}
   else if( s == "and c"){addByte(0xA1);}
   else if( s == "and d"){addByte(0xA2);}
@@ -1563,22 +1534,22 @@ void a( string s )
   else if( s == "cpdr"){addByte(0xED);addByte(0xB9);}
   else if( s == "indr"){addByte(0xED);addByte(0xBA);}
   else if( s == "otdr"){addByte(0xED);addByte(0xBB);}
-  else if( s == "rlc b"){addByte(0xCB);addByte(0x0);}
-  else if( s == "rlc c"){addByte(0xCB);addByte(0x1);}
-  else if( s == "rlc d"){addByte(0xCB);addByte(0x2);}
-  else if( s == "rlc e"){addByte(0xCB);addByte(0x3);}
-  else if( s == "rlc h"){addByte(0xCB);addByte(0x4);}
-  else if( s == "rlc l"){addByte(0xCB);addByte(0x5);}
-  else if( s == "rlc (hl)"){addByte(0xCB);addByte(0x6);}
-  else if( s == "rlc a"){addByte(0xCB);addByte(0x7);}
-  else if( s == "rrc b"){addByte(0xCB);addByte(0x8);}
-  else if( s == "rrc c"){addByte(0xCB);addByte(0x9);}
-  else if( s == "rrc d"){addByte(0xCB);addByte(0xA);}
-  else if( s == "rrc e"){addByte(0xCB);addByte(0xB);}
-  else if( s == "rrc h"){addByte(0xCB);addByte(0xC);}
-  else if( s == "rrc l"){addByte(0xCB);addByte(0xD);}
-  else if( s == "rrc (hl)"){addByte(0xCB);addByte(0xE);}
-  else if( s == "rrc a"){addByte(0xCB);addByte(0xF);}
+  else if( s == "rlc b"){addByte(0xCB);addByte(0x00);}
+  else if( s == "rlc c"){addByte(0xCB);addByte(0x01);}
+  else if( s == "rlc d"){addByte(0xCB);addByte(0x02);}
+  else if( s == "rlc e"){addByte(0xCB);addByte(0x03);}
+  else if( s == "rlc h"){addByte(0xCB);addByte(0x04);}
+  else if( s == "rlc l"){addByte(0xCB);addByte(0x05);}
+  else if( s == "rlc (hl)"){addByte(0xCB);addByte(0x06);}
+  else if( s == "rlc a"){addByte(0xCB);addByte(0x07);}
+  else if( s == "rrc b"){addByte(0xCB);addByte(0x08);}
+  else if( s == "rrc c"){addByte(0xCB);addByte(0x09);}
+  else if( s == "rrc d"){addByte(0xCB);addByte(0x0A);}
+  else if( s == "rrc e"){addByte(0xCB);addByte(0x0B);}
+  else if( s == "rrc h"){addByte(0xCB);addByte(0x0C);}
+  else if( s == "rrc l"){addByte(0xCB);addByte(0x0D);}
+  else if( s == "rrc (hl)"){addByte(0xCB);addByte(0x0E);}
+  else if( s == "rrc a"){addByte(0xCB);addByte(0x0F);}
   else if( s == "rl b"){addByte(0xCB);addByte(0x10);}
   else if( s == "rl c"){addByte(0xCB);addByte(0x11);}
   else if( s == "rl d"){addByte(0xCB);addByte(0x12);}
@@ -2334,7 +2305,7 @@ void a( string s )
   else if( s == "set 7, (iy+*)"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xFE);byte_delay=2;}
   else if( s == "set 7, (iy+*), a"){addByte(0xFD);addByte(0xCB);addByte(0x00);addByte(0xFF);byte_delay=2;}
 
-  else if( s == "add ix, bc"){addByte(0xDD);addByte(0x9);}
+  else if( s == "add ix, bc"){addByte(0xDD);addByte(0x09);}
   else if( s == "add ix, de"){addByte(0xDD);addByte(0x19);}
   else if( s == "ld ix, **"){addByte(0xDD);addByte(0x21);}
   else if( s == "ld (**), ix"){addByte(0xDD);addByte(0x22);}
@@ -2423,91 +2394,91 @@ void a( string s )
   else if( s == "push ix"){addByte(0xDD);addByte(0xE5);}
   else if( s == "jp (ix)"){addByte(0xDD);addByte(0xE9);}
   else if( s == "ld sp, ix"){addByte(0xDD);addByte(0xF9);}
-else if( s == "add iy, bc"){addByte(0xFD);addByte(0x9);}
-else if( s == "add iy, de"){addByte(0xFD);addByte(0x19);}
-else if( s == "ld iy, **"){addByte(0xFD);addByte(0x21);}
-else if( s == "ld (**), iy"){addByte(0xFD);addByte(0x22);}
-else if( s == "inc iy"){addByte(0xFD);addByte(0x23);}
-else if( s == "inc iyh"){addByte(0xFD);addByte(0x24);}
-else if( s == "dec iyh"){addByte(0xFD);addByte(0x25);}
-else if( s == "ld iyh, *"){addByte(0xFD);addByte(0x26);}
-else if( s == "add iy,iy"){addByte(0xFD);addByte(0x29);}
-else if( s == "ld iy, (**)"){addByte(0xFD);addByte(0x2A);}
-else if( s == "dec iy"){addByte(0xFD);addByte(0x2B);}
-else if( s == "inc iyl"){addByte(0xFD);addByte(0x2C);}
-else if( s == "dec iyl"){addByte(0xFD);addByte(0x2D);}
-else if( s == "ld iyl, *"){addByte(0xFD);addByte(0x2E);}
-else if( s == "inc (iy+*)"){addByte(0xFD);addByte(0x34);}
-else if( s == "dec (iy+*)"){addByte(0xFD);addByte(0x35);}
-else if( s == "ld (iy+*), *"){addByte(0xFD);addByte(0x36);}
-else if( s == "add iy, sp"){addByte(0xFD);addByte(0x39);}
-else if( s == "ld b, iyh"){addByte(0xFD);addByte(0x44);}
-else if( s == "ld b, iyl"){addByte(0xFD);addByte(0x45);}
-else if( s == "ld b, (iy+*)"){addByte(0xFD);addByte(0x46);}
-else if( s == "ld c, iyh"){addByte(0xFD);addByte(0x4C);}
-else if( s == "ld c, iyl"){addByte(0xFD);addByte(0x4D);}
-else if( s == "ld c, (iy+*)"){addByte(0xFD);addByte(0x4E);}
-else if( s == "ld d, iyh"){addByte(0xFD);addByte(0x54);}
-else if( s == "ld d, iyl"){addByte(0xFD);addByte(0x55);}
-else if( s == "ld d, (iy+*)"){addByte(0xFD);addByte(0x56);}
-else if( s == "ld e, iyh"){addByte(0xFD);addByte(0x5C);}
-else if( s == "ld e, iyl"){addByte(0xFD);addByte(0x5D);}
-else if( s == "ld e, (iy+*)"){addByte(0xFD);addByte(0x5E);}
-else if( s == "ld iyh, b"){addByte(0xFD);addByte(0x60);}
-else if( s == "ld iyh, c"){addByte(0xFD);addByte(0x61);}
-else if( s == "ld iyh, d"){addByte(0xFD);addByte(0x62);}
-else if( s == "ld iyh, e"){addByte(0xFD);addByte(0x63);}
-else if( s == "ld iyh, iyh"){addByte(0xFD);addByte(0x64);}
-else if( s == "ld iyh, iyl"){addByte(0xFD);addByte(0x65);}
-else if( s == "ld h, (iy+*)"){addByte(0xFD);addByte(0x66);}
-else if( s == "ld iyh, a"){addByte(0xFD);addByte(0x67);}
-else if( s == "ld iyl, b"){addByte(0xFD);addByte(0x68);}
-else if( s == "ld iyl, c"){addByte(0xFD);addByte(0x69);}
-else if( s == "ld iyl, d"){addByte(0xFD);addByte(0x6A);}
-else if( s == "ld iyl, e"){addByte(0xFD);addByte(0x6B);}
-else if( s == "ld iyl, iyh"){addByte(0xFD);addByte(0x6C);}
-else if( s == "ld iyl, iyl"){addByte(0xFD);addByte(0x6D);}
-else if( s == "ld l, (iy+*)"){addByte(0xFD);addByte(0x6E);}
-else if( s == "ld iyl, a"){addByte(0xFD);addByte(0x6F);}
-else if( s == "ld (iy+*), b"){addByte(0xFD);addByte(0x70);}
-else if( s == "ld (iy+*), c"){addByte(0xFD);addByte(0x71);}
-else if( s == "ld (iy+*), d"){addByte(0xFD);addByte(0x72);}
-else if( s == "ld (iy+*), e"){addByte(0xFD);addByte(0x73);}
-else if( s == "ld (iy+*), h"){addByte(0xFD);addByte(0x74);}
-else if( s == "ld (iy+*), l"){addByte(0xFD);addByte(0x75);}
-else if( s == "ld (iy+*), a"){addByte(0xFD);addByte(0x77);}
-else if( s == "ld a, iyh"){addByte(0xFD);addByte(0x7C);}
-else if( s == "ld a, iyl"){addByte(0xFD);addByte(0x7D);}
-else if( s == "ld a, (iy+*)"){addByte(0xFD);addByte(0x7E);}
-else if( s == "add a, iyh"){addByte(0xFD);addByte(0x84);}
-else if( s == "add a, iyl"){addByte(0xFD);addByte(0x85);}
-else if( s == "add a, (iy+*)"){addByte(0xFD);addByte(0x86);}
-else if( s == "adc a, iyh"){addByte(0xFD);addByte(0x8C);}
-else if( s == "adc a, iyl"){addByte(0xFD);addByte(0x8D);}
-else if( s == "adc a, (iy+*)"){addByte(0xFD);addByte(0x8E);}
-else if( s == "sub iyh"){addByte(0xFD);addByte(0x94);}
-else if( s == "sub iyl"){addByte(0xFD);addByte(0x95);}
-else if( s == "sub (iy+*)"){addByte(0xFD);addByte(0x96);}
-else if( s == "sbc a, iyh"){addByte(0xFD);addByte(0x9C);}
-else if( s == "sbc a, iyl"){addByte(0xFD);addByte(0x9D);}
-else if( s == "sbc a, (iy+*)"){addByte(0xFD);addByte(0x9E);}
-else if( s == "and iyh"){addByte(0xFD);addByte(0xA4);}
-else if( s == "and iyl"){addByte(0xFD);addByte(0xA5);}
-else if( s == "and (iy+*)"){addByte(0xFD);addByte(0xA6);}
-else if( s == "xor iyh"){addByte(0xFD);addByte(0xAC);}
-else if( s == "xor iyl"){addByte(0xFD);addByte(0xAD);}
-else if( s == "xor (iy+*)"){addByte(0xFD);addByte(0xAE);}
-else if( s == "or iyh"){addByte(0xFD);addByte(0xB4);}
-else if( s == "or iyl"){addByte(0xFD);addByte(0xB5);}
-else if( s == "or (iy+*)"){addByte(0xFD);addByte(0xB6);}
-else if( s == "cp iyh"){addByte(0xFD);addByte(0xBC);}
-else if( s == "cp iyl"){addByte(0xFD);addByte(0xBD);}
-else if( s == "cp (iy+*)"){addByte(0xFD);addByte(0xBE);}
-else if( s == "pop iy"){addByte(0xFD);addByte(0xE1);}
-else if( s == "ex (sp), iy"){addByte(0xFD);addByte(0xE3);}
-else if( s == "push iy"){addByte(0xFD);addByte(0xE5);}
-else if( s == "jp (iy)"){addByte(0xFD);addByte(0xE9);}
-else if( s == "ld sp, iy"){addByte(0xFD);addByte(0xF9);}
+  else if( s == "add iy, bc"){addByte(0xFD);addByte(0x9);}
+  else if( s == "add iy, de"){addByte(0xFD);addByte(0x19);}
+  else if( s == "ld iy, **"){addByte(0xFD);addByte(0x21);}
+  else if( s == "ld (**), iy"){addByte(0xFD);addByte(0x22);}
+  else if( s == "inc iy"){addByte(0xFD);addByte(0x23);}
+  else if( s == "inc iyh"){addByte(0xFD);addByte(0x24);}
+  else if( s == "dec iyh"){addByte(0xFD);addByte(0x25);}
+  else if( s == "ld iyh, *"){addByte(0xFD);addByte(0x26);}
+  else if( s == "add iy,iy"){addByte(0xFD);addByte(0x29);}
+  else if( s == "ld iy, (**)"){addByte(0xFD);addByte(0x2A);}
+  else if( s == "dec iy"){addByte(0xFD);addByte(0x2B);}
+  else if( s == "inc iyl"){addByte(0xFD);addByte(0x2C);}
+  else if( s == "dec iyl"){addByte(0xFD);addByte(0x2D);}
+  else if( s == "ld iyl, *"){addByte(0xFD);addByte(0x2E);}
+  else if( s == "inc (iy+*)"){addByte(0xFD);addByte(0x34);}
+  else if( s == "dec (iy+*)"){addByte(0xFD);addByte(0x35);}
+  else if( s == "ld (iy+*), *"){addByte(0xFD);addByte(0x36);}
+  else if( s == "add iy, sp"){addByte(0xFD);addByte(0x39);}
+  else if( s == "ld b, iyh"){addByte(0xFD);addByte(0x44);}
+  else if( s == "ld b, iyl"){addByte(0xFD);addByte(0x45);}
+  else if( s == "ld b, (iy+*)"){addByte(0xFD);addByte(0x46);}
+  else if( s == "ld c, iyh"){addByte(0xFD);addByte(0x4C);}
+  else if( s == "ld c, iyl"){addByte(0xFD);addByte(0x4D);}
+  else if( s == "ld c, (iy+*)"){addByte(0xFD);addByte(0x4E);}
+  else if( s == "ld d, iyh"){addByte(0xFD);addByte(0x54);}
+  else if( s == "ld d, iyl"){addByte(0xFD);addByte(0x55);}
+  else if( s == "ld d, (iy+*)"){addByte(0xFD);addByte(0x56);}
+  else if( s == "ld e, iyh"){addByte(0xFD);addByte(0x5C);}
+  else if( s == "ld e, iyl"){addByte(0xFD);addByte(0x5D);}
+  else if( s == "ld e, (iy+*)"){addByte(0xFD);addByte(0x5E);}
+  else if( s == "ld iyh, b"){addByte(0xFD);addByte(0x60);}
+  else if( s == "ld iyh, c"){addByte(0xFD);addByte(0x61);}
+  else if( s == "ld iyh, d"){addByte(0xFD);addByte(0x62);}
+  else if( s == "ld iyh, e"){addByte(0xFD);addByte(0x63);}
+  else if( s == "ld iyh, iyh"){addByte(0xFD);addByte(0x64);}
+  else if( s == "ld iyh, iyl"){addByte(0xFD);addByte(0x65);}
+  else if( s == "ld h, (iy+*)"){addByte(0xFD);addByte(0x66);}
+  else if( s == "ld iyh, a"){addByte(0xFD);addByte(0x67);}
+  else if( s == "ld iyl, b"){addByte(0xFD);addByte(0x68);}
+  else if( s == "ld iyl, c"){addByte(0xFD);addByte(0x69);}
+  else if( s == "ld iyl, d"){addByte(0xFD);addByte(0x6A);}
+  else if( s == "ld iyl, e"){addByte(0xFD);addByte(0x6B);}
+  else if( s == "ld iyl, iyh"){addByte(0xFD);addByte(0x6C);}
+  else if( s == "ld iyl, iyl"){addByte(0xFD);addByte(0x6D);}
+  else if( s == "ld l, (iy+*)"){addByte(0xFD);addByte(0x6E);}
+  else if( s == "ld iyl, a"){addByte(0xFD);addByte(0x6F);}
+  else if( s == "ld (iy+*), b"){addByte(0xFD);addByte(0x70);}
+  else if( s == "ld (iy+*), c"){addByte(0xFD);addByte(0x71);}
+  else if( s == "ld (iy+*), d"){addByte(0xFD);addByte(0x72);}
+  else if( s == "ld (iy+*), e"){addByte(0xFD);addByte(0x73);}
+  else if( s == "ld (iy+*), h"){addByte(0xFD);addByte(0x74);}
+  else if( s == "ld (iy+*), l"){addByte(0xFD);addByte(0x75);}
+  else if( s == "ld (iy+*), a"){addByte(0xFD);addByte(0x77);}
+  else if( s == "ld a, iyh"){addByte(0xFD);addByte(0x7C);}
+  else if( s == "ld a, iyl"){addByte(0xFD);addByte(0x7D);}
+  else if( s == "ld a, (iy+*)"){addByte(0xFD);addByte(0x7E);}
+  else if( s == "add a, iyh"){addByte(0xFD);addByte(0x84);}
+  else if( s == "add a, iyl"){addByte(0xFD);addByte(0x85);}
+  else if( s == "add a, (iy+*)"){addByte(0xFD);addByte(0x86);}
+  else if( s == "adc a, iyh"){addByte(0xFD);addByte(0x8C);}
+  else if( s == "adc a, iyl"){addByte(0xFD);addByte(0x8D);}
+  else if( s == "adc a, (iy+*)"){addByte(0xFD);addByte(0x8E);}
+  else if( s == "sub iyh"){addByte(0xFD);addByte(0x94);}
+  else if( s == "sub iyl"){addByte(0xFD);addByte(0x95);}
+  else if( s == "sub (iy+*)"){addByte(0xFD);addByte(0x96);}
+  else if( s == "sbc a, iyh"){addByte(0xFD);addByte(0x9C);}
+  else if( s == "sbc a, iyl"){addByte(0xFD);addByte(0x9D);}
+  else if( s == "sbc a, (iy+*)"){addByte(0xFD);addByte(0x9E);}
+  else if( s == "and iyh"){addByte(0xFD);addByte(0xA4);}
+  else if( s == "and iyl"){addByte(0xFD);addByte(0xA5);}
+  else if( s == "and (iy+*)"){addByte(0xFD);addByte(0xA6);}
+  else if( s == "xor iyh"){addByte(0xFD);addByte(0xAC);}
+  else if( s == "xor iyl"){addByte(0xFD);addByte(0xAD);}
+  else if( s == "xor (iy+*)"){addByte(0xFD);addByte(0xAE);}
+  else if( s == "or iyh"){addByte(0xFD);addByte(0xB4);}
+  else if( s == "or iyl"){addByte(0xFD);addByte(0xB5);}
+  else if( s == "or (iy+*)"){addByte(0xFD);addByte(0xB6);}
+  else if( s == "cp iyh"){addByte(0xFD);addByte(0xBC);}
+  else if( s == "cp iyl"){addByte(0xFD);addByte(0xBD);}
+  else if( s == "cp (iy+*)"){addByte(0xFD);addByte(0xBE);}
+  else if( s == "pop iy"){addByte(0xFD);addByte(0xE1);}
+  else if( s == "ex (sp), iy"){addByte(0xFD);addByte(0xE3);}
+  else if( s == "push iy"){addByte(0xFD);addByte(0xE5);}
+  else if( s == "jp (iy)"){addByte(0xFD);addByte(0xE9);}
+  else if( s == "ld sp, iy"){addByte(0xFD);addByte(0xF9);}
 
 
   
@@ -2660,7 +2631,7 @@ void loop()
 void addToListFile(int mem_loc, string loc)
 {
   if( loc.length() > 0 )
-  listfile << loc << "; " << std::uppercase << std::hex << memorylocation << endl;
+    listfile << loc << "; " << std::uppercase << std::hex << memorylocation << endl;
 }
 
 
@@ -3699,9 +3670,9 @@ int main(int argc, char *argv[])
     }
   if( argc == 4 )
     {
- #ifdef DEBUG
+#ifdef DEBUG
       cerr << "** generating list file named " << argv[3] << endl;
- #endif
+#endif
     }
 
   addLabel("OP1", 0x8478 );
@@ -3780,6 +3751,22 @@ int main(int argc, char *argv[])
 		}
 	      listfile << endl;
 	      listed=1;
+	    }
+	  // 2021 01 19 - mkpellegrino
+	  else if( line.substr(0,6) == ".label" )
+	    {
+	      listfile << ".label " <<  line.substr(7,line.size()-14) << " " << stringToHexValue(line.substr(line.size()-6,6) ) << endl;
+	      listed = 1;
+	      // use: void addLabel( string s, int addr )
+#ifdef DEBUG
+	      string ll=line.substr(7,line.size()-14);
+	      string aa=line.substr(line.size()-6,6);
+	      cerr << "line: [" << line << "]" << endl;
+	      cerr << "ll  : [" << ll << "]" << endl;
+	      cerr << "aa  : [" << aa << "]" << endl;
+	      cerr << "aa_i: [" << stringToHexValue(aa) << "]" << endl;
+#endif
+	      addLabel( line.substr(7,line.size()-14), stringToHexValue(line.substr(line.size()-6,6) ) );
 	    }
 	  // a label (if the last character is a :
 	  else if( line.back() == ':' )
@@ -3874,7 +3861,7 @@ int main(int argc, char *argv[])
 		  // addToListFile(memorylocation,line);
 
 		}
-	       if( line.substr(0,3) ==".fp")
+	      if( line.substr(0,3) ==".fp")
 		{
 		  string tmp = removeUnwanted(line.substr(4, line.length() ));		  
 #ifdef DEBUG

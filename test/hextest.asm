@@ -12,6 +12,4 @@
 	inc hl
 	inc hl
 	bCall(PutS)
-	
 	ret
-

@@ -18,7 +18,7 @@ DEBUG=-g -DDEBUG
 OPT=-O2
 #OPT_SIZE=-O3 -Os -fno-threadsafe-statics -fno-exceptions -ffunction-sections -fdata-sections -fno-rtti -flto -fvisibility-inlines-hidden
 
-all: clean tias disassemble create-raw lexer formulas factors hexinput ascii looptest bill qform distance
+all: clean tias disassemble 
 
 tias: tias.cpp
 	$(value CXX) tias.cpp $(CPPFLAGS) $(INCLUDE) $(OPT) -o tias
@@ -30,42 +30,39 @@ disassemble: disassemble.cpp
 	$(value CXX) disassemble.cpp $(DEBUG) $(CPPFLAGS) $(INCLUDE) -o disassemble-debug
 	strip -no_uuid -A -u -S -X -N -x disassemble
 
-create-raw: create-raw.cpp
-	$(value CXX) create-raw.cpp $(CPPFLAGS) $(OPT) -o create-raw
-	strip -no_uuid -A -u -S -X -N -x create-raw
+#create-raw: create-raw.cpp
+#	$(value CXX) create-raw.cpp $(CPPFLAGS) $(OPT) -o create-raw
+#	strip -no_uuid -A -u -S -X -N -x create-raw
 
-lexer:	lexer.cpp
-	$(value CXX) lexer.cpp $(CPPFLAGS) $(OPT) -o lexer
-	$(value CXX) lexer.cpp $(DEBUG) $(CPPFLAGS) $(INCLUDE) -o lexer-debug
-	strip -no_uuid -A -u -S -X -N -x lexer
+#lexer:	lexer.cpp
+#	$(value CXX) lexer.cpp $(CPPFLAGS) $(OPT) -o lexer
+#	$(value CXX) lexer.cpp $(DEBUG) $(CPPFLAGS) $(INCLUDE) -o lexer-debug
+#	strip -no_uuid -A -u -S -X -N -x lexer
 
-decks: deckcard.asm decktiny.asm
-	./tias deckcard.asm deckcard.8xp
-	./tias decktiny.asm decktiny.8xp
+#decks: deckcard.asm decktiny.asm
+#	./tias deckcard.asm deckcard.8xp
+#	./tias decktiny.asm decktiny.8xp
 
-formulas: formulas.asm
-	./tias formulas.asm formulas.8xp formulas.mem
+#formulas: formulas.asm
+#	./tias formulas.asm formulas.8xp formulas.mem
 
-factors: factors.asm
-	./tias factors.asm factors.8xp factors.mem
+#factors: factors.asm
+#	./tias factors.asm factors.8xp factors.mem
 
-hexinput: hex-input.asm
-	./tias hex-input.asm hex-input.8xp hex-input.mem
+#hexinput: hex-input.asm
+#	./tias hex-input.asm hex-input.8xp hex-input.mem
 
-ascii: ascii.asm
-	./tias ascii.asm ascii.8xp
+#looptest: looptest.asm
+#	./tias looptest.asm looptest.8xp
 
-looptest: looptest.asm
-	./tias looptest.asm looptest.8xp
+#bill: bill.asm
+#	./tias bill.asm splitchk.8xp
 
-bill: bill.asm
-	./tias bill.asm splitchk.8xp
+#qform: qform.asm
+#	./tias qform2.asm qform.8xp
 
-qform: qform.asm
-	./tias qform2.asm qform.8xp
-
-distance: distance.asm
-	./tias distance.asm distance.8xp distance.mem
+#distance: distance.asm
+#	./tias distance.asm distance.8xp distance.mem
 
 clean:
 	rm -f ./tias

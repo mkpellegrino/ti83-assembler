@@ -5,12 +5,9 @@
 	bCall(PutS)
 
 ascii_loop_top:
-	ld hl, &byte
-	ld a, (hl)
+	ld a, (&byte)
 	bCall(PutC)
-
-	ld hl, &byte
-	ld a, (hl)
+	ld a, (&byte)
 	ld l, a
 	ld h, @0x00
 	push hl
@@ -46,18 +43,14 @@ ascii_loop_middle:
 
 
 byte_up:
-
+	
 	ld hl, &byte
-	ld a, (hl)
-	inc a
-	ld (hl), a
+	inc (hl)
 	jr %ascii_loop_top
 
 byte_down:
 	ld hl, &byte
-	ld a, (hl)
-	dec a
-	ld (hl), a
+	dec (hl)
 	
 	jr %ascii_loop_top
 
